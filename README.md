@@ -117,3 +117,18 @@ UX Mobile
 ✅ Fast tap responses
 
 ✅ Offline basic support
+
+👨‍💻 Autor
+<div align="center">
+Santiago Arbelaez Contreras
+Junior Full Stack Developer
+Estudiante Ingeniería de Sistemas – Universidad del Quindío
+
+
+https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
+https://img.shields.io/badge/%E2%9C%A8_Portfolio-6C63FF?style=for-the-badge&logo=sparkles&logoColor=white
+https://img.shields.io/badge/Email-EA4335?style=for-the-badge&logo=gmail&logoColor=white
+https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white
+
+</div>
+<div align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=90&section=footer&animation=fadeIn" /> <p><em>Catálogo Digital • Moderno • Mobile-First • Empresarial</em></p> <sub>© 2024 Plaxtilíneas y Asociados. Todos los derechos reservados.</sub> </div>
