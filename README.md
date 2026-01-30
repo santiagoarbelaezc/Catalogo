@@ -96,3 +96,24 @@ Formulario de consulta
 Redes sociales
 
 Mapa de ubicación
+
+---
+
+📱 Optimización Móvil
+Performance
+✅ Images lazy loading
+
+✅ Componentes on-demand
+
+✅ Minificación de assets
+
+✅ Cache estratégico
+
+UX Mobile
+✅ Touch-friendly buttons (>44px)
+
+✅ Swipe gestures
+
+✅ Fast tap responses
+
+✅ Offline basic support
