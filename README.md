@@ -1,27 +1,129 @@
-# Catalogo
+🛍️ Catálogo Digital - Plaxtilíneas
+<div align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=120&section=header&animation=fadeIn" /> <h1>📱 Catálogo Digital Móvil</h1> <h3>✨ Solución moderna para visualización de productos empresariales</h3> <p>Plataforma Angular optimizada para dispositivos móviles con diseño innovador y experiencia de usuario intuitiva</p>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.9.
 
-## Development server
+</div>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+📋 Descripción del Proyecto
+Catálogo digital desarrollado en Angular con enfoque mobile-first, diseñado específicamente para ser utilizado en dispositivos móviles. La plataforma permite a las empresas mostrar sus productos de manera atractiva y profesional, facilitando la conexión directa con clientes potenciales.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+🏢 Empresas Beneficiadas
+Plaxtilíneas - Soluciones en plásticos
 
-## Build
+Espumas y Plásticos - Materiales industriales
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Districol - Distribución especializada
 
-## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+---
 
-## Running end-to-end tests
+🎯 Características Principales
+📸 Visualización de Productos
+Galería de imágenes de alta calidad
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Zoom interactivo en productos
 
-## Further help
+Vista rápida de detalles
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Categorización inteligente
+
+📱 Experiencia Mobile-First
+Diseño 100% responsive
+
+Navegación optimizada para touch
+
+Carga rápida en conexiones móviles
+
+Interface intuitiva y minimalista
+
+🔗 Conectividad Empresarial
+Redirección a páginas web oficiales
+
+Contacto directo vía WhatsApp
+
+Información de contacto visible
+
+Localización de sucursales
+
+🎨 Diseño Innovador
+UI/UX moderna y atractiva
+
+Animaciones fluidas
+
+Paleta de colores profesional
+
+Tipografía legible
+
+---
+
+📱 Vistas y Funcionalidades
+1. Página de Inicio
+Banner corporativo
+
+Acceso rápido por empresa
+
+Búsqueda inteligente
+
+Categorías destacadas
+
+2. Catálogo por Empresa
+Filtrado por categorías/subcategorías
+
+Ordenamiento personalizado
+
+Vista grid/list adaptativa
+
+Paginación optimizada
+
+3. Detalle de Producto
+Galería de imágenes (swipe)
+
+Especificaciones técnicas
+
+Precios y disponibilidad
+
+Botones de acción directa
+
+4. Contacto Rápido
+Botón WhatsApp flotante
+
+Formulario de consulta
+
+Redes sociales
+
+Mapa de ubicación
+
+---
+
+📱 Optimización Móvil
+Performance
+✅ Images lazy loading
+
+✅ Componentes on-demand
+
+✅ Minificación de assets
+
+✅ Cache estratégico
+
+UX Mobile
+✅ Touch-friendly buttons (>44px)
+
+✅ Swipe gestures
+
+✅ Fast tap responses
+
+✅ Offline basic support
+
+---
+
+👨‍💻 Autor
+<div align="center">
+Santiago Arbelaez Contreras
+Junior Full Stack Developer
+Estudiante Ingeniería de Sistemas – Universidad del Quindío
+
+
+</div>
+<div align="center"> <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=90&section=footer&animation=fadeIn" /> <p><em>Catálogo Digital • Moderno • Mobile-First • Empresarial</em></p> <sub>© 2024 Plaxtilíneas y Asociados. Todos los derechos reservados.</sub> </div>
