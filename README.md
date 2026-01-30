@@ -5,3 +5,15 @@ https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescri
 https://img.shields.io/badge/%F0%9F%93%B1_Mobile_First-00C853?style=for-the-badge&logo=smartphone&logoColor=white
 
 </div>
+
+---
+
+📋 Descripción del Proyecto
+Catálogo digital desarrollado en Angular con enfoque mobile-first, diseñado específicamente para ser utilizado en dispositivos móviles. La plataforma permite a las empresas mostrar sus productos de manera atractiva y profesional, facilitando la conexión directa con clientes potenciales.
+
+🏢 Empresas Beneficiadas
+Plaxtilíneas - Soluciones en plásticos
+
+Espumas y Plásticos - Materiales industriales
+
+Districol - Distribución especializada
