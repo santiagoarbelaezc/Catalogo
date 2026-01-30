@@ -57,3 +57,40 @@ Animaciones fluidas
 Paleta de colores profesional
 
 Tipografía legible
+
+📱 Vistas y Funcionalidades
+1. Página de Inicio
+Banner corporativo
+
+Acceso rápido por empresa
+
+Búsqueda inteligente
+
+Categorías destacadas
+
+2. Catálogo por Empresa
+Filtrado por categorías/subcategorías
+
+Ordenamiento personalizado
+
+Vista grid/list adaptativa
+
+Paginación optimizada
+
+3. Detalle de Producto
+Galería de imágenes (swipe)
+
+Especificaciones técnicas
+
+Precios y disponibilidad
+
+Botones de acción directa
+
+4. Contacto Rápido
+Botón WhatsApp flotante
+
+Formulario de consulta
+
+Redes sociales
+
+Mapa de ubicación
