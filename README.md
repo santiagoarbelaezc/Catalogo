@@ -17,3 +17,43 @@ Plaxtilíneas - Soluciones en plásticos
 Espumas y Plásticos - Materiales industriales
 
 Districol - Distribución especializada
+
+
+---
+
+🎯 Características Principales
+📸 Visualización de Productos
+Galería de imágenes de alta calidad
+
+Zoom interactivo en productos
+
+Vista rápida de detalles
+
+Categorización inteligente
+
+📱 Experiencia Mobile-First
+Diseño 100% responsive
+
+Navegación optimizada para touch
+
+Carga rápida en conexiones móviles
+
+Interface intuitiva y minimalista
+
+🔗 Conectividad Empresarial
+Redirección a páginas web oficiales
+
+Contacto directo vía WhatsApp
+
+Información de contacto visible
+
+Localización de sucursales
+
+🎨 Diseño Innovador
+UI/UX moderna y atractiva
+
+Animaciones fluidas
+
+Paleta de colores profesional
+
+Tipografía legible
