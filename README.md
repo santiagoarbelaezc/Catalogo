@@ -58,6 +58,8 @@ Paleta de colores profesional
 
 Tipografía legible
 
+---
+
 📱 Vistas y Funcionalidades
 1. Página de Inicio
 Banner corporativo
