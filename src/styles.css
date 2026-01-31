@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+/* Importar temas globales */
+@import './app/components/themes/fonts.css';
+@import './app/components/themes/colors.css';
+
+/* Estilos globales adicionales */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+:root{
+ --primary-color: #1a1a1a;
+  --secondary-color: #4a5568;
+  --accent-color: #2d3748; /* Más sutil que el verde brillante */
+  --border-color: #e2e8f0;
+  --background-light: #fafafa;
+  --background-white: #ffffff;
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --border-radius: 12px;
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Variables de fuentes */
+  --font-primary: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  --font-heading: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+}

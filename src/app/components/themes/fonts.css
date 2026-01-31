@@ -1,0 +1,41 @@
+/* Declarar fuentes locales personalizadas */
+@font-face {
+  font-family: 'Fashion Fetish Light';
+  src: url('/assets/fonts/Fashion-Fetish-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Fashion Fetish Regular';
+  src: url('/assets/fonts/Fashion-Fetish-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Avenir Next LT Pro';
+  src: url('/assets/fonts/AvenirNextLTPro-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+/* Definir familias de fuente con fallbacks */
+.fashion-fetish-light {
+  font-family: 'Fashion Fetish Light', 'Playfair Display', serif;
+  font-weight: 300;
+}
+
+.fashion-fetish-regular {
+  font-family: 'Fashion Fetish Regular', 'Playfair Display', serif;
+  font-weight: 400;
+}
+
+.avenir-next {
+  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-weight: 400;
+}
+
+body {
+  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+}
