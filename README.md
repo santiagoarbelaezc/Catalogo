@@ -97,35 +97,12 @@ Mapa de ubicación
 
 ---
 
-🏗️ Arquitectura del Sistema
 📊 Estrategias de Despliegue
 Entorno	Plataforma	Propósito	Características
 🚀 Producción	AWS (Amazon Web Services)	Entorno estable para clientes finales	Alta disponibilidad, escalabilidad automática, CDN global
 🧪 Desarrollo/Beta	Firebase (Google Cloud)	Testing y versiones preliminares	Despliegue rápido, hosting estático, preview de features
 🔬 Beta Testing	Firebase Hosting + Functions	Validación con usuarios controlados	Versiones accesibles via URL específica, analytics integrado
-🖥️ Frontend (Capa de Presentación)
-Componente	Descripción	Tecnologías	Despliegue
-Aplicación Angular	Single Page Application principal	Angular 16+, TypeScript, HTML5, CSS3	Producción: Hostinger
-Beta: Firebase Hosting
-Interfaz de Usuario	Catálogo de productos responsive	Componentes Angular, RxJS	Multi-entorno configurado
-Gestión de Estado	Estado global de la aplicación	Services, RxJS BehaviorSubject	Configuración por entorno
-Versiones Beta	Features en testing	Feature flags, A/B testing	Firebase Hosting + Analytics
-🌐 CDN & Routing (Capa de Red)
-Componente	Descripción	Tecnologías	Proveedor
-Amazon CloudFront	Content Delivery Network global	CDN, SSL/TLS, Caching	AWS
-Routing de Peticiones	Direccionamiento API y assets	Request Routing, Edge Locations	AWS
-Terminación SSL	Seguridad en tránsito	TLS 1.2+, HTTPS	AWS/Firebase
-⚙️ Backend (Capa de Servicios)
-Componente	Descripción	Tecnologías	Despliegue
-API REST	Servicios backend principales	Node.js, Express.js	Producción: AWS Elastic Beanstalk
-Beta: Firebase Functions
-Gestión de Productos	CRUD de productos y categorías	Express Routes, Controllers	Multi-entorno
-Auto-scaling	Escalado automático por demanda	Load Balancer, Auto-scaling Groups	AWS (Producción)
-🗄️ Base de Datos (Capa de Persistencia)
-Componente	Descripción	Tecnologías	Proveedor
-MySQL Database	Almacenamiento persistente	MySQL 8.0+, Relacional	Hostinger
-Gestión de Datos	Productos, categorías, usuarios	Tablas relacionales, índices	Hostinger
-Conexiones Seguras	Comunicación encriptada	SSL Database Connections	Hostinger
+
 
 
 ---
