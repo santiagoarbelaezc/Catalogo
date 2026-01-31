@@ -65,6 +65,19 @@ Catálogo digital desarrollado en Angular con enfoque mobile-first, diseñado es
 
 ---
 
+📄 Exportación de Catálogo
+Generación de PDF del catálogo completo
+
+Selección personalizada de productos
+
+Plantillas profesionales predefinidas
+
+Compresión optimizada para compartir
+
+Preservación del diseño responsive
+
+---
+
 ## 📱 Vistas y Funcionalidades
 1. **Página de Inicio**
    - Banner corporativo
