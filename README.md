@@ -116,6 +116,94 @@ Preservación del diseño responsive
 
 ---
 
+## 📁 Estructura del Proyecto
+
+### 🗂️ Raíz del Proyecto
+```
+📦 catalogo-digital
+├── 📁 .angular/              # Configuración de compilación Angular
+├── 📁 .vscode/               # Configuración del editor VS Code
+├── 📁 node_modules/          # Dependencias del proyecto
+├── 📁 public/                # Recursos públicos estáticos
+├── 📁 src/                   # Código fuente principal
+├── 📄 .editorconfig          # Configuración del editor
+├── 📄 .gitignore             # Archivos ignorados por Git
+├── 📄 angular.json           # Configuración de Angular CLI
+├── 📄 package-lock.json      # Bloqueo de versiones de dependencias
+├── 📄 package.json           # Dependencias y scripts del proyecto
+├── 📄 README.md              # Documentación del proyecto
+├── 📄 tsconfig.app.json      # Configuración TypeScript para la app
+├── 📄 tsconfig.json          # Configuración base de TypeScript
+└── 📄 tsconfig.spec.json     # Configuración TypeScript para tests
+```
+
+### 📂 Directorio `/src`
+```
+📁 src/
+├── 📁 app/                   # Aplicación principal
+├── 📁 assets/                # Recursos multimedia (imágenes, iconos)
+├── 📄 index.html             # Página HTML principal
+├── 📄 main.ts                # Punto de entrada de la aplicación
+└── 📄 styles.css             # Estilos globales
+```
+
+### 🎯 Directorio `/src/app`
+```
+📁 app/
+├── 📁 components/            # Componentes reutilizables
+├── 📁 data/                  # Datos estáticos y mock data
+├── 📁 directives/            # Directivas personalizadas
+├── 📁 models/                # Interfaces y modelos TypeScript
+├── 📁 pages/                 # Páginas/Vistas principales
+├── 📁 services/              # Servicios e inyección de dependencias
+├── 📁 utils/                 # Utilidades y helpers
+├── 📄 app.component.css      # Estilos del componente raíz
+├── 📄 app.component.html     # Template del componente raíz
+├── 📄 app.component.spec.ts  # Tests del componente raíz
+├── 📄 app.component.ts       # Lógica del componente raíz
+├── 📄 app.config.ts          # Configuración de la aplicación
+└── 📄 app.routes.ts          # Rutas de la aplicación
+```
+
+### 🧩 Directorio `/src/app/components`
+```
+📁 components/
+├── 📁 catalog/               # Componentes del catálogo de productos
+├── 📁 layout/                # Componentes de estructura (header, footer, etc.)
+├── 📁 shared/                # Componentes compartidos entre módulos
+└── 📁 themes/                # Temas y personalizaciones visuales
+```
+
+### 📄 Directorio `/src/app/pages`
+```
+📁 pages/
+├── 📁 catalogo-home/         # Página principal del catálogo
+├── 📁 districol/             # Página de productos Districol
+├── 📁 espumasplasticos/      # Página de Espumas y Plásticos
+└── 📁 plaxtilineas/          # Página de Plaxtilíneas
+```
+
+---
+
+### 📊 Resumen de Arquitectura
+
+<div align="center">
+
+| Categoría | Descripción | Ubicación |
+|-----------|-------------|-----------|
+| 🎨 **UI Components** | Componentes visuales reutilizables | `/src/app/components` |
+| 📱 **Pages** | Vistas principales de la aplicación | `/src/app/pages` |
+| 🔧 **Services** | Lógica de negocio y comunicación | `/src/app/services` |
+| 📦 **Models** | Tipado e interfaces TypeScript | `/src/app/models` |
+| 🎯 **Directives** | Directivas Angular personalizadas | `/src/app/directives` |
+| 💾 **Data** | Información estática y datasets | `/src/app/data` |
+| 🛠️ **Utils** | Funciones auxiliares y helpers | `/src/app/utils` |
+
+</div>
+
+
+---
+
 ## 🛠️ Tecnologías
 - **Framework**: Angular
 - **Lenguaje**: TypeScript
