@@ -211,7 +211,6 @@ Preservación del diseño responsive
 - **Herramientas de Desarrollo**: Node.js, npm
 - **Despliegue**: AWS, Firebase
 
----
 
 ---
 
