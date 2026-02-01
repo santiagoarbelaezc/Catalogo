@@ -213,25 +213,6 @@ Preservación del diseño responsive
 
 ---
 
-## 🚀 Instalación
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/catalogo-digital.git
-   ```
-2. Navega al directorio del proyecto:
-   ```bash
-   cd catalogo-digital
-   ```
-3. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-4. Inicia el servidor de desarrollo:
-   ```bash
-   ng serve
-   ```
-5. Abre tu navegador en `http://localhost:4200`.
-
 ---
 
 ## 📱 Optimización Móvil
