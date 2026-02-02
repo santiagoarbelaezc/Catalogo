@@ -13,6 +13,20 @@ export class NavbarComponent {
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
-    this.isVisible = event.clientY < 120; // Show when mouse is within 120px from top
+    // Si estamos en el top de la página, mantener visible
+    if (window.scrollY === 0) {
+      this.isVisible = true;
+      return;
+    }
+    // Lógica normal del mouse
+    this.isVisible = event.clientY < 120;
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: Event) {
+    // Si estamos en el top de la página, mostrar navbar
+    if (window.scrollY === 0) {
+      this.isVisible = true;
+    }
   }
 }

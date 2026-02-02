@@ -13,17 +13,17 @@ export class CatalogoHomeComponent {
   // Datos de ejemplo para el banner
   bannerImages: BannerImage[] = [
     {
-      url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop',
+      url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770070212/cate8_uedtyk.png',
       alt: 'Productos de Plaxitlineas',
       title: 'Plaxitlineas'
     },
     {
-      url: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+      url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1768958816/banner_tnds6k.jpg',
       alt: 'Espumas Plásticas',
-      title: 'Espumas Plásticas'
+      title: 'Espumas & Plásticos'
     },
     {
-      url: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&h=600&fit=crop',
+      url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1768952038/grid-4_vbom7w.jpg',
       alt: 'Districol',
       title: 'Districol'
     }

@@ -1,27 +1,13 @@
 <div class="plaxtilineas-container">
   <!-- Banner interactivo -->
-  <app-products-banner
-    [images]="bannerImages"
-    [height]="'60vh'"
-    [hoverScale]="1.15"
-    [minScale]="0.85">
-  </app-products-banner>
+
 
   <div class="products-grid">
     <app-catalog-item
       *ngFor="let product of products; let i = index"
       [product]="product"
-      [backgroundGradient]="'#F0F0F0,#808080'"
+      [backgroundGradient]="'#F0F0F0,#AAAAAA'"
       [reverseLayout]="i % 2 === 1">
-    </app-catalog-item>
-  </div>
-
-  <div class="products-grid">
-    <app-catalog-item
-      *ngFor="let product of products; let i = index"
-      [product]="product"
-      [backgroundGradient]="'#F0F0F0,#808080'"
-      [reverseLayout]="i % 2 === 0">
     </app-catalog-item>
   </div>
 </div>

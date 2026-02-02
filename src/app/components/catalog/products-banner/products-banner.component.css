@@ -9,6 +9,7 @@
 .banner-container {
   width: 100%;
   position: relative;
+  margin-top: 130px;
 }
 
 /* Grid sin separación */

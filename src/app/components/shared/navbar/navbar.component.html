@@ -1,14 +1,27 @@
 <nav class="navbar" [class.hidden]="!isVisible">
   <div class="nav-container">
-    <div class="nav-links">
-      <a routerLink="/plaxtilineas" class="nav-link">plaxtilineas</a>
-      <a routerLink="/espumasplasticos" class="nav-link">espumasplasticos</a>
-      <a routerLink="/districol" class="nav-link">districol</a>
-      <span class="nav-link contacto">contacto</span>
-    </div>
+    <a routerLink="/plaxtilineas" class="nav-link">
+      <div class="logo-container">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="nav-logo">
+        <span class="logo-name">Plaxtilineas</span>
+      </div>
+    </a>
+    <a routerLink="/espumasplasticos" class="nav-link">
+      <div class="logo-container">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumasplasticos" class="nav-logo">
+        <span class="logo-name">Espumas Plásticos</span>
+      </div>
+    </a>
+    <a routerLink="/districol" class="nav-link">
+      <div class="logo-container">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/districol_lcjwj3.png" alt="districol" class="nav-logo">
+        <span class="logo-name">Districol</span>
+      </div>
+    </a>
+   
     <div class="contact-info">
-      <p class="address">Cra. 19 #19-35</p>
-      <p class="phone">3006680125</p>
+      <span class="address">Cra. 19 #19-35</span>
+      <span class="phone">3006680125</span>
     </div>
   </div>
 </nav>
