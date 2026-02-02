@@ -1,1 +1,14 @@
-<p>navbar works!</p>
+<nav class="navbar" [class.hidden]="!isVisible">
+  <div class="nav-container">
+    <div class="nav-links">
+      <a routerLink="/plaxtilineas" class="nav-link">plaxtilineas</a>
+      <a routerLink="/espumasplasticos" class="nav-link">espumasplasticos</a>
+      <a routerLink="/districol" class="nav-link">districol</a>
+      <span class="nav-link contacto">contacto</span>
+    </div>
+    <div class="contact-info">
+      <p class="address">Cra. 19 #19-35</p>
+      <p class="phone">3006680125</p>
+    </div>
+  </div>
+</nav>
