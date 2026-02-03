@@ -250,12 +250,88 @@
   gap: 30px;
 }
 
+.desktop-menu {
+  display: flex;
+}
+
+.mobile-menu-button {
+  display: none;
+}
+
 .navbar-right {
   display: flex;
   align-items: center;
   gap: 20px;
   min-width: 200px;
   justify-content: flex-end;
+}
+
+/* ===== MOBILE MENU ===== */
+.mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.open {
+  max-height: 500px;
+}
+
+.mobile-menu-content {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-nav-link {
+  color: #2D2D2D;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-link:hover {
+  background: rgba(21, 205, 130, 0.05);
+  transform: translateX(5px);
+}
+
+.mobile-nav-link.router-link-active {
+  background: rgba(21, 205, 130, 0.1);
+  border-left: 4px solid #15CD82;
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: #2D2D2D;
+  font-size: 1.2rem;
+}
+
+.hamburger-btn:hover {
+  background: rgba(102, 102, 102, 0.1);
+  transform: scale(1.1);
+}
+
+.hamburger-btn.active {
+  color: #15CD82;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -341,6 +417,14 @@
     gap: 12px;
     min-width: 120px;
   }
+
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
 }
 
 @media (max-width: 576px) {
@@ -397,5 +481,21 @@
   .navbar-right {
     gap: 10px;
     min-width: 100px;
+  }
+
+  .desktop-menu {
+    display: none;
+  }
+
+  .mobile-menu-button {
+    display: block;
+  }
+
+  .mobile-menu-content {
+    padding: 0.5rem 0;
+  }
+
+  .mobile-nav-link {
+    padding: 0.8rem 1rem;
   }
 }

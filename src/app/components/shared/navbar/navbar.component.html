@@ -8,8 +8,8 @@
       </div>
     </div>
 
-    <!-- Center: Links -->
-    <div class="navbar-center">
+    <!-- Center: Links (Desktop) -->
+    <div class="navbar-center desktop-menu">
       <a routerLink="/catalogo" class="nav-link">
         <div class="logo-container">
           <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catalogo" class="nav-logo">
@@ -36,6 +36,13 @@
       </a>
     </div>
 
+    <!-- Mobile Menu Button -->
+    <div class="mobile-menu-button">
+      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+        <fa-icon [icon]="isMobileMenuOpen ? faTimes : faBars"></fa-icon>
+      </button>
+    </div>
+
     <!-- Right: Contact -->
     <div class="navbar-right">
       <div class="contact-info">
@@ -44,6 +51,36 @@
           3006680125
         </span>
       </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
+    <div class="mobile-menu-content">
+      <a routerLink="/catalogo" class="mobile-nav-link" (click)="toggleMobileMenu()">
+        <div class="logo-container">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catalogo" class="nav-logo">
+          <span class="logo-name">Catálogo</span>
+        </div>
+      </a>
+      <a routerLink="/plaxtilineas" class="mobile-nav-link" (click)="toggleMobileMenu()">
+        <div class="logo-container">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="nav-logo">
+          <span class="logo-name">Plaxtilineas</span>
+        </div>
+      </a>
+      <a routerLink="/espumasplasticos" class="mobile-nav-link" (click)="toggleMobileMenu()">
+        <div class="logo-container">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumasplasticos" class="nav-logo">
+          <span class="logo-name">Espumas Plásticos</span>
+        </div>
+      </a>
+      <a routerLink="/districol" class="mobile-nav-link" (click)="toggleMobileMenu()">
+        <div class="logo-container">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770137278/districol_es6ukx.png" alt="districol" class="nav-logo">
+          <span class="logo-name">Districol</span>
+        </div>
+      </a>
     </div>
   </div>
 </nav>

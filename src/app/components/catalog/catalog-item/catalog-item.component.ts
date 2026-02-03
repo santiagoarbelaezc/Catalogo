@@ -48,10 +48,10 @@ export class CatalogItemComponent {
   }
 
   contact(): void {
-    // Lógica para contacto
-    console.log('Contactar sobre producto:', this.product.name);
-    // Aquí puedes implementar redirección a formulario de contacto
-    window.location.href = '/contacto?producto=' + encodeURIComponent(this.product.name);
+    // Lógica para contacto vía WhatsApp
+    const message = `Hola, estoy interesado en el producto: ${this.product.name}. ¿Podrían darme más información?`;
+    const whatsappUrl = `https://wa.me/3006680125?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
   }
 
   downloadCatalog(): void {
