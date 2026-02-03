@@ -5,8 +5,9 @@ import { EspumasplasticosComponent } from './pages/espumasplasticos/espumasplast
 import { PlaxtilineasComponent } from './pages/plaxtilineas/plaxtilineas.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/catalogo-home', pathMatch: 'full' },
-  { path: 'catalogo-home', component: CatalogoHomeComponent },
+  { path: '', redirectTo: '/catalogo', pathMatch: 'full' },
+  { path: 'catalogo', component: CatalogoHomeComponent },
+  { path: 'catalogo-home', redirectTo: '/catalogo', pathMatch: 'full' },
   { path: 'districol', component: DistricolComponent },
   { path: 'espumasplasticos', component: EspumasplasticosComponent },
   { path: 'plaxtilineas', component: PlaxtilineasComponent }

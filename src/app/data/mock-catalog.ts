@@ -5,6 +5,31 @@ import { CatalogPage } from '../models/catalog-page.model';
 export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 1,
+    name: 'POLIFLEX 2.0 La nueva generación de la espuma.',
+    description: 'Característica visual DISTINTIVA Presenta una apariencia visual única e inconfundible gracias a su patrón distintivo, que evoca la solidez y sofisticación del mármol. Esta estética distintiva no es solo visualmente atractiva: funciona como una verdadera huella digital, permitiendo identificar el producto de forma rápida y segura en cualquier punto de la cadena productiva o comercial',
+    material: 'Espuma Poliflex',
+    variants: [],
+    colors: [],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770141284/espumas_rehh6n.jpg',
+        description: 'Vista general de POLIFLEX 2.0 mostrando su patrón distintivo'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770141286/ChatGPT_Image_3_feb_2026_12_33_57_p.m._zwkgnf.png',
+        description: 'Detalle de la apariencia visual única e inconfundible'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770141284/espumas_rehh6n.jpg',
+        description: 'Vista general de POLIFLEX 2.0 mostrando su patrón distintivo'
+      }
+    ],
+    category: 'Plaxtilineas',
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 2,
     name: 'Malla plástica multiusos',
     description: 'Perfecta para una amplia variedad de aplicaciones en jardinería, construcción, cerramiento agricolas, entre otros.',
     material: 'Malla plástica',
@@ -33,7 +58,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: true
   },
   {
-    id: 2,
+    id: 3,
     name: 'Césped artificial verde',
     description: 'Césped artificial verde ideal para jardines, terrazas y áreas recreativas. Ofrece un aspecto natural, es resistente al desgaste y requiere mínimo mantenimiento.',
     material: 'Césped artificial',
@@ -60,7 +85,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: false
   },
   {
-    id: 3,
+    id: 4,
     name: 'Yumbolon',
     description: 'Yumbolon es un componente estructural versátil fabricado en materiales de alta calidad, diseñado para aplicaciones industriales y arquitectónicas. Disponible en múltiples espesores y colores para adaptarse a cualquier proyecto. Su diseño innovador combina resistencia, durabilidad y estética moderna.',
     material: 'Acero Inoxidable AISI 304 / Acero al Carbono con recubrimiento',
@@ -202,7 +227,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: false
   },
   {
-    id: 8,
+    id: 9,
     name: 'Papel Decorativo',
     description: 'Pared papel colgadura, puedes armonizar tus espacios de una manera fácil y económica. Transforma tus paredes con elegancia y estilo, creando ambientes únicos y personalizados para tu hogar o negocio.',
     material: 'Papel decorativo para paredes',
@@ -229,7 +254,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: false
   },
   {
-    id: 8,
+    id: 10,
     name: 'Espumas',
     description: 'Las espumas de poliuretano se utilizan en una amplia gama de aplicaciones; tapicería y colchones, aislamiento acústico, industria automotriz. PLAXTILINEAS distribuye espumas en diferentes densidades y espesores, desde 0.05 cm hasta 15 cm de espesor, las medidas de espuma como insumo vienen de 1.00 m ancho x 2.00 m largo. Esto significa que PLAXTILINEAS tiene una amplia variedad de opciones para satisfacer las necesidades de cada cliente. Las espumas de alta densidad son ideales para aplicaciones que requieren mayor soporte y durabilidad, mientras que las espumas de baja densidad son perfectas para aplicaciones más suaves y cómodas.',
     material: 'Poliuretano de diferentes densidades',
@@ -259,7 +284,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: false
   },
   {
-    id: 9,
+    id: 11,
     name: 'Pegantes - Cemento e Incoloro Continental',
     description: 'Pegantes de alta calidad para diversas aplicaciones. Incluye pegamento cemento y pegante incoloro continental, ideales para construcción y acabados.',
     material: 'Adhesivo',
@@ -810,6 +835,31 @@ export const DISTRICOL_PRODUCTS: CatalogProduct[] = [
       {
         url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770094865/WhatsApp_Image_2026-02-02_at_11.59.25_PM_ifythe.jpg',
         description: 'Vista de las capas de espuma y acolchado'
+      }
+    ],
+    category: 'Districol',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 3,
+    name: 'Colchón Ágata',
+    description: 'CAPACIDAD DE PESO POR PERSONA 120 KG GARANTÍA 7 AÑOS ALTURA +/-1 CM 40 CM ÁGATA Inteligente y avanzado La cubierta de este exquisito colchón se presenta con telas de alta tecnología no acolchadas y tejidos de precisión para ofrecer una experiencia superior. Siente la suavidad etérea que acaricia tu piel, mientras que el sistema de capas de espuma que componen toda la estructura permite una transición permitiendo la sensación de estar en una nube.',
+    material: 'Espuma',
+    variants: [],
+    colors: [],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770136121/Captura_de_pantalla_2026-02-03_090004_ucn5ss.png',
+        description: 'Vista general del colchón Ágata mostrando diseño inteligente y avanzado'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770136103/ChatGPT_Image_Feb_3_2026_09_09_46_AM_xqbwtv.png',
+        description: 'Detalle de la cubierta con telas de alta tecnología y capas de espuma'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770136127/Captura_de_pantalla_2026-02-03_090049_fa3wkh.png',
+        description: 'Vista de la estructura permitiendo sensación de nube'
       }
     ],
     category: 'Districol',
