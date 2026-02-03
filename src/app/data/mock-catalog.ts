@@ -342,6 +342,34 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
     category: 'Plaxtilineas',
     isNew: true,
     isFeatured: false
+  },
+  {
+    id: 12,
+    name: 'Clavos de acero',
+    description: 'Fabricados con aceros de alto contenido de carbono, templados y revenidos para obtener la mejor combinación de alta dureza y tenacidad. Fabricados sobre pedido todo tipo de clavos de acero, en longitudes de 5/8" (16mm) hasta 4" (100 mm), en diámetros hasta 43 mm. Consúltenos sus necesidades. Se utiliza para clavar sobre muros de adobe o ladrillo y muros con mezcla sencilla y en madera muy dura, entre otros usos.',
+    material: 'Acero de alto contenido de carbono',
+    variants: [
+      { id: 27, name: 'Longitudes de 5/8" (16mm) hasta 4" (100 mm)', available: true },
+      { id: 28, name: 'Diámetros hasta 43 mm', available: true }
+    ],
+    colors: ['Plateado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091905/clavo-liso-1_zju455.jpg',
+        description: 'Vista general de los clavos de acero mostrando su dureza y tenacidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091939/WhatsApp_Image_2026-02-02_at_11.11.06_PM_1_nn2tk1.jpg',
+        description: 'Detalle de la fabricación y templado de los clavos'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091943/WhatsApp_Image_2026-02-02_at_11.11.06_PM_xyhcgn.jpg',
+        description: 'Aplicación en muros de adobe y ladrillo'
+      }
+    ],
+    category: 'Plaxtilineas',
+    isNew: true,
+    isFeatured: false
   }
 ];
 
@@ -618,16 +646,16 @@ export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
     isFeatured: false
   },
   {
-    id: 9,
+    id: 10,
     name: 'Colchón ORTOPEDICO',
     description: 'Este colchón está fabricado con espuma flexible de poliuretano Bioflex y una lámina de casata de alta densidad, lo que lo convierte en una superficie firme y cómoda. Es especialmente adecuado para personas con problemas de columna que buscan una superficie dura que les permitan descansar cómodamente. La banda e hiladillo de colores variados realzan la presentación del colchón. Tela acolchada tejida en punto, manijas de sujeción en laterales del colchón. Espuma Poliflex 5 cm de espesor D-30 ambas caras - espuma cassata D-100 de 20 cm espesor. Altura de 20 cm. Nivel de firmeza 8/10. MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm 200x200x30 cm',
     material: 'Espuma flexible de poliuretano Bioflex',
     variants: [
-      { id: 42, name: '100x190x30 cm', available: true },
-      { id: 43, name: '120x190x30 cm', available: true },
-      { id: 44, name: '140x190x30 cm', available: true },
-      { id: 45, name: '160x190x30 cm', available: true },
-      { id: 46, name: '200x200x30 cm', available: true }
+      { id: 47, name: '100x190x30 cm', available: true },
+      { id: 48, name: '120x190x30 cm', available: true },
+      { id: 49, name: '140x190x30 cm', available: true },
+      { id: 50, name: '160x190x30 cm', available: true },
+      { id: 51, name: '200x200x30 cm', available: true }
     ],
     colors: ['Colores variados'],
     images: [
@@ -645,6 +673,146 @@ export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
       }
     ],
     category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 10,
+    name: 'Colchoneta camping plegable',
+    description: 'Descubre la comodidad en cualquier aventura con nuestra colchoneta camping plegable. Con medidas de 60x190x5 cm, Sus manijas de sujeción facilitan su transporte, y su diseño plegable la hace fácil de almacenar',
+    material: 'Espuma',
+    variants: [
+      { id: 47, name: '60x190x5 cm', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081644/Captura_de_pantalla_2026-02-02_201411_f2xkxt.png',
+        description: 'Vista general de la colchoneta camping plegable mostrando comodidad en aventuras'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081629/ChatGPT_Image_2_feb_2026_08_17_27_p.m._atza3j.png',
+        description: 'Detalle de las manijas de sujeción y diseño plegable'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081644/Captura_de_pantalla_2026-02-02_201411_f2xkxt.png',
+        description: 'Vista general de la colchoneta camping plegable mostrando comodidad en aventuras'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 12,
+    name: 'Colchón VERONA',
+    description: 'Poliflex es la mejor opción si buscas la espuma flexible más eficiente para tus colchones. Con una densidad D-30 en su núcleo y lámina Penta gris D-26, y un sistema de acolchado es el más avanzado y cómodo del mercado. ¿Deseas disfrutar de una experiencia relajante? ¡Nuestro colchón VERONA te lo garantiza! Tela jacquard de alto gramaje, tejido de punto - Manijas de sujecion en laterales del colchon. Núcleo espuma Poliflex D-30 de 23 cm espesor - pillow independiente en espuma penta espuma D-26 en una sola cara MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm 200x200x30 cm',
+    material: 'Espuma Poliflex',
+    variants: [
+      { id: 52, name: '100X190x30 cm', available: true },
+      { id: 53, name: '120x190x30 cm', available: true },
+      { id: 54, name: '140x190x30 cm', available: true },
+      { id: 55, name: '160x190x30 cm', available: true },
+      { id: 56, name: '200x200x30 cm', available: true }
+    ],
+    colors: ['Gris'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770090892/Captura_de_pantalla_2026-02-02_225051_zioybr.png',
+        description: 'Vista general del colchón VERONA mostrando comodidad y diseño avanzado'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770090877/ChatGPT_Image_Feb_2_2026_10_54_04_PM_qgciou.png',
+        description: 'Detalle de la espuma Poliflex D-30 y lámina Penta gris D-26'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770090892/Captura_de_pantalla_2026-02-02_225051_zioybr.png',
+        description: 'Vista general del colchón VERONA mostrando comodidad y diseño avanzado'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 13,
+    name: 'Colchón Tentaflex',
+    description: 'Este colchón posee un bloque de espuma naranja de alta densidad que asegura una firmeza perfecta para un sueño reparador. Pero ojo, no sacrifica el confort a la hora de dormir. Además, su cubierta en tela acolchada es tan suave que no querrás salir de la cama. ¿Lo mejor de todo? ¡Es súper sencillo de lavar gracias a la cremallera incorporada!',
+    material: 'Espuma',
+    variants: [
+      { id: 57, name: '15 cm altura', available: true },
+      { id: 58, name: '18 cm altura', available: true }
+    ],
+    colors: [],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091646/Captura_de_pantalla_2026-02-02_225852_gjqv0y.png',
+        description: 'Vista general del colchón Tentaflex mostrando firmeza y comodidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091660/ChatGPT_Image_Feb_2_2026_11_06_50_PM_owzv1n.png',
+        description: 'Detalle de la cubierta en tela acolchada y cremallera para fácil limpieza'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770091646/Captura_de_pantalla_2026-02-02_225852_gjqv0y.png',
+        description: 'Vista general del colchón Tentaflex mostrando firmeza y comodidad'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  }
+];
+
+// Productos Districol
+export const DISTRICOL_PRODUCTS: CatalogProduct[] = [
+  {
+    id: 1,
+    name: 'colchón Sleep Well - SMV01',
+    description: 'Tu descanso nunca volverá a ser el mismo. Tejido de punto de alta calidad. Memory Foam Gel Infused de 2 cm para una frescura y soporte inigualables. Sistema Pocket de 5 zonas con Foam Case de 7 cm para un descanso personalizado. Capas de espuma de alta densidad y acolchado de algodón para máximo confort. Porque un buen día empieza con una buena noche.',
+    material: 'Memory Foam',
+    variants: [],
+    colors: [],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770093862/WhatsApp_Image_2026-02-02_at_11.03.10_PM_1_nzm0sf.jpg',
+        description: 'Vista general del colchón Sleep Well mostrando calidad y confort'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770093861/WhatsApp_Image_2026-02-02_at_11.03.49_PM_1_f6qc3u.jpg',
+        description: 'Detalle del Memory Foam Gel Infused y sistema Pocket'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770093861/WhatsApp_Image_2026-02-02_at_11.03.48_PM_1_hesayj.jpg',
+        description: 'Vista de las capas de espuma y acolchado de algodón'
+      }
+    ],
+    category: 'Districol',
+    isNew: true,
+    isFeatured: true
+  },
+  {
+    id: 2,
+    name: 'Pocket Bliss-SNM2308',
+    description: 'Tejido de punto de alta calidad. Acolchado de poliester: para una frescura natural. Espuma troquelada de alta densidad en 3cm: que se adapta a tu forma. Espuma látex con fibras de bambú de 2cm. Espuma dura de alta densidad de 4cm. Espuma suave de 1.5 cm. Sistema pocket de 5 zonas con foam case: brindando soporte individual a cada movimiento. Relleno de algodón. Espuma para acolchar de 7cm. Regálate el descanso que tu cuerpo merece con el Pocket Bliss-SNM2308.',
+    material: 'Espuma',
+    variants: [],
+    colors: [],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770094874/WhatsApp_Image_2026-02-02_at_11.59.24_PM_crlguk.jpg',
+        description: 'Vista general del Pocket Bliss-SNM2308 mostrando calidad y confort'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770094866/WhatsApp_Image_2026-02-02_at_11.59.24_PM_1_vetdkm.jpg',
+        description: 'Detalle del sistema pocket y espumas de alta densidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770094865/WhatsApp_Image_2026-02-02_at_11.59.25_PM_ifythe.jpg',
+        description: 'Vista de las capas de espuma y acolchado'
+      }
+    ],
+    category: 'Districol',
     isNew: true,
     isFeatured: false
   }

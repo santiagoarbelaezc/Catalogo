@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 })
 export class NavbarComponent {
   isVisible = true;
+  previousScrollY = 0;
 
   @HostListener('window:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
@@ -24,9 +25,17 @@ export class NavbarComponent {
 
   @HostListener('window:scroll', ['$event'])
   onScroll(event: Event) {
+    const currentScroll = window.scrollY;
     // Si estamos en el top de la página, mostrar navbar
-    if (window.scrollY === 0) {
+    if (currentScroll === 0) {
+      this.isVisible = true;
+    } else if (currentScroll > this.previousScrollY) {
+      // Scrolling down, hide navbar
+      this.isVisible = false;
+    } else if (currentScroll < this.previousScrollY) {
+      // Scrolling up, show navbar
       this.isVisible = true;
     }
+    this.previousScrollY = currentScroll;
   }
 }

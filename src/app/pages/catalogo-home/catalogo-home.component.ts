@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { PlaxtilineasComponent } from "../plaxtilineas/plaxtilineas.component";
 import { ProductsBannerComponent, BannerImage } from "../../components/catalog/products-banner/products-banner.component";
 import { EspumasplasticosComponent } from "../espumasplasticos/espumasplasticos.component";
+import { DistricolComponent } from "../districol/districol.component";
 
 @Component({
   selector: 'app-catalogo-home',
   standalone: true,
-  imports: [PlaxtilineasComponent, ProductsBannerComponent, EspumasplasticosComponent],
+  imports: [PlaxtilineasComponent, ProductsBannerComponent, EspumasplasticosComponent, DistricolComponent],
   templateUrl: './catalogo-home.component.html',
   styleUrl: './catalogo-home.component.css'
 })
