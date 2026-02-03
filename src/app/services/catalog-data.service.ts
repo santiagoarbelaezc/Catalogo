@@ -3,6 +3,7 @@ import { CatalogProduct } from '../models/product.model';
 import { CatalogPage } from '../models/catalog-page.model';
 import { 
   PLAXTILINEAS_PRODUCTS, 
+  ESPUMAS_PRODUCTS,
   CATALOG_PAGES, 
   getProductsByPage, 
   getPage 
@@ -69,5 +70,10 @@ export class CatalogDataService {
   // Obtener productos de Plaxtilineas
   getPlaxtilineasProducts(): CatalogProduct[] {
     return [...PLAXTILINEAS_PRODUCTS];
+  }
+  
+  // Obtener productos de Espumas
+  getEspumasProducts(): CatalogProduct[] {
+    return [...ESPUMAS_PRODUCTS];
   }
 }

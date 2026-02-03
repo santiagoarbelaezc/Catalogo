@@ -1,1 +1,13 @@
-<p>espumasplasticos works!</p>
+<div class="espumasplasticos-container">
+  <!-- Banner interactivo -->
+
+
+  <div class="products-grid">
+    <app-catalog-item
+      *ngFor="let product of products; let i = index"
+      [product]="product"
+      [backgroundGradient]="'#33AE80,#8AC9AF'"
+      [reverseLayout]="i % 2 === 1">
+    </app-catalog-item>
+  </div>
+</div>

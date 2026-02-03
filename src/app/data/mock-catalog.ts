@@ -6,7 +6,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 1,
     name: 'Malla plástica multiusos',
-    description: 'Perfecta para una amplia variedad de aplicaciones en jardinería🪴construcción 🏗️cerramiento agricolas👩‍🌾 entre otros 👌🏾',
+    description: 'Perfecta para una amplia variedad de aplicaciones en jardinería, construcción, cerramiento agricolas, entre otros.',
     material: 'Malla plástica',
     variants: [
       { id: 17, name: '1m ancho x 30m lineales', available: true },
@@ -289,7 +289,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 10,
     name: 'Polisombras',
-    description: 'Tela de polietileno de alta densidad ideal para reducir la temperatura en diferentes espacios👌🏽✨ ideal para cultivos, parqueaderos, construcción, sembrados, entre otros.',
+    description: 'Tela de polietileno de alta densidad ideal para reducir la temperatura en diferentes espacios, ideal para cultivos, parqueaderos, construcción, sembrados, entre otros.',
     material: 'Polietileno de alta densidad',
     variants: [
       { id: 22, name: '4m ancho x 100m lineales - 35%', available: true },
@@ -318,7 +318,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 11,
     name: 'Plástico Burbuja',
-    description: 'Protege tus objetos frágiles con nuestro plástico burbuja de alta calidad! 👌🏽📦🔒 Envoltura resistente y duradera con burbujas de aire para garantizar una protección óptima durante el transporte. 🌐 Ideal para mudanzas, envíos y almacenamiento seguro👍🏽✨',
+    description: 'Protege tus objetos frágiles con nuestro plástico burbuja de alta calidad! Envoltura resistente y duradera con burbujas de aire para garantizar una protección óptima durante el transporte. Ideal para mudanzas, envíos y almacenamiento seguro.',
     material: 'Plástico burbuja',
     variants: [
       { id: 25, name: 'Bola pequeña', available: true },
@@ -353,6 +353,300 @@ export const CATALOG_PAGES: CatalogPage[] = [
     pageSubtitle: 'Versátil y duradero',
     introduction: 'Descubre nuestras plaxtilineas, componentes premium disponibles en múltiples espesores y colores. Fabricado con materiales de alta calidad para aplicaciones industriales y arquitectónicas.',
     products: PLAXTILINEAS_PRODUCTS
+  }
+];
+
+// Productos Espumas
+export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
+  {
+    id: 1,
+    name: 'Juego de Alcoba de Madera Pino',
+    description: 'Renueva tu habitación con elegancia y confort gracias a nuestro juego de alcoba de madera pino. Este diseño único cuenta con una cama de 140x190 cm, dos mesas de noche y un tocador con cajones para brindarte la comodidad y practicidad que necesitas en tu día a día. La calidad de la madera utilizada en la fabricación de este juego de alcoba es excepcional, lo que asegura que tendrás un mueble resistente y duradero en tu hogar. Además, su diseño elegante le da un toque de sofisticación a cualquier habitación. Si buscas un descanso de calidad y una experiencia de sueño inigualable, nuestra cama de madera pino es la elección perfecta.',
+    material: 'Madera Pino',
+    variants: [
+      { id: 27, name: 'Cama 140x190 cm', available: true },
+      { id: 28, name: 'Dos mesas de noche', available: true },
+      { id: 29, name: 'Tocador con cajones', available: true }
+    ],
+    colors: ['Natural'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770074973/banner_wmjmcg.jpg',
+        description: 'Vista general del juego de alcoba de madera pino mostrando elegancia y confort'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770074973/background_o184yw.png',
+        description: 'Detalle del diseño único y calidad de la madera pino'
+      }
+      ,
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770076032/grid-3_thrlun.jpg',
+        description: 'Detalle del diseño único y calidad de la madera pino'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 2,
+    name: 'Colchonetas para ejercicio o gimnasio',
+    description: 'Colchonetas para ejercicio o gimnasio. Espuma casata de 3 cm 50x100. Forro antifluido en cuerotex. Ideal para realizar ejercicio en casa.',
+    material: 'Espuma',
+    variants: [
+      { id: 31, name: 'Espuma casata de 3 cm 50x100', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1768954321/espumas_plasticos_productos/1768954315777-6y0xq5g.jpg',
+        description: 'Vista general de las colchonetas para gimnasio mostrando su resistencia'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1768954321/espumas_plasticos_productos/1768954315786-msbuqce.jpg',
+        description: 'Detalle del forro antifluido en cuerotex'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770076663/Captura_de_pantalla_2026-02-02_185712_crbp8i.png',
+        description: 'Aplicación en ejercicios en casa mostrando versatilidad'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 3,
+    name: 'Almohada ortopédica cervical en espuma memory foam',
+    description: '¿Sufres de dolor de cuello y hombros al despertar cada mañana? ¡No te preocupes más! Nuestra almohada ortopédica cervical en espuma memory foam es la solución que estabas buscando. Su diseño único y ergonómico se adapta perfectamente a la forma de tu cuello, brindándote el soporte y la comodidad que necesitas para dormir profundamente y despertar sintiéndote renovado. Además, su forro en tela Jacquard de alta calidad y su cremallera hacen que sea fácil de limpiar y mantener.',
+    material: 'Espuma memory foam',
+    variants: [
+      { id: 30, name: 'Estándar', available: true }
+    ],
+    colors: ['Blanco'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077290/WhatsApp_Image_2026-02-02_at_7.03.56_PM_c6gilu.jpg',
+        description: 'Vista general de la almohada ortopédica mostrando su diseño ergonómico'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077290/WhatsApp_Image_2026-02-02_at_7.03.56_PM_1_b80fkn.jpg',
+        description: 'Detalle del forro en tela Jacquard y cremallera para fácil limpieza'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077290/WhatsApp_Image_2026-02-02_at_7.03.57_PM_zcdjg0.jpg',
+        description: 'Aplicación práctica mostrando comodidad y soporte cervical'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 4,
+    name: 'Colchón ortopédico PREMIUM',
+    description: '¿Estás buscando un colchón que te brinde la rigidez que necesitas en tu columna vertebral? ¡Tenemos el colchón perfecto para ti! Colchón ortopédico PREMIUM está hecho de espuma cassata de alta densidad y cuenta con espumas suavizantes en ambos lados para asegurar tu comodidad. Además, su forro en tela Jacquard le da un toque de elegancia y durabilidad. Pero lo mejor de todo es que nuestro colchón viene con una garantía de 4 años sobre su estructura interna, lo que te asegura que estás haciendo una inversión duradera en tu descanso. No lo pienses más y consigue hoy mismo nuestro colchón de alta densidad para asegurarte una noche de sueño reparador y confortable.',
+    material: 'Espuma cassata de alta densidad',
+    variants: [
+      { id: 32, name: 'Estándar', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077724/WhatsApp_Image_2026-02-02_at_7.14.04_PM_prywik.jpg',
+        description: 'Vista general del colchón ortopédico PREMIUM mostrando su diseño elegante'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077716/WhatsApp_Image_2026-02-02_at_7.14.40_PM_ytrk04.jpg',
+        description: 'Detalle de la espuma cassata de alta densidad y forro Jacquard'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770077717/WhatsApp_Image_2026-02-02_at_7.14.20_PM_o5osb3.jpg',
+        description: 'Aplicación práctica mostrando comodidad y soporte vertebral'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 5,
+    name: 'Colchonetas',
+    description: 'Nuestras colchonetas disponibles en diferentes tamaños, son ideales para esta temporada que se aproxima. Desde 80 cm hasta 140 cm de ancho, por 1.90 cm de largo. Ideales para hoteles, moteles y fincas turísticas, así como para recibir visitas en casa. No esperes a que la comodidad te busque, ¡búscala tú mismo! Descubre el lujo de un descanso perfecto en tus propios términos.',
+    material: 'Espuma',
+    variants: [
+      { id: 33, name: '80 cm - 140 cm ancho x 1.90 cm largo', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078179/WhatsApp_Image_2026-02-02_at_7.18.47_PM_wwdtye.jpg',
+        description: 'Vista general de las colchonetas mostrando su comodidad y versatilidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078178/WhatsApp_Image_2026-02-02_at_7.21.45_PM_ykeov2.jpg',
+        description: 'Detalle de los tamaños disponibles para diferentes necesidades'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078179/WhatsApp_Image_2026-02-02_at_7.18.47_PM_wwdtye.jpg',
+        description: 'Vista general de las colchonetas mostrando su comodidad y versatilidad'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 6,
+    name: 'Cojín TV triangular',
+    description: 'Con nuestro cojín TV triangular, podrás disfrutar cómodamente en tu sofá o cama, dejando atrás cualquier molestia. Su forro de tela acolchada proporciona suavidad al tacto y es fácil de limpiar con su práctica cremallera. Este cojín está confeccionado con espuma de alta densidad, asegurando durabilidad y resistencia. Y lo más emocionante es que lo ofrecemos en una variedad de colores para que encuentres el perfecto para tu estilo y decoración.',
+    material: 'Espuma de alta densidad',
+    variants: [
+      { id: 34, name: 'Triangular', available: true }
+    ],
+    colors: ['Variedad de colores'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078504/WhatsApp_Image_2026-02-02_at_7.27.08_PM_1_rnf3mx.jpg',
+        description: 'Vista general del cojín TV triangular mostrando comodidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078511/WhatsApp_Image_2026-02-02_at_7.27.08_PM_qhiheq.jpg',
+        description: 'Detalle del forro de tela acolchada y cremallera'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078503/WhatsApp_Image_2026-02-02_at_7.27.08_PM_2_gkw8em.jpg',
+        description: 'Aplicación en sofá o cama mostrando versatilidad'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 7,
+    name: 'Juego de Sábanas para cama',
+    description: 'Dale a tu cama el toque de suavidad y frescura que se merece con nuestro Juego de Sábanas para cama! Nuestra sábanas generan suavidad y confort a la hora del descanso. Contenido del Juego de Sábanas: Sabana Sobre sabana Dos fundas de almohada de 50x75 cm Recuerda que somos fabricantes',
+    material: 'Tela',
+    variants: [
+      { id: 35, name: 'Sabana', available: true },
+      { id: 36, name: 'Sobre sabana', available: true },
+      { id: 37, name: 'Dos fundas de almohada 50x75 cm', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078909/WhatsApp_Image_2026-02-02_at_7.34.17_PM_cdtiad.jpg',
+        description: 'Vista general del juego de sábanas mostrando suavidad y confort'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078815/WhatsApp_Image_2026-02-02_at_7.32.25_PM_1_g6ov5g.jpg',
+        description: 'Detalle de la sábana y sobre sábana'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078810/WhatsApp_Image_2026-02-02_at_7.32.25_PM_2_zqzzbi.jpg',
+        description: 'Detalle de las fundas de almohada'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078806/WhatsApp_Image_2026-02-02_at_7.32.25_PM_3_kkwwbf.jpg',
+        description: 'Aplicación en cama mostrando frescura y comodidad'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770078801/WhatsApp_Image_2026-02-02_at_7.32.26_PM_sh4hbl.jpg',
+        description: 'Vista completa del conjunto de sábanas'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 8,
+    name: 'Protector 100% impermeable',
+    description: 'Descubra la innovación en protección para su colchón con nuestro Protector 100% impermeable. Este producto de alta calidad está confeccionado con tela resistente y bandas elásticas, asegurando una barrera impenetrable contra líquidos. Disponible en todas las medidas, desde 1.00 hasta 2.00 metros de ancho, es la opción ideal para preservar la vida útil de su colchón. No espere más, asegure la durabilidad y la higiene de su colchón hoy mismo.',
+    material: 'Tela resistente',
+    variants: [
+      { id: 38, name: '1.00 - 2.00 metros de ancho', available: true }
+    ],
+    colors: ['Variado'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770079681/WhatsApp_Image_2026-02-02_at_7.43.43_PM_ygsqrg.jpg',
+        description: 'Vista general del protector impermeable mostrando protección'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770079673/WhatsApp_Image_2026-02-02_at_7.44.07_PM_ouxfnn.jpg',
+        description: 'Detalle de la tela resistente y bandas elásticas'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770079673/WhatsApp_Image_2026-02-02_at_7.44.21_PM_riznq8.jpg',
+        description: 'Aplicación en colchón mostrando impermeabilidad'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 9,
+    name: 'Colchón CONFORT MONACO',
+    description: 'Descubre la fabulosa espuma Poliflex. Un núcleo de espuma de poliuretano con un núcleo de lámina D-26 y dos láminas D-26 Penta gris. Este acolchado clásico es el supremo en comodidad y te garantiza un sueño maravilloso gracias a su espuma de alta densidad. ¡Duerme como te lo mereces con el colchón CONFORT MONACO! Tela poliéster, tejido de punto - Manijas de sujeción en laterales del colchón. Núcleo espuma Poliflex de 20 cm de espesor - pillow independientes en espuma penta espuma D-26 Altura de 30 cm Nivel de firmeza 6 sobre 10 MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm Garantia, 4 años, estructura interna',
+    material: 'Espuma Poliflex',
+    variants: [
+      { id: 39, name: '100x190x30 cm', available: true },
+      { id: 40, name: '120x190x30 cm', available: true },
+      { id: 41, name: '140x190x30 cm', available: true },
+      { id: 42, name: '160x190x30 cm', available: true }
+    ],
+    colors: ['Gris'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770080605/ChatGPT_Image_2_feb_2026_08_01_34_p.m._psx90j.png',
+        description: 'Vista general del colchón CONFORT MONACO mostrando comodidad y diseño'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770080627/Captura_de_pantalla_2026-02-02_195921_kewete.png',
+        description: 'Detalle de la espuma Poliflex y estructura interna'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770080605/ChatGPT_Image_2_feb_2026_08_01_34_p.m._psx90j.png',
+        description: 'Vista general del colchón CONFORT MONACO mostrando comodidad y diseño'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
+  },
+  {
+    id: 9,
+    name: 'Colchón ORTOPEDICO',
+    description: 'Este colchón está fabricado con espuma flexible de poliuretano Bioflex y una lámina de casata de alta densidad, lo que lo convierte en una superficie firme y cómoda. Es especialmente adecuado para personas con problemas de columna que buscan una superficie dura que les permitan descansar cómodamente. La banda e hiladillo de colores variados realzan la presentación del colchón. Tela acolchada tejida en punto, manijas de sujeción en laterales del colchón. Espuma Poliflex 5 cm de espesor D-30 ambas caras - espuma cassata D-100 de 20 cm espesor. Altura de 20 cm. Nivel de firmeza 8/10. MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm 200x200x30 cm',
+    material: 'Espuma flexible de poliuretano Bioflex',
+    variants: [
+      { id: 42, name: '100x190x30 cm', available: true },
+      { id: 43, name: '120x190x30 cm', available: true },
+      { id: 44, name: '140x190x30 cm', available: true },
+      { id: 45, name: '160x190x30 cm', available: true },
+      { id: 46, name: '200x200x30 cm', available: true }
+    ],
+    colors: ['Colores variados'],
+    images: [
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081079/WhatsApp_Image_2026-02-02_at_8.09.51_PM_uujdjl.jpg',
+        description: 'Vista general del colchón ORTOPEDICO mostrando firmeza'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081078/WhatsApp_Image_2026-02-02_at_8.10.04_PM_vf4yqt.jpg',
+        description: 'Detalle de la espuma Bioflex y estructura'
+      },
+      {
+        url: 'https://res.cloudinary.com/dsv1gdgya/image/upload/v1770081079/WhatsApp_Image_2026-02-02_at_8.09.51_PM_uujdjl.jpg',
+        description: 'Aplicación para problemas de columna'
+      }
+    ],
+    category: 'Espumas',
+    isNew: true,
+    isFeatured: false
   }
 ];
 
