@@ -17,7 +17,11 @@ export class CatalogDataService {
   
   // Obtener todos los productos
   getAllProducts(): CatalogProduct[] {
-    return [...PLAXTILINEAS_PRODUCTS];
+    return [
+      ...PLAXTILINEAS_PRODUCTS,
+      ...ESPUMAS_PRODUCTS,
+      ...DISTRICOL_PRODUCTS
+    ];
   }
   
   // Obtener productos por página
@@ -82,4 +86,14 @@ export class CatalogDataService {
   getDistricolProducts(): CatalogProduct[] {
     return [...DISTRICOL_PRODUCTS];
   }
+  
+  // Obtener todos los productos de todos los catálogos
+  getAllCatalogProducts(): CatalogProduct[] {
+    return [
+      ...PLAXTILINEAS_PRODUCTS,
+      ...ESPUMAS_PRODUCTS,
+      ...DISTRICOL_PRODUCTS
+    ];
+  }
+
 }

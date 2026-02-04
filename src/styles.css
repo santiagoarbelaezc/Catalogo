@@ -1,6 +1,7 @@
 /* Importar temas globales */
 @import './app/components/themes/fonts.css';
 @import './app/components/themes/colors.css';
+@import './print-styles.css';
 
 /* Estilos globales adicionales */
 * {

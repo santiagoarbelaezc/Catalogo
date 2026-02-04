@@ -1,0 +1,124 @@
+.print-catalog-section {
+  padding: 1rem;
+  background: white;
+  font-family: var(--font-primary);
+}
+
+.print-products-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Contenedor individual para cada producto con separación visual */
+.product-item-container {
+  position: relative;
+  background: var(--background-white);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+/* Separador visual elegante entre productos */
+.product-item-container::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+  opacity: 0.4;
+}
+
+/* Último producto sin separador */
+.product-item-container:last-child::after {
+  display: none;
+}
+
+/* Estilos específicos para impresión */
+@media print {
+  .print-catalog-section {
+    padding: 0.75rem 1.25rem;
+    margin: 0;
+    background: white;
+  }
+
+  .print-products-grid {
+    gap: 1.5rem;
+  }
+
+  .product-item-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    page-break-inside: avoid;
+  }
+
+  .product-item-container::after {
+    display: none;
+  }
+
+  /* Ajustes para que dos productos quepan perfectamente en una página carta */
+  .product-item-container:nth-child(2n) {
+    margin-bottom: 2rem;
+  }
+
+  .product-item-container:nth-child(2n)::after {
+    content: '';
+    display: block;
+    page-break-after: always;
+  }
+
+  /* Asegurar que cada producto quepa en una página si es necesario */
+  app-catalog-short {
+    page-break-inside: avoid;
+    margin-bottom: 0;
+  }
+}
+
+/* Mejoras específicas para móviles */
+@media (max-width: 768px) {
+  .print-catalog-section {
+    padding: 0.5rem;
+  }
+
+  .print-products-grid {
+    gap: 2.5rem;
+  }
+
+  .product-item-container {
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-item-container::after {
+    width: 80px;
+    height: 3px;
+    bottom: -1.5rem;
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .print-products-grid {
+    gap: 3rem;
+  }
+
+  .product-item-container {
+    margin-bottom: 2.5rem;
+    border-radius: 6px;
+  }
+
+  .product-item-container::after {
+    width: 100px;
+    height: 4px;
+    bottom: -2rem;
+    opacity: 0.5;
+  }
+}

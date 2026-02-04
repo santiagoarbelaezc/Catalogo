@@ -1,0 +1,51 @@
+/* Estilos específicos para impresión */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 12pt !important;
+  }
+
+  .catalog-section {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 20px !important;
+  }
+
+  .product-card {
+    border: 1px solid #ddd !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+
+  /* Ocultar elementos no necesarios en impresión */
+  .no-print,
+  .navbar,
+  .footer,
+  button,
+  .actions {
+    display: none !important;
+  }
+
+  /* Asegurar que las imágenes se impriman bien */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Mejorar legibilidad del texto */
+  .product-title {
+    color: black !important;
+    font-size: 16pt !important;
+  }
+
+  .product-description {
+    color: #333 !important;
+    font-size: 11pt !important;
+  }
+}
+
+/* Clase para elementos que no deben imprimirse */
+.no-print {
+  display: none;
+}

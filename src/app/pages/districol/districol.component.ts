@@ -4,11 +4,12 @@ import { CatalogItemComponent } from '../../components/catalog/catalog-item/cata
 import { ProductsBannerComponent, BannerImage } from '../../components/catalog/products-banner/products-banner.component';
 import { CatalogDataService } from '../../services/catalog-data.service';
 import { CatalogProduct } from '../../models/product.model';
+import { NavbarComponent } from "../../components/shared/navbar/navbar.component";
 
 @Component({
   selector: 'app-districol',
   standalone: true,
-  imports: [CommonModule, CatalogItemComponent, ProductsBannerComponent],
+  imports: [CommonModule, CatalogItemComponent, ProductsBannerComponent, NavbarComponent],
   templateUrl: './districol.component.html',
   styleUrl: './districol.component.css'
 })

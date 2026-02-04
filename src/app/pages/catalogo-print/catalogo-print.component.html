@@ -1,0 +1,11 @@
+<section class="print-catalog-section">
+  <div class="print-products-grid">
+    <div class="product-item-container" *ngFor="let product of products; let i = index">
+      <app-catalog-short
+        [product]="product"
+        [backgroundGradient]="'#FFFFFF,#FFFFFF'"
+        [reverseLayout]="i % 2 === 1">
+      </app-catalog-short>
+    </div>
+  </div>
+</section>

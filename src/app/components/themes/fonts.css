@@ -39,3 +39,8 @@
 body {
   font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
 }
+
+/* Para elementos específicos que necesitan fuentes seguras en PDF */
+.print-safe-font {
+  font-family: Arial, Helvetica, sans-serif !important;
+}

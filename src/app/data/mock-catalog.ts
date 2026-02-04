@@ -256,7 +256,7 @@ export const PLAXTILINEAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 10,
     name: 'Espumas',
-    description: 'Las espumas de poliuretano se utilizan en una amplia gama de aplicaciones; tapicería y colchones, aislamiento acústico, industria automotriz. PLAXTILINEAS distribuye espumas en diferentes densidades y espesores, desde 0.05 cm hasta 15 cm de espesor, las medidas de espuma como insumo vienen de 1.00 m ancho x 2.00 m largo. Esto significa que PLAXTILINEAS tiene una amplia variedad de opciones para satisfacer las necesidades de cada cliente. Las espumas de alta densidad son ideales para aplicaciones que requieren mayor soporte y durabilidad, mientras que las espumas de baja densidad son perfectas para aplicaciones más suaves y cómodas.',
+    description: 'Las espumas de poliuretano se utilizan en una amplia gama de aplicaciones; tapicería y colchones, aislamiento acústico, industria automotriz. PLAXTILINEAS distribuye espumas en diferentes densidades y espesores, desde 0.05 cm hasta 15 cm de espesor, las medidas de espuma como insumo vienen de 1.00 m ancho x 2.00 m largo.',
     material: 'Poliuretano de diferentes densidades',
     variants: [
       { id: 13, name: '0.05cm - 15cm espesor', available: true },
@@ -498,7 +498,7 @@ export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 4,
     name: 'Colchón ortopédico PREMIUM',
-    description: '¿Estás buscando un colchón que te brinde la rigidez que necesitas en tu columna vertebral? ¡Tenemos el colchón perfecto para ti! Colchón ortopédico PREMIUM está hecho de espuma cassata de alta densidad y cuenta con espumas suavizantes en ambos lados para asegurar tu comodidad. Además, su forro en tela Jacquard le da un toque de elegancia y durabilidad. Pero lo mejor de todo es que nuestro colchón viene con una garantía de 4 años sobre su estructura interna, lo que te asegura que estás haciendo una inversión duradera en tu descanso. No lo pienses más y consigue hoy mismo nuestro colchón de alta densidad para asegurarte una noche de sueño reparador y confortable.',
+    description: 'Colchón ortopédico PREMIUM está hecho de espuma cassata de alta densidad y cuenta con espumas suavizantes en ambos lados para asegurar tu comodidad. Además, su forro en tela Jacquard le da un toque de elegancia y durabilidad. Pero lo mejor de todo es que nuestro colchón viene con una garantía de 4 años sobre su estructura interna, lo que te asegura que estás haciendo una inversión duradera en tu descanso.',
     material: 'Espuma cassata de alta densidad',
     variants: [
       { id: 32, name: 'Estándar', available: true }
@@ -643,7 +643,7 @@ export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 9,
     name: 'Colchón CONFORT MONACO',
-    description: 'Descubre la fabulosa espuma Poliflex. Un núcleo de espuma de poliuretano con un núcleo de lámina D-26 y dos láminas D-26 Penta gris. Este acolchado clásico es el supremo en comodidad y te garantiza un sueño maravilloso gracias a su espuma de alta densidad. ¡Duerme como te lo mereces con el colchón CONFORT MONACO! Tela poliéster, tejido de punto - Manijas de sujeción en laterales del colchón. Núcleo espuma Poliflex de 20 cm de espesor - pillow independientes en espuma penta espuma D-26 Altura de 30 cm Nivel de firmeza 6 sobre 10 MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm Garantia, 4 años, estructura interna',
+    description: 'Descubre la fabulosa espuma Poliflex. Un núcleo de espuma de poliuretano con un núcleo de lámina D-26 y dos láminas D-26 Penta gris. Este acolchado clásico es el supremo en comodidad y te garantiza un sueño maravilloso gracias a su espuma de alta densidad. ¡Duerme como te lo mereces con el colchón CONFORT MONACO! Tela poliéster, tejido de punto - Manijas de sujeción en laterales del colchón.',
     material: 'Espuma Poliflex',
     variants: [
       { id: 39, name: '100x190x30 cm', available: true },
@@ -673,7 +673,7 @@ export const ESPUMAS_PRODUCTS: CatalogProduct[] = [
   {
     id: 10,
     name: 'Colchón ORTOPEDICO',
-    description: 'Este colchón está fabricado con espuma flexible de poliuretano Bioflex y una lámina de casata de alta densidad, lo que lo convierte en una superficie firme y cómoda. Es especialmente adecuado para personas con problemas de columna que buscan una superficie dura que les permitan descansar cómodamente. La banda e hiladillo de colores variados realzan la presentación del colchón. Tela acolchada tejida en punto, manijas de sujeción en laterales del colchón. Espuma Poliflex 5 cm de espesor D-30 ambas caras - espuma cassata D-100 de 20 cm espesor. Altura de 20 cm. Nivel de firmeza 8/10. MEDIDAS 100X190x30 cm 120x190x30 cm 140x190x30 cm 160x190x30 cm 200x200x30 cm',
+    description: 'Este colchón está fabricado con espuma flexible de poliuretano Bioflex y una lámina de casata de alta densidad, lo que lo convierte en una superficie firme y cómoda. Es especialmente adecuado para personas con problemas de columna que buscan una superficie dura que les permitan descansar cómodamente. La banda e hiladillo de colores variados realzan la presentación del colchón.',
     material: 'Espuma flexible de poliuretano Bioflex',
     variants: [
       { id: 47, name: '100x190x30 cm', available: true },

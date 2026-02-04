@@ -1,0 +1,52 @@
+<section class="product-section-short" [style.background]="getBackgroundGradient()">
+  <div class="product-card-short" [class.reverse-layout]="reverseLayout">
+    <!-- Imagen única -->
+    <div class="product-image-section" [class.order-1]="reverseLayout" [class.order-2]="!reverseLayout">
+      <div class="single-image-container">
+        <img
+          [src]="product.images[0].url"
+          [alt]="product.images[0].description || product.name"
+          class="single-image"
+        />
+      </div>
+    </div>
+
+    <!-- Contenido del producto simplificado -->
+    <div class="product-content-short" [class.order-1]="!reverseLayout" [class.order-2]="reverseLayout">
+      <!-- Encabezado -->
+      <div class="product-header-short">
+        <h3 class="product-title-short">
+          {{ product.name }}
+        </h3>
+        <p class="product-category-short">{{ product.category }}</p>
+      </div>
+
+      <!-- Descripción breve -->
+      <div class="product-description-short">
+        <p>{{ product.description }}</p>
+      </div>
+
+      <!-- Especificaciones básicas -->
+      <div class="product-specs-short">
+        <div class="spec-item-short">
+          <span class="spec-label-short">Material:</span>
+          <span class="spec-value-short">{{ product.material }}</span>
+        </div>
+
+        <!-- Variantes disponibles -->
+        <div class="spec-item-short" *ngIf="product.variants.length > 0">
+          <span class="spec-label-short">Opciones:</span>
+          <div class="variants-container-short">
+            <span
+              *ngFor="let variant of product.variants.slice(0, 3)"
+              class="variant-chip-short"
+              [class.available]="variant.available"
+            >
+              {{ variant.name }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

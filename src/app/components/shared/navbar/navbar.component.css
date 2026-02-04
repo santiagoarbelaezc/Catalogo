@@ -334,6 +334,52 @@
   color: #15CD82;
 }
 
+/* ===== PRINT BUTTON ===== */
+.print-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  color: #2D2D2D;
+  font-size: 1.1rem;
+  margin-right: 0.5rem;
+}
+
+.print-btn:hover {
+  background: rgba(102, 102, 102, 0.1);
+  transform: scale(1.1);
+}
+
+.print-icon {
+  color: #15CD82;
+  transition: all 0.3s ease;
+}
+
+.print-btn:hover .print-icon {
+  color: #000;
+}
+
+.print-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.print-btn:disabled:hover {
+  background: none;
+  transform: none;
+}
+
+.print-icon.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1024px) {
   .nav-container {
@@ -424,6 +470,10 @@
 
   .mobile-menu-button {
     display: block;
+  }
+
+  .print-btn {
+    display: none; /* Ocultar en móvil para no sobrecargar */
   }
 }
 
