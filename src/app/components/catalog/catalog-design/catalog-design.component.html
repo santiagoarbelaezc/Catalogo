@@ -1,0 +1,148 @@
+<section class="product-section-design" [style.background]="getBackgroundGradient()" [class.reverse-section]="reverseLayout"
+  data-aos="fade-up"
+  data-aos-duration="1000"
+  data-aos-easing="ease-out-cubic">
+  
+  <div class="product-card-design" [class.reverse-layout]="reverseLayout">
+    <!-- Imágenes del producto -->
+    <div class="product-image-section-design" [class.order-1]="reverseLayout" [class.order-2]="!reverseLayout"
+      data-aos="fade-right"
+      data-aos-duration="900"
+      data-aos-delay="100">
+      
+      <div class="images-grid-design">
+        <!-- Imagen principal con efecto -->
+        <div class="main-image-wrapper-design">
+          <div class="single-image-container-design main-image-design"
+            data-aos="zoom-in"
+            data-aos-duration="800"
+            data-aos-delay="200">
+            <img
+              [src]="product.images[0].url"
+              [alt]="product.images[0].description || product.name"
+              class="single-image-design"
+            />
+            <!-- Logo superpuesto mejorado -->
+            <div class="logo-overlay-design">
+              <img 
+                src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770388940/logo-invert_ghucfi.png" 
+                alt="Logo" 
+                class="product-logo-design"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Imágenes secundarias -->
+        <div class="secondary-images-wrapper-design">
+          <div class="single-image-container-design secondary-image-design" *ngIf="product.images[1]"
+            data-aos="fade-up"
+            data-aos-duration="800"
+            data-aos-delay="300">
+            <img
+              [src]="product.images[1].url"
+              [alt]="product.images[1].description || product.name"
+              class="single-image-design"
+            />
+          </div>
+          <div class="single-image-container-design secondary-image-design" *ngIf="product.images[2]"
+            data-aos="fade-up"
+            data-aos-duration="800"
+            data-aos-delay="400">
+            <img
+              [src]="product.images[2].url"
+              [alt]="product.images[2].description || product.name"
+              class="single-image-design"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido del producto mejorado -->
+    <div class="product-content-design" [class.order-1]="!reverseLayout" [class.order-2]="reverseLayout" [class.reverse-content]="reverseLayout"
+      data-aos="fade-left"
+      data-aos-duration="900"
+      data-aos-delay="200">
+      
+      <!-- Encabezado elegante -->
+      <div class="product-header-design">
+        <div class="header-top-design">
+          <p class="product-category-design">{{ product.category }}</p>
+          <img *ngIf="product.brandIconUrl" [src]="product.brandIconUrl" alt="Icono de marca" class="brand-icon-design" />
+        </div>
+        <h2 class="product-title-design">{{ product.name }}</h2>
+      </div>
+
+      <!-- Descripción elegante -->
+      <p class="product-description-design">{{ product.description }}</p>
+
+      <!-- Especificaciones mejoradas -->
+      <div class="product-specs-design">
+        <!-- Material -->
+        <div class="spec-block-design"
+          data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-delay="400">
+          <div class="spec-header-design">
+            <span class="spec-icon-design">📋</span>
+            <span class="spec-title-design">Material</span>
+          </div>
+          <p class="spec-value-design">{{ product.material }}<span *ngIf="product.gramaje"> • {{ product.gramaje }}</span></p>
+        </div>
+
+        <!-- Opciones de colores -->
+        <div class="spec-block-design" *ngIf="product.options"
+          data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-delay="500">
+          <div class="spec-header-design">
+            <span class="spec-icon-design">🎨</span>
+            <span class="spec-title-design">Opciones</span>
+          </div>
+          <p class="spec-value-design">{{ product.options }}</p>
+        </div>
+
+        <!-- Referencias disponibles -->
+        <div class="spec-block-design" *ngIf="product.references && product.references.length > 0"
+          data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-delay="600">
+          <div class="spec-header-design">
+            <span class="spec-icon-design">📦</span>
+            <span class="spec-title-design">Referencias</span>
+          </div>
+          <div class="references-grid-design">
+            <span
+              *ngFor="let reference of product.references.slice(0, 6)"
+              class="reference-chip-design"
+              [class.available]="reference.available"
+            >
+              {{ reference.name }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Variantes disponibles -->
+        <div class="spec-block-design" *ngIf="!product.references && product.variants && product.variants.length > 0"
+          data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-delay="600">
+          <div class="spec-header-design">
+            <span class="spec-icon-design">⚙️</span>
+            <span class="spec-title-design">Referencias</span>
+          </div>
+          <div class="references-grid-design">
+            <span
+              *ngFor="let variant of product.variants.slice(0, 6)"
+              class="reference-chip-design"
+              [class.available]="variant.available"
+            >
+              {{ variant.name }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

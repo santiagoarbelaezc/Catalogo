@@ -1,22 +1,59 @@
-<section class="product-section-short" [style.background]="getBackgroundGradient()">
+<section class="product-section-short" [style.background]="getBackgroundGradient()" [class.reverse-section]="reverseLayout">
   <div class="product-card-short" [class.reverse-layout]="reverseLayout">
-    <!-- Imagen única -->
+    <!-- Imágenes del producto -->
     <div class="product-image-section" [class.order-1]="reverseLayout" [class.order-2]="!reverseLayout">
-      <div class="single-image-container">
-        <img
-          [src]="product.images[0].url"
-          [alt]="product.images[0].description || product.name"
-          class="single-image"
-        />
+      <div class="images-grid-container">
+        <!-- Imagen principal -->
+        <div class="main-image-wrapper">
+          <div class="single-image-container main-image">
+            <img
+              [src]="product.images[0].url"
+              [alt]="product.images[0].description || product.name"
+              class="single-image"
+            />
+            <!-- Logo superpuesto -->
+            <div class="logo-overlay">
+              <img 
+                src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770388940/logo-invert_ghucfi.png" 
+                alt="Logo" 
+                class="product-logo product-logo-normal"
+              />
+              <img 
+                src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770388940/logo-invert_ghucfi.png" 
+                alt="Logo Invertido" 
+                class="product-logo product-logo-invert"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Imágenes secundarias -->
+        <div class="secondary-images-wrapper">
+          <div class="single-image-container secondary-image" *ngIf="product.images[1]">
+            <img
+              [src]="product.images[1].url"
+              [alt]="product.images[1].description || product.name"
+              class="single-image"
+            />
+          </div>
+          <div class="single-image-container secondary-image" *ngIf="product.images[2]">
+            <img
+              [src]="product.images[2].url"
+              [alt]="product.images[2].description || product.name"
+              class="single-image"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Contenido del producto simplificado -->
-    <div class="product-content-short" [class.order-1]="!reverseLayout" [class.order-2]="reverseLayout">
+    <div class="product-content-short" [class.order-1]="!reverseLayout" [class.order-2]="reverseLayout" [class.reverse-content]="reverseLayout">
       <!-- Encabezado -->
       <div class="product-header-short">
         <h3 class="product-title-short">
           {{ product.name }}
+          <img *ngIf="product.brandIconUrl" [src]="product.brandIconUrl" alt="Icono de marca" class="brand-icon-title-short" />
         </h3>
         <p class="product-category-short">{{ product.category }}</p>
       </div>
@@ -30,15 +67,35 @@
       <div class="product-specs-short">
         <div class="spec-item-short">
           <span class="spec-label-short">Material:</span>
-          <span class="spec-value-short">{{ product.material }}</span>
+          <span class="spec-value-short">{{ product.material }}<span *ngIf="product.gramaje"> - Gramaje: {{ product.gramaje }}</span></span>
         </div>
 
-        <!-- Variantes disponibles -->
-        <div class="spec-item-short" *ngIf="product.variants.length > 0">
+        <!-- Opciones de colores -->
+        <div class="spec-item-short" *ngIf="product.options">
+          <span class="spec-label-short">Opciones:</span>
+          <span class="spec-value-short">{{ product.options }}</span>
+        </div>
+
+        <!-- Referencias disponibles -->
+        <div class="spec-item-short" *ngIf="product.references && product.references.length > 0">
+          <span class="spec-label-short">Referencias:</span>
+          <div class="variants-container-short">
+            <span
+              *ngFor="let reference of product.references.slice(0, 6)"
+              class="variant-chip-short"
+              [class.available]="reference.available"
+            >
+              {{ reference.name }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Variantes disponibles (para compatibilidad con productos antiguos) -->
+        <div class="spec-item-short" *ngIf="!product.references && product.variants && product.variants.length > 0">
           <span class="spec-label-short">Opciones:</span>
           <div class="variants-container-short">
             <span
-              *ngFor="let variant of product.variants.slice(0, 3)"
+              *ngFor="let variant of product.variants.slice(0, 6)"
               class="variant-chip-short"
               [class.available]="variant.available"
             >

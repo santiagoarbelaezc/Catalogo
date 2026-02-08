@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
+import AOS from 'aos';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,15 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'Catalogo';
+
+  ngOnInit() {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      offset: 100,
+      easing: 'ease-out-cubic'
+    });
+  }
 }

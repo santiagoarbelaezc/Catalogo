@@ -11,11 +11,17 @@ export interface CatalogProduct {
   description: string;        // Descripción del producto
   material: string;           // Material del producto
 
-  // Variantes
-  variants: ProductVariant[];
+  // Referencias (antes variantes)
+  references?: ProductVariant[];
 
-  // Colores disponibles
+  // Opciones de colores (texto)
+  options?: string;           // Colores disponibles en texto
+
+  // Colores disponibles (array - para compatibilidad)
   colors: string[];           // Array de colores disponibles
+
+  // Variantes (para compatibilidad con productos antiguos)
+  variants?: ProductVariant[];
 
   // Imágenes
   images: ProductImage[];     // Array de imágenes del producto con descripciones
@@ -24,4 +30,9 @@ export interface CatalogProduct {
   category: string;           // Categoría del producto
   isNew?: boolean;            // Si es producto nuevo
   isFeatured?: boolean;       // Si es producto destacado
+
+  // Marca y gramaje
+  marca?: string;             // Marca del producto
+  gramaje?: string;           // Gramaje del producto
+  brandIconUrl?: string;      // URL del icono de la marca
 }

@@ -1,3 +1,6 @@
+/* Importar AOS CSS globalmente */
+@import 'aos/dist/aos.css';
+
 /* Importar temas globales */
 @import './app/components/themes/fonts.css';
 @import './app/components/themes/colors.css';
