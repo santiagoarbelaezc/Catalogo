@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductsService {
   
-  private apiUrl = 'http://catalogo-prod.eba-ykj9cau5.sa-east-1.elasticbeanstalk.com/api/productos';
+  private apiUrl = 'https://d20quunkr79ym2.cloudfront.net/api/productos';
 
   constructor(private http: HttpClient) {}
 

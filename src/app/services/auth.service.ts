@@ -31,7 +31,7 @@ export interface ProfileResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://catalogo-prod.eba-ykj9cau5.sa-east-1.elasticbeanstalk.com/api/auth';
+  private apiUrl = 'https://d20quunkr79ym2.cloudfront.net/api/auth';
   private tokenKey = 'auth_token';
   private userKey = 'current_user';
 
