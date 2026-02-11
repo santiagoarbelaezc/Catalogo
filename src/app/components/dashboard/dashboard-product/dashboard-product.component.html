@@ -1,1 +1,382 @@
-<p>dashboard-product works!</p>
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <button class="btn-back" (click)="goBack()">
+          <span>←</span> Volver al Dashboard
+        </button>
+        <h1 class="dashboard-title">Gestión de Productos</h1>
+      </div>
+      <div class="header-right">
+        <button class="btn-logout" (click)="logout()">
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="!isLoading" class="dashboard-content">
+      <!-- Actions Bar -->
+      <div class="actions-bar">
+        <button class="btn-primary" (click)="showCreateForm()" [disabled]="showForm">
+          <span>+</span> Nuevo Producto
+        </button>
+        <div class="products-count">
+          Total: {{ products.length }} productos
+        </div>
+      </div>
+
+      <!-- Product Form -->
+      <div *ngIf="showForm" class="form-section">
+        <div class="form-card">
+          <h2 class="form-title">
+            {{ editingProduct ? 'Editar Producto' : 'Crear Nuevo Producto' }}
+          </h2>
+
+          <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+            <!-- Información Básica -->
+            <div class="form-group">
+              <h3 class="group-title">Información Básica</h3>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="name" class="form-label">Nombre del Producto *</label>
+                  <input
+                    type="text"
+                    id="name"
+                    formControlName="name"
+                    class="form-input"
+                    [class.error]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+                    placeholder="Ej: Plastilina Roja"
+                  >
+                  <div class="error-message" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                    <span *ngIf="productForm.get('name')?.errors?.['required']">El nombre es requerido</span>
+                    <span *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo 3 caracteres</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="category" class="form-label">Categoría *</label>
+                  <select id="category" formControlName="category" class="form-input">
+                    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="description" class="form-label">Descripción *</label>
+                <textarea
+                  id="description"
+                  formControlName="description"
+                  class="form-textarea"
+                  [class.error]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+                  placeholder="Describe el producto..."
+                  rows="3"
+                ></textarea>
+                <div class="error-message" *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+                  <span *ngIf="productForm.get('description')?.errors?.['required']">La descripción es requerida</span>
+                  <span *ngIf="productForm.get('description')?.errors?.['minlength']">Mínimo 10 caracteres</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="material" class="form-label">Material *</label>
+                  <input
+                    type="text"
+                    id="material"
+                    formControlName="material"
+                    class="form-input"
+                    [class.error]="productForm.get('material')?.invalid && productForm.get('material')?.touched"
+                    placeholder="Ej: Plastilina no tóxica"
+                  >
+                  <div class="error-message" *ngIf="productForm.get('material')?.invalid && productForm.get('material')?.touched">
+                    <span>El material es requerido</span>
+                  </div>
+                </div>
+
+                <div class="form-field">
+                  <label for="marca" class="form-label">Marca</label>
+                  <input
+                    type="text"
+                    id="marca"
+                    formControlName="marca"
+                    class="form-input"
+                    placeholder="Ej: Districol"
+                  >
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="gramaje" class="form-label">Gramaje</label>
+                  <input
+                    type="text"
+                    id="gramaje"
+                    formControlName="gramaje"
+                    class="form-input"
+                    placeholder="Ej: 500g"
+                  >
+                </div>
+
+                <div class="form-field">
+                  <label for="brandIconUrl" class="form-label">URL del Icono de Marca</label>
+                  <input
+                    type="url"
+                    id="brandIconUrl"
+                    formControlName="brandIconUrl"
+                    class="form-input"
+                    placeholder="https://..."
+                  >
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label for="options" class="form-label">Opciones Adicionales</label>
+                <textarea
+                  id="options"
+                  formControlName="options"
+                  class="form-textarea"
+                  placeholder="Opciones especiales, características..."
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Estados -->
+            <div class="form-group">
+              <h3 class="group-title">Estados del Producto</h3>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="isNew">
+                  <span class="checkmark"></span>
+                  Producto Nuevo
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" formControlName="isFeatured">
+                  <span class="checkmark"></span>
+                  Producto Destacado
+                </label>
+              </div>
+            </div>
+
+            <!-- Colores -->
+            <div class="form-group">
+              <div class="group-header">
+                <h3 class="group-title">Colores Disponibles</h3>
+                <button type="button" class="btn-add" (click)="addColor()">
+                  <span>+</span> Agregar Color
+                </button>
+              </div>
+
+              <div formArrayName="colors" class="colors-list">
+                <div class="color-item" *ngFor="let colorControl of colorsArray.controls; let i = index">
+                  <input
+                    type="text"
+                    [formControlName]="i"
+                    class="form-input color-input"
+                    placeholder="Ej: Rojo, Azul, Verde"
+                  >
+                  <button type="button" class="btn-remove" (click)="removeColor(i)">
+                    <span>×</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Variantes -->
+            <div class="form-group">
+              <div class="group-header">
+                <h3 class="group-title">Variantes del Producto</h3>
+                <button type="button" class="btn-add" (click)="addVariant()">
+                  <span>+</span> Agregar Variante
+                </button>
+              </div>
+
+              <div formArrayName="variants" class="variants-list">
+                <div class="variant-item" *ngFor="let variantGroup of variantsArray.controls; let i = index" [formGroupName]="i">
+                  <div class="variant-fields">
+                    <input
+                      type="text"
+                      formControlName="name"
+                      class="form-input"
+                      placeholder="Nombre de la variante"
+                    >
+                    <input
+                      type="number"
+                      formControlName="price"
+                      class="form-input"
+                      placeholder="Precio"
+                      min="0"
+                      step="0.01"
+                    >
+                    <label class="checkbox-label small">
+                      <input type="checkbox" formControlName="available">
+                      <span class="checkmark"></span>
+                      Disponible
+                    </label>
+                  </div>
+                  <button type="button" class="btn-remove" (click)="removeVariant(i)">
+                    <span>×</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Imágenes -->
+            <div class="form-group">
+              <h3 class="group-title">Imágenes del Producto</h3>
+              <div class="file-upload">
+                <input
+                  type="file"
+                  id="images"
+                  multiple
+                  accept="image/*"
+                  (change)="onFileSelected($event)"
+                  class="file-input"
+                >
+                <label for="images" class="file-label">
+                  <span>📸</span> Seleccionar Imágenes
+                </label>
+                <p class="file-help">Máximo 5 imágenes, formato JPEG, PNG, JPG, WEBP. Tamaño máximo: 5MB por archivo.</p>
+              </div>
+
+              <!-- Preview de archivos seleccionados -->
+              <div class="files-preview" *ngIf="selectedFiles.length > 0">
+                <h4>Imágenes seleccionadas:</h4>
+                <div class="files-list">
+                  <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                    <span class="file-name">{{ file.name }}</span>
+                    <span class="file-size">({{ (file.size / 1024 / 1024).toFixed(2) }} MB)</span>
+                    <button type="button" class="btn-remove-file" (click)="removeFile(i)">
+                      <span>×</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones del formulario -->
+            <div class="form-actions">
+              <button type="button" class="btn-secondary" (click)="cancelEdit()">
+                Cancelar
+              </button>
+              <button type="submit" class="btn-primary" [disabled]="isSubmitting || productForm.invalid">
+                <span *ngIf="isSubmitting">Guardando...</span>
+                <span *ngIf="!isSubmitting">{{ editingProduct ? 'Actualizar' : 'Crear' }} Producto</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Products List -->
+      <div class="products-section">
+        <h2 class="section-title">Productos Existentes</h2>
+
+        <div *ngIf="products.length === 0" class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3>No hay productos</h3>
+          <p>Crea tu primer producto usando el botón "Nuevo Producto"</p>
+        </div>
+
+        <div *ngIf="products.length > 0" class="products-grid">
+          <div class="product-card" *ngFor="let product of products">
+            <!-- Imágenes -->
+            <div class="product-header">
+              <div class="product-images-container" *ngIf="product.images && product.images.length > 0">
+                <div class="main-image">
+                  <img [src]="product.images[0].url" [alt]="product.name" loading="lazy">
+                </div>
+                <div class="image-thumbnails" *ngIf="product.images.length > 1">
+                  <div class="thumbnail" *ngFor="let img of product.images.slice(1, 4)" 
+                       [title]="img.description" class="thumbnail-small">
+                    <img [src]="img.url" [alt]="img.description" loading="lazy">
+                  </div>
+                </div>
+              </div>
+              <div class="product-badges">
+                <span class="badge" *ngIf="product.isNew">Nuevo</span>
+                <span class="badge featured" *ngIf="product.isFeatured">Destacado</span>
+              </div>
+            </div>
+
+            <div class="product-content">
+              <div class="product-header-info">
+                <div>
+                  <h3 class="product-name">{{ product.name }}</h3>
+                  <p class="product-category">{{ product.category }}</p>
+                </div>
+                <div class="product-brand" *ngIf="product.brandIconUrl">
+                  <img [src]="product.brandIconUrl" [alt]="product.marca" class="brand-icon">
+                </div>
+              </div>
+
+              <p class="product-description">{{ product.description }}</p>
+
+              <div class="product-info-section">
+                <div class="info-row" *ngIf="product.material">
+                  <strong>Material:</strong>
+                  <span>{{ product.material }}</span>
+                </div>
+                <div class="info-row" *ngIf="product.marca">
+                  <strong>Marca:</strong>
+                  <span>{{ product.marca }}</span>
+                </div>
+                <div class="info-row" *ngIf="product.gramaje">
+                  <strong>Gramaje:</strong>
+                  <span>{{ product.gramaje }}</span>
+                </div>
+              </div>
+
+              <!-- Colores disponibles -->
+              <div class="colors-section" *ngIf="product.colors && product.colors.length > 0">
+                <strong>Colores:</strong>
+                <div class="colors-list">
+                  <span class="color-tag" *ngFor="let color of product.colors">{{ color }}</span>
+                </div>
+              </div>
+
+              <!-- Variantes -->
+              <div class="variants-section" *ngIf="product.variants && product.variants.length > 0">
+                <strong>Variantes:</strong>
+                <div class="variants-list">
+                  <div class="variant-item" *ngFor="let variant of product.variants">
+                    <div class="variant-name">{{ variant.name }}</div>
+                    <div class="variant-details">
+                      <span class="variant-price" *ngIf="variant.price">
+                        ${{ variant.price | number:'1.0-2' }}
+                      </span>
+                      <span class="variant-available" [class.unavailable]="!variant.available">
+                        {{ variant.available ? '✓ Disponible' : '✗ No disponible' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-actions">
+              <button class="btn-edit" (click)="editProduct(product)">
+                <span>✏️</span> Editar
+              </button>
+              <button class="btn-delete" (click)="deleteProduct(product)">
+                <span>🗑️</span> Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

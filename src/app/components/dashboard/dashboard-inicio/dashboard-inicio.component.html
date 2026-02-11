@@ -1,1 +1,82 @@
-<p>dashboard-inicio works!</p>
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="dashboard-title">Panel de Administración</h1>
+        <p class="welcome-text" *ngIf="currentUser">
+          Bienvenido, <span class="user-name">{{ currentUser.username }}</span>
+        </p>
+      </div>
+      <div class="header-right">
+        <button class="btn-logout" (click)="logout()">
+          <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando dashboard...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!isLoading" class="dashboard-content">
+      <!-- Stats Cards -->
+      <section class="stats-section">
+        <h2 class="section-title">Estadísticas</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span>📦</span>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ stats.totalProducts }}</h3>
+              <p class="stat-label">Total Productos</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span>📂</span>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ stats.categories }}</h3>
+              <p class="stat-label">Categorías</p>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <span>📅</span>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-number">{{ today | date:'fullDate' }}</h3>
+              <p class="stat-label">Fecha Actual</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="actions-section">
+        <h2 class="section-title">Acciones Rápidas</h2>
+        <div class="actions-grid">
+          <button class="action-card" (click)="navigateToProducts()">
+            <div class="action-icon">➕</div>
+            <div class="action-content">
+              <h3>Agregar Producto</h3>
+              <p>Crear un nuevo producto en el catálogo</p>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Productos recientes eliminado para simplificar el dashboard -->
+    </div>
+  </main>
+</div>

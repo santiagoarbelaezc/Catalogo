@@ -10,7 +10,7 @@ import { CatalogProduct } from '../../../models/product.model';
   styleUrl: './catalog-design.component.css'
 })
 export class CatalogDesignComponent implements OnInit {
-  @Input() product!: CatalogProduct;
+  @Input() product!: CatalogProduct | any;
   @Input() backgroundGradient: string = 'var(--primary-bg),var(--primary-bg)';
   @Input() reverseLayout: boolean = false;
 
@@ -27,5 +27,31 @@ export class CatalogDesignComponent implements OnInit {
     } else {
       return 'var(--primary-bg)';
     }
+  }
+
+  /**
+   * Mapea nombres de colores a valores hexadecimales
+   */
+  getColorValue(colorName: string): string {
+    const colorMap: { [key: string]: string } = {
+      'Rojo': '#EF4444',
+      'Azul': '#3B82F6',
+      'Verde': '#22C55E',
+      'Amarillo': '#FBBF24',
+      'Negro': '#1F2937',
+      'Blanco': '#F3F4F6',
+      'Blanca': '#F3F4F6',
+      'Negra': '#1F2937',
+      'Naranja': '#F97316',
+      'Rosa': '#EC4899',
+      'Marrón': '#92400E',
+      'Gris': '#9CA3AF',
+      'Transparente': '#E5E7EB',
+      'Multicolor': '#9333EA',
+      'Múltiples': '#9333EA',
+      'Plateado': '#D1D5DB'
+    };
+
+    return colorMap[colorName] || '#CCCCCC';
   }
 }

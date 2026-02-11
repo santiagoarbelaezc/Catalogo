@@ -1,22 +1,19 @@
-<section class="product-section-design" [style.background]="getBackgroundGradient()" [class.reverse-section]="reverseLayout"
-  data-aos="fade-up"
-  data-aos-duration="1000"
-  data-aos-easing="ease-out-cubic">
+<section class="product-section-design" [style.background]="getBackgroundGradient()" [class.reverse-section]="reverseLayout">
   
   <div class="product-card-design" [class.reverse-layout]="reverseLayout">
     <!-- Imágenes del producto -->
     <div class="product-image-section-design" [class.order-1]="reverseLayout" [class.order-2]="!reverseLayout"
       data-aos="fade-right"
-      data-aos-duration="900"
-      data-aos-delay="100">
+      data-aos-duration="400"
+      data-aos-delay="50">
       
       <div class="images-grid-design">
         <!-- Imagen principal con efecto -->
-        <div class="main-image-wrapper-design">
+        <div class="main-image-wrapper-design" *ngIf="product.images && product.images.length > 0">
           <div class="single-image-container-design main-image-design"
             data-aos="zoom-in"
-            data-aos-duration="800"
-            data-aos-delay="200">
+            data-aos-duration="400"
+            data-aos-delay="100">
             <img
               [src]="product.images[0].url"
               [alt]="product.images[0].description || product.name"
@@ -33,12 +30,30 @@
           </div>
         </div>
 
+        <!-- Imagen de placeholder cuando no hay imágenes -->
+        <div class="main-image-wrapper-design" *ngIf="!product.images || product.images.length === 0">
+          <div class="single-image-container-design main-image-design placeholder-image-design">
+            <div class="placeholder-content-design">
+              <span class="placeholder-icon-design">📦</span>
+              <p class="placeholder-text-design">Sin imagen disponible</p>
+            </div>
+            <!-- Logo superpuesto mejorado -->
+            <div class="logo-overlay-design">
+              <img 
+                src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770388940/logo-invert_ghucfi.png" 
+                alt="Logo" 
+                class="product-logo-design"
+              />
+            </div>
+          </div>
+        </div>
+
         <!-- Imágenes secundarias -->
-        <div class="secondary-images-wrapper-design">
+        <div class="secondary-images-wrapper-design" *ngIf="product.images && product.images.length > 1">
           <div class="single-image-container-design secondary-image-design" *ngIf="product.images[1]"
             data-aos="fade-up"
-            data-aos-duration="800"
-            data-aos-delay="300">
+            data-aos-duration="400"
+            data-aos-delay="150">
             <img
               [src]="product.images[1].url"
               [alt]="product.images[1].description || product.name"
@@ -47,8 +62,8 @@
           </div>
           <div class="single-image-container-design secondary-image-design" *ngIf="product.images[2]"
             data-aos="fade-up"
-            data-aos-duration="800"
-            data-aos-delay="400">
+            data-aos-duration="400"
+            data-aos-delay="200">
             <img
               [src]="product.images[2].url"
               [alt]="product.images[2].description || product.name"
@@ -62,8 +77,8 @@
     <!-- Contenido del producto mejorado -->
     <div class="product-content-design" [class.order-1]="!reverseLayout" [class.order-2]="reverseLayout" [class.reverse-content]="reverseLayout"
       data-aos="fade-left"
-      data-aos-duration="900"
-      data-aos-delay="200">
+      data-aos-duration="400"
+      data-aos-delay="100">
       
       <!-- Encabezado elegante -->
       <div class="product-header-design">
@@ -82,8 +97,8 @@
         <!-- Material -->
         <div class="spec-block-design"
           data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-delay="400">
+          data-aos-duration="400"
+          data-aos-delay="200">
           <div class="spec-header-design">
             <span class="spec-icon-design">📋</span>
             <span class="spec-title-design">Material</span>
@@ -91,11 +106,11 @@
           <p class="spec-value-design">{{ product.material }}<span *ngIf="product.gramaje"> • {{ product.gramaje }}</span></p>
         </div>
 
-        <!-- Opciones de colores -->
+        <!-- Opciones -->
         <div class="spec-block-design" *ngIf="product.options"
           data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-delay="500">
+          data-aos-duration="400"
+          data-aos-delay="250">
           <div class="spec-header-design">
             <span class="spec-icon-design">🎨</span>
             <span class="spec-title-design">Opciones</span>
@@ -103,40 +118,24 @@
           <p class="spec-value-design">{{ product.options }}</p>
         </div>
 
-        <!-- Referencias disponibles -->
-        <div class="spec-block-design" *ngIf="product.references && product.references.length > 0"
-          data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-delay="600">
-          <div class="spec-header-design">
-            <span class="spec-icon-design">📦</span>
-            <span class="spec-title-design">Referencias</span>
-          </div>
-          <div class="references-grid-design">
-            <span
-              *ngFor="let reference of product.references.slice(0, 6)"
-              class="reference-chip-design"
-              [class.available]="reference.available"
-            >
-              {{ reference.name }}
-            </span>
-          </div>
-        </div>
+       
 
         <!-- Variantes disponibles -->
-        <div class="spec-block-design" *ngIf="!product.references && product.variants && product.variants.length > 0"
+        <div class="spec-block-design" *ngIf="product.variants && product.variants.length > 0"
           data-aos="fade-up"
-          data-aos-duration="800"
-          data-aos-delay="600">
+          data-aos-duration="400"
+          data-aos-delay="300">
           <div class="spec-header-design">
             <span class="spec-icon-design">⚙️</span>
-            <span class="spec-title-design">Referencias</span>
+            <span class="spec-title-design">Variantes</span>
           </div>
           <div class="references-grid-design">
             <span
               *ngFor="let variant of product.variants.slice(0, 6)"
               class="reference-chip-design"
-              [class.available]="variant.available"
+              [class.unavailable]="!variant.available"
+              [attr.data-unavailable]="!variant.available"
+              [title]="(variant.price ? 'Precio: $' + variant.price : 'Sin precio') + (variant.available ? '' : ' - No disponible')"
             >
               {{ variant.name }}
             </span>
