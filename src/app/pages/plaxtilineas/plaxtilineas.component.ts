@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogDesignComponent } from '../../components/catalog/catalog-design/catalog-design.component';
+import { CatalogItemComponent } from '../../components/catalog/catalog-item/catalog-item.component';
 
 import { CatalogDataService } from '../../services/catalog-data.service';
 import { ProductsService } from '../../services/products.service';
@@ -10,7 +10,7 @@ import { NavbarComponent } from "../../components/shared/navbar/navbar.component
 @Component({
   selector: 'app-plaxtilineas',
   standalone: true,
-  imports: [CommonModule, CatalogDesignComponent, NavbarComponent],
+  imports: [CommonModule, CatalogItemComponent, NavbarComponent],
   templateUrl: './plaxtilineas.component.html',
   styleUrl: './plaxtilineas.component.css'
 })

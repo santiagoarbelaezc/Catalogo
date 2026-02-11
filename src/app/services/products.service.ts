@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class ProductsService {
   
-  private apiUrl = 'http://localhost:5000/api/productos';
+  private apiUrl = 'http://catalogo-prod.eba-ykj9cau5.sa-east-1.elasticbeanstalk.com/api/productos';
 
   constructor(private http: HttpClient) {}
 
@@ -37,37 +37,19 @@ export class ProductsService {
   }
 
   /**
-   * ✏️ Crear un nuevo producto
+   * ✏️ Crear un nuevo producto con FormData
    * POST /api/productos
-   * 
-   * @param productData - Datos del producto (incluyendo archivos)
    */
   createProduct(productData: FormData): Observable<any> {
     return this.http.post<any>(this.apiUrl, productData);
   }
 
   /**
-   * ✏️ Crear un nuevo producto (sin imágenes)
-   * POST /api/productos
-   */
-  createProductWithoutImages(product: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, product);
-  }
-
-  /**
-   * 🔄 Actualizar un producto (sin imágenes)
+   * 🔄 Actualizar un producto con FormData
    * PUT /api/productos/:id
    */
-  updateProduct(id: number, productData: any): Observable<any> {
+  updateProduct(id: number, productData: FormData): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, productData);
-  }
-
-  /**
-   * 🔄 Actualizar un producto con imágenes
-   * PUT /api/productos/:id/con-imagenes
-   */
-  updateProductWithImages(id: number, productData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}/con-imagenes`, productData);
   }
 
   /**
@@ -106,23 +88,28 @@ export class ProductsService {
     if (product.gramaje) formData.append('gramaje', product.gramaje);
     if (product.brandIconUrl) formData.append('brandIconUrl', product.brandIconUrl);
 
-    // Agregar colores
+    // Agregar colores como string separado por comas
     if (product.colors && product.colors.length > 0) {
-      if (Array.isArray(product.colors)) {
-        formData.append('colors', JSON.stringify(product.colors));
-      } else {
-        formData.append('colors', product.colors);
-      }
+      const colorString = Array.isArray(product.colors) 
+        ? product.colors.join(',') 
+        : product.colors;
+      formData.append('colors', colorString);
     }
 
-    // Agregar variantes
+    // Agregar variantes como JSON string
     if (product.variants && product.variants.length > 0) {
       formData.append('variants', JSON.stringify(product.variants));
     }
 
-    // Agregar archivos de imágenes
+    // Agregar imágenes de URL (si existen)
+    if (product.images && product.images.length > 0) {
+      formData.append('images', JSON.stringify(product.images));
+    }
+
+    // Agregar archivos de imágenes con el campo 'imagenes'
+    // Usar Array.from() para convertir FileList a Array
     if (files && files.length > 0) {
-      files.forEach((file, index) => {
+      Array.from(files).forEach((file) => {
         formData.append('imagenes', file);
       });
     }

@@ -42,10 +42,23 @@
           <span class="spec-label">Material:</span>
           <span class="spec-value">{{ product.material }}</span>
         </div>
+
+        <!-- Opciones/Colores disponibles -->
+        <div class="spec-item" *ngIf="product.colors && product.colors.length > 0">
+          <span class="spec-label">Colores disponibles:</span>
+          <div class="colors-container">
+            <span 
+              *ngFor="let color of product.colors" 
+              class="color-chip"
+            >
+              {{ color }}
+            </span>
+          </div>
+        </div>
         
-        <!-- Variantes disponibles -->
-        <div class="spec-item">
-          <span class="spec-label">Espesores disponibles:</span>
+        <!-- Variantes/Referencias disponibles -->
+        <div class="spec-item" *ngIf="product.variants && product.variants.length > 0">
+          <span class="spec-label">Variantes disponibles:</span>
           <div class="variants-container">
             <span 
               *ngFor="let variant of product.variants" 
@@ -57,9 +70,6 @@
             </span>
           </div>
         </div>
-
-        <!-- Colores disponibles -->
-        
       </div>
 
       <!-- Acciones -->

@@ -60,11 +60,11 @@
 <!-- Sección original de productos -->
 <section id="plaxtilineas-section" class="catalog-section plaxtilineas-container">
   <div class="products-grid">
-    <app-catalog-design
+    <app-catalog-item
       *ngFor="let product of products; let i = index"
       [product]="product"
       [backgroundGradient]="'#F0F0F0,#AAAAAA'"
       [reverseLayout]="i % 2 === 1">
-    </app-catalog-design>
+    </app-catalog-item>
   </div>
 </section>

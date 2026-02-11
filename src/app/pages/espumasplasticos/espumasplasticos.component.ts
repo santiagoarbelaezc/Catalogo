@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogItemComponent } from '../../components/catalog/catalog-item/catalog-item.component';
 
-import { CatalogDataService } from '../../services/catalog-data.service';
+import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
 import { NavbarComponent } from "../../components/shared/navbar/navbar.component";
 
@@ -18,9 +18,20 @@ export class EspumasplasticosComponent implements OnInit {
 
   
 
-  constructor(private catalogDataService: CatalogDataService) {}
+  constructor(private productsService: ProductsService) {}
 
   ngOnInit(): void {
-    this.products = this.catalogDataService.getEspumasProducts();
+    this.productsService.getAllProducts().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.products = response.data.filter(
+            (product: any) => product.category === 'Espumas'
+          );
+        }
+      },
+      error: (error) => {
+        console.error('Error cargando productos Espumas Plásticas:', error);
+      }
+    });
   }
 }

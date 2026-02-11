@@ -4,7 +4,7 @@
   background: linear-gradient(135deg, #009AA2 0%, #15CD82 100%);
   font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 /* Elementos decorativos similares al login */

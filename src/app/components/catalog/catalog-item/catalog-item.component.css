@@ -227,16 +227,6 @@
   text-transform: uppercase;
 }
 
-.spec-label::before {
-  content: '';
-  width: 4px;
-  height: 4px;
-  background: var(--primary-color);
-  border-radius: 50%;
-  display: inline-block;
-  opacity: 0.5;
-}
-
 .spec-value {
   color: var(--secondary-color);
   font-size: 1rem;
@@ -288,36 +278,25 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  align-items: center;
   margin-left: 0.6rem;
 }
 
 .color-chip {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1.5px solid white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
+  padding: 0.4rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 400;
   transition: var(--transition-smooth);
-  position: relative;
+  font-family: var(--font-primary);
+  letter-spacing: 0.2px;
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--primary-color);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .color-chip:hover {
-  transform: scale(1.15);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.color-chip::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  transition: border-color 0.3s ease;
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 /* ===== ACCIONES ELEGANTES ===== */

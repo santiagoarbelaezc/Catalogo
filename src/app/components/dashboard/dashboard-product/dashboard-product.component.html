@@ -4,7 +4,7 @@
     <div class="header-content">
       <div class="header-left">
         <button class="btn-back" (click)="goBack()">
-          <span>←</span> Volver al Dashboard
+          <span>⬅️</span> Volver al Dashboard
         </button>
         <h1 class="dashboard-title">Gestión de Productos</h1>
       </div>
@@ -29,7 +29,7 @@
       <!-- Actions Bar -->
       <div class="actions-bar">
         <button class="btn-primary" (click)="showCreateForm()" [disabled]="showForm">
-          <span>+</span> Nuevo Producto
+          <span>➕</span> Nuevo Producto
         </button>
         <div class="products-count">
           Total: {{ products.length }} productos
@@ -175,7 +175,7 @@
               <div class="group-header">
                 <h3 class="group-title">Colores Disponibles</h3>
                 <button type="button" class="btn-add" (click)="addColor()">
-                  <span>+</span> Agregar Color
+                  <span>➕</span> Agregar Color
                 </button>
               </div>
 
@@ -188,7 +188,7 @@
                     placeholder="Ej: Rojo, Azul, Verde"
                   >
                   <button type="button" class="btn-remove" (click)="removeColor(i)">
-                    <span>×</span>
+                    <span>❌</span>
                   </button>
                 </div>
               </div>
@@ -199,7 +199,7 @@
               <div class="group-header">
                 <h3 class="group-title">Variantes del Producto</h3>
                 <button type="button" class="btn-add" (click)="addVariant()">
-                  <span>+</span> Agregar Variante
+                  <span>➕</span> Agregar Variante
                 </button>
               </div>
 
@@ -227,7 +227,7 @@
                     </label>
                   </div>
                   <button type="button" class="btn-remove" (click)="removeVariant(i)">
-                    <span>×</span>
+                    <span>❌</span>
                   </button>
                 </div>
               </div>
@@ -235,7 +235,35 @@
 
             <!-- Imágenes -->
             <div class="form-group">
-              <h3 class="group-title">Imágenes del Producto</h3>
+              <div class="group-header">
+                <h3 class="group-title">Imágenes del Producto</h3>
+                <button type="button" class="btn-add" (click)="addImage()">
+                  <span>➕</span> Agregar Imagen
+                </button>
+              </div>
+
+              <div formArrayName="images" class="images-list">
+                <div class="image-item" *ngFor="let imageGroup of imagesArray.controls; let i = index" [formGroupName]="i">
+                  <div class="image-fields">
+                    <input
+                      type="url"
+                      formControlName="url"
+                      class="form-input"
+                      placeholder="URL de la imagen (https://...)"
+                    >
+                    <input
+                      type="text"
+                      formControlName="description"
+                      class="form-input"
+                      placeholder="Descripción de la imagen"
+                    >
+                  </div>
+                  <button type="button" class="btn-remove" (click)="removeImage(i)">
+                    <span>❌</span>
+                  </button>
+                </div>
+              </div>
+
               <div class="file-upload">
                 <input
                   type="file"
@@ -246,7 +274,7 @@
                   class="file-input"
                 >
                 <label for="images" class="file-label">
-                  <span>📸</span> Seleccionar Imágenes
+                  <span>📸</span> O Seleccionar Archivos Locales
                 </label>
                 <p class="file-help">Máximo 5 imágenes, formato JPEG, PNG, JPG, WEBP. Tamaño máximo: 5MB por archivo.</p>
               </div>
@@ -259,7 +287,7 @@
                     <span class="file-name">{{ file.name }}</span>
                     <span class="file-size">({{ (file.size / 1024 / 1024).toFixed(2) }} MB)</span>
                     <button type="button" class="btn-remove-file" (click)="removeFile(i)">
-                      <span>×</span>
+                      <span>❌</span>
                     </button>
                   </div>
                 </div>
@@ -368,7 +396,7 @@
 
             <div class="product-actions">
               <button class="btn-edit" (click)="editProduct(product)">
-                <span>✏️</span> Editar
+                <span>📝</span> Editar
               </button>
               <button class="btn-delete" (click)="deleteProduct(product)">
                 <span>🗑️</span> Eliminar

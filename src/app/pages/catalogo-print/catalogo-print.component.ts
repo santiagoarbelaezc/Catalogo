@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogDataService } from '../../services/catalog-data.service';
+import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
 import { CatalogShortComponent } from '../../components/catalog/catalog-short/catalog-short.component';
 
@@ -14,9 +15,23 @@ import { CatalogShortComponent } from '../../components/catalog/catalog-short/ca
 export class CatalogoPrintComponent implements OnInit {
   products: CatalogProduct[] = [];
 
-  constructor(private catalogService: CatalogDataService) {}
+  constructor(
+    private catalogDataService: CatalogDataService,
+    private productsService: ProductsService
+  ) {}
 
   ngOnInit() {
-    this.products = this.catalogService.getAllCatalogProducts();
+    // this.products = this.catalogService.getAllCatalogProducts();
+    
+    this.productsService.getAllProducts().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.products = response.data;
+        }
+      },
+      error: (error) => {
+        console.error('Error cargando productos:', error);
+      }
+    });
   }
 }

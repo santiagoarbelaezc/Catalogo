@@ -38,7 +38,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   showForm = false;
   editingProduct: any = null;
   selectedFiles: File[] = [];
-  categories = ['Plaxtilineas', 'Districol', 'Espumasplasticos'];
+  categories = ['Plaxtilineas', 'Districol', 'Espumas'];
 
   private subscriptions: Subscription[] = [];
 
@@ -78,7 +78,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       gramaje: [''],
       brandIconUrl: [''],
       colors: this.fb.array([]),
-      variants: this.fb.array([])
+      variants: this.fb.array([]),
+      images: this.fb.array([])
     });
   }
 
@@ -108,6 +109,10 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     return this.productForm.get('variants') as FormArray;
   }
 
+  get imagesArray(): FormArray {
+    return this.productForm.get('images') as FormArray;
+  }
+
   // Métodos para colores
   addColor(color: string = '') {
     this.colorsArray.push(new FormControl(color, Validators.required));
@@ -131,6 +136,19 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.variantsArray.removeAt(index);
   }
 
+  // Métodos para imágenes
+  addImage(url: string = '', description: string = '') {
+    const imageGroup = this.fb.group({
+      url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
+      description: [description, Validators.required]
+    });
+    this.imagesArray.push(imageGroup);
+  }
+
+  removeImage(index: number) {
+    this.imagesArray.removeAt(index);
+  }
+
   // Manejo de archivos
   onFileSelected(event: any) {
     const files = Array.from(event.target.files) as File[];
@@ -151,6 +169,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     });
     this.colorsArray.clear();
     this.variantsArray.clear();
+    this.imagesArray.clear();
     this.selectedFiles = [];
     this.showForm = true;
   }
@@ -191,6 +210,14 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       });
     }
 
+    // Cargar imágenes
+    this.imagesArray.clear();
+    if (product.images && product.images.length > 0) {
+      product.images.forEach((image: any) => {
+        this.addImage(image.url, image.description);
+      });
+    }
+
     this.selectedFiles = [];
     this.showForm = true;
   }
@@ -210,7 +237,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       const productData = {
         ...formValue,
         colors: formValue.colors.filter((c: string) => c.trim()),
-        variants: formValue.variants.filter((v: any) => v.name.trim())
+        variants: formValue.variants.filter((v: any) => v.name.trim()),
+        images: formValue.images.filter((img: any) => img.url && img.url.trim())
       };
 
       if (this.editingProduct) {
@@ -232,7 +260,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
         ...v,
         available: v.available === 1 || v.available === true,
         price: parseFloat(v.price) || 0
-      }))
+      })),
+      images: productData.images.filter((img: any) => img.url && img.url.trim())
     };
 
     const formData = this.productsService.createFormData(normalizedData, this.selectedFiles);
@@ -240,14 +269,14 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     const createSub = this.productsService.createProduct(formData).subscribe({
       next: (response) => {
         if (response.success) {
-          console.log('Producto creado:', response.data);
+          console.log('✅ Producto creado:', response.data);
           this.loadProducts();
           this.cancelEdit();
         }
         this.isSubmitting = false;
       },
       error: (error) => {
-        console.error('Error creando producto:', error);
+        console.error('❌ Error creando producto:', error);
         this.isSubmitting = false;
       }
     });
@@ -263,20 +292,24 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
         ...v,
         available: v.available === 1 || v.available === true,
         price: parseFloat(v.price) || 0
-      }))
+      })),
+      images: productData.images.filter((img: any) => img.url && img.url.trim())
     };
 
-    const updateSub = this.productsService.updateProduct(id, normalizedData).subscribe({
+    // Usar FormData siempre (con o sin archivos)
+    const formData = this.productsService.createFormData(normalizedData, this.selectedFiles.length > 0 ? this.selectedFiles : undefined);
+
+    const updateSub = this.productsService.updateProduct(id, formData).subscribe({
       next: (response) => {
         if (response.success) {
-          console.log('Producto actualizado:', response.data);
+          console.log('✅ Producto actualizado:', response.data);
           this.loadProducts();
           this.cancelEdit();
         }
         this.isSubmitting = false;
       },
       error: (error) => {
-        console.error('Error actualizando producto:', error);
+        console.error('❌ Error actualizando producto:', error);
         this.isSubmitting = false;
       }
     });
