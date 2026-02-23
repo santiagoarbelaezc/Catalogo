@@ -1,13 +1,13 @@
-/* Wrapper: Fondo con gradiente teal-verde sutil */
+/* Wrapper: Fondo con gradiente negro-café sutil */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #009AA2 0%, #15CD82 100%);
+  background: linear-gradient(135deg, var(--color-negro) 0%, var(--color-cafe-oscuro) 100%);
   padding: 20px;
   box-sizing: border-box;
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
   position: relative;
   overflow: hidden;
 }
@@ -20,7 +20,7 @@
   right: -200px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(0, 154, 162, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(94, 79, 70, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -33,7 +33,7 @@
   left: -150px;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(21, 205, 130, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(127, 107, 94, 0.06) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -45,10 +45,10 @@
   background: var(--color-bg-primary);
   border-radius: 16px;
   padding: 60px 40px;
-  box-shadow: 0 10px 40px rgba(0, 154, 162, 0.1);
-  border: 1px solid rgba(0, 154, 162, 0.08);
+  box-shadow: 0 10px 40px rgba(18, 18, 18, 0.15);
+  border: 1px solid rgba(94, 79, 70, 0.08);
   box-sizing: border-box;
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
   position: relative;
   z-index: 1;
   animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -70,7 +70,7 @@
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, #009AA2 0%, #15CD82 100%);
+  background: linear-gradient(90deg, var(--color-negro) 0%, var(--color-cafe) 100%);
   margin: 16px auto 0;
   border-radius: 2px;
 }
@@ -115,11 +115,11 @@
 .form-input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(94, 79, 70, 0.15);
   border-radius: 8px;
   font-size: 0.95rem;
   box-sizing: border-box;
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
   background: var(--color-bg-secondary);
   transition: var(--transition-medium);
   color: var(--color-text-primary);
@@ -127,9 +127,9 @@
 
 .form-input:focus {
   outline: none;
-  border-color: #009AA2;
+  border-color: var(--color-cafe);
   background: var(--color-bg-primary);
-  box-shadow: 0 0 0 3px rgba(0, 154, 162, 0.08);
+  box-shadow: 0 0 0 3px rgba(94, 79, 70, 0.08);
 }
 
 .form-input::placeholder {
@@ -143,7 +143,7 @@
 
 /* Mensajes de error */
 .error-message {
-  color: var(--color-accent);
+  color: #9E6B60;
   font-size: 0.8rem;
   font-weight: 500;
   margin-top: -4px;
@@ -159,22 +159,22 @@
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition-medium);
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   width: 100%;
-  background: linear-gradient(135deg, #009AA2 0%, #007a80 100%);
-  color: var(--color-text-inverse);
+  background: var(--color-negro);
+  color: var(--color-blanco);
   margin-top: 8px;
-  box-shadow: 0 4px 12px rgba(0, 154, 162, 0.2);
+  box-shadow: 0 4px 12px rgba(18, 18, 18, 0.15);
 }
 
 .login-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 154, 162, 0.3);
-  background: linear-gradient(135deg, #007a80 0%, #006070 100%);
+  box-shadow: 0 8px 20px rgba(18, 18, 18, 0.2);
+  background: var(--color-cafe-oscuro);
 }
 
 .login-button:active:not(:disabled) {
@@ -182,7 +182,7 @@
 }
 
 .login-button:disabled {
-  background: linear-gradient(135deg, #ddd 0%, #ccc 100%);
+  background: #c0c0c0;
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -196,7 +196,7 @@
 }
 
 .register-link {
-  color: #009AA2;
+  color: var(--color-cafe);
   text-decoration: none;
   font-weight: 500;
 }
@@ -214,7 +214,7 @@
 
 .btn-back {
   background: transparent;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(94, 79, 70, 0.15);
   color: var(--color-text-primary);
   padding: 10px 18px;
   border-radius: 8px;
@@ -225,8 +225,8 @@
 
 .btn-back:hover {
   background: var(--color-bg-secondary);
-  border-color: #009AA2;
-  color: #009AA2;
+  border-color: var(--color-cafe);
+  color: var(--color-cafe);
   transform: translateY(-2px);
 }
 
@@ -236,6 +236,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -247,6 +248,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

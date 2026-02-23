@@ -1,145 +1,135 @@
-/* CONTENEDOR GENERAL */
-.catalog-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px 70px;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #ffffff;
-  color: #222;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  margin-top: 50px;
+/* Contenedor principal del catálogo Plaxtilineas */
+.catalog-plaxtilineas {
+  font-family: var(--font-primary);
+  padding: 1rem;
 }
 
-
-/* HEADER */
 .catalog-header {
   text-align: center;
-  padding: 40px 0 20px;
-}
-
-.main-logo {
-  width: 90px;
-  margin-bottom: 15px;
+  margin-bottom: 2rem;
 }
 
 .catalog-header h1 {
-  margin: 5px 0;
-  letter-spacing: 3px;
-  font-size: 32px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
 }
 
-.subtitle {
-  font-size: 14px;
-  color: #555;
-  letter-spacing: 1px;
-}
-
-
-/* MENSAJE VERDE */
 .catalog-message {
-  background: linear-gradient(90deg, #0f3d1f, #2e7d32);
-  color: white;
+  max-width: 600px;
+  margin: 2rem auto;
   text-align: center;
-  padding: 20px 0;
-  font-size: 18px;
-  font-weight: 500;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-negro), var(--color-cafe-oscuro));
+  color: var(--color-blanco);
+  font-size: 1rem;
+  line-height: 1.6;
+  box-shadow: var(--shadow-md);
 }
 
-
-/* BANNER */
-.catalog-banner {
-  width: 100%;
-  overflow: hidden;
-  margin: 20px 0;
+.catalog-message p {
+  margin: 0 0 0.5rem 0;
 }
 
-.banner-img {
-  width: 100%;
-  height: auto;
-  display: block;
+.catalog-message p:last-child {
+  margin-bottom: 0;
 }
 
-
-/* ALIADOS */
-.catalog-allies {
-  padding: 40px 0;
+/* Sección de aliados */
+.allies-section {
+  max-width: 1200px;
+  margin: 3rem auto;
+  padding: 2rem;
   text-align: center;
 }
 
-.catalog-allies h2 {
-  margin-bottom: 30px;
+.allies-section h2 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
   letter-spacing: 2px;
-  font-size: 22px;
+  margin-bottom: 2rem;
+  font-weight: 600;
 }
 
+.allies-section p {
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
 
-/* GRID LOGOS */
-.brands-grid {
+.brand-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.brand-item {
+  display: flex;
   align-items: center;
-  justify-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--color-bg-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(94, 79, 70, 0.06);
+  transition: var(--transition-medium);
 }
 
-.brand-logo {
-  max-width: 180px;
-  max-height: 100px;
+.brand-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.brand-item img {
+  max-width: 120px;
+  max-height: 60px;
   object-fit: contain;
-  filter: grayscale(10%);
-  transition: 0.3s ease;
-  opacity: 0.9;
+  filter: grayscale(60%);
+  transition: filter 0.3s ease;
 }
 
-.brand-logo:hover {
-  transform: scale(1.08);
+.brand-item:hover img {
   filter: grayscale(0%);
-  opacity: 1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-
-/* RESPONSIVE */
+/* Responsive */
 @media (max-width: 768px) {
-  .catalog-container {
-    padding: 20px 20px;
-    border-radius: 8px;
+  .catalog-plaxtilineas {
+    padding: 0.5rem;
   }
 
   .catalog-header h1 {
-    font-size: 26px;
+    font-size: 1.5rem;
   }
 
   .catalog-message {
-    font-size: 16px;
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
   }
 
-  .brand-logo {
-    max-width: 140px;
+  .brand-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
   }
 
-  .brands-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 20px;
+  .brand-item {
+    padding: 1rem;
+  }
+
+  .brand-item img {
+    max-width: 100px;
   }
 }
 
-/* Estilos originales para la sección de productos */
-.plaxtilineas-container {
-  margin: 50px auto;
-}
-
-.plaxtilineas-container h1 {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.plaxtilineas-container p {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #666;
+@media (max-width: 480px) {
+  .brand-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }

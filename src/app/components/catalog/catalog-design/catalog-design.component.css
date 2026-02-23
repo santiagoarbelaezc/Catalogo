@@ -2,7 +2,7 @@
 .product-section-design {
   padding: 4rem 2rem;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f9f7 0%, #e8f5e9 50%, #f1f8f6 100%);
+  background: linear-gradient(135deg, var(--color-gris-claro) 0%, #E0DEDA 50%, var(--color-blanco) 100%);
   font-family: var(--font-primary);
   position: relative;
   overflow: hidden;
@@ -15,19 +15,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 20% 50%, rgba(76, 175, 80, 0.05) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(56, 142, 60, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 50%, rgba(94, 79, 70, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(58, 51, 48, 0.03) 0%, transparent 50%);
   pointer-events: none;
 }
 
 /* Tema oscuro para productos invertidos */
 .product-section-design.reverse-section {
-  background: linear-gradient(135deg, #1a2f2a 0%, #1e3a33 50%, #1a2f2a 100%);
+  background: linear-gradient(135deg, var(--color-negro) 0%, var(--color-negro-gris) 50%, var(--color-negro) 100%);
 }
 
 .product-section-design.reverse-section::before {
-  background: radial-gradient(circle at 20% 50%, rgba(129, 199, 132, 0.08) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(165, 214, 167, 0.08) 0%, transparent 50%);
+  background: radial-gradient(circle at 20% 50%, rgba(127, 107, 94, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(94, 79, 70, 0.06) 0%, transparent 50%);
 }
 
 /* ===== CARD DEL PRODUCTO ===== */
@@ -86,15 +86,15 @@
 
 .single-image-container-design {
   position: relative;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  background: white;
+  background: var(--color-blanco);
   aspect-ratio: 4/3;
   cursor: pointer;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 10px 40px rgba(27, 94, 32, 0.12), 
-              0 3px 15px rgba(76, 175, 80, 0.08);
-  border: 1px solid rgba(129, 199, 132, 0.3);
+  box-shadow: 0 10px 40px rgba(18, 18, 18, 0.08),
+    0 3px 15px rgba(94, 79, 70, 0.05);
+  border: 1px solid rgba(94, 79, 70, 0.1);
 }
 
 .single-image-container-design.main-image-design {
@@ -115,9 +115,9 @@
 
 .single-image-container-design:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(27, 94, 32, 0.18), 
-              0 8px 20px rgba(76, 175, 80, 0.15);
-  border-color: rgba(76, 175, 80, 0.6);
+  box-shadow: 0 20px 50px rgba(18, 18, 18, 0.12),
+    0 8px 20px rgba(94, 79, 70, 0.1);
+  border-color: rgba(94, 79, 70, 0.25);
 }
 
 .single-image-container-design:hover .single-image-design {
@@ -135,39 +135,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(245, 245, 245, 0.15);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border: 1.5px solid rgba(245, 245, 245, 0.3);
   border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
-              inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(18, 18, 18, 0.12),
+    inset 0 1px 1px rgba(245, 245, 245, 0.5);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .logo-overlay-design:hover {
   transform: translateY(-5px) scale(1.05);
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15),
-              inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  background: rgba(245, 245, 245, 0.25);
+  border-color: rgba(245, 245, 245, 0.4);
+  box-shadow: 0 12px 40px rgba(18, 18, 18, 0.15),
+    inset 0 1px 1px rgba(245, 245, 245, 0.6);
 }
 
 .product-logo-design {
   width: 70px;
   height: 70px;
   object-fit: contain;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 2px 8px rgba(18, 18, 18, 0.15));
 }
 
 /* ===== CONTENIDO ELEGANTE ===== */
 .product-content-design {
   padding: 3.5rem;
-  background: white;
-  border-radius: 24px;
-  box-shadow: 0 15px 50px rgba(27, 94, 32, 0.1), 
-              0 5px 20px rgba(76, 175, 80, 0.08);
-  border: 1px solid rgba(129, 199, 132, 0.25);
+  background: var(--color-blanco);
+  border-radius: 20px;
+  box-shadow: var(--shadow-elegant);
+  border: 1px solid rgba(94, 79, 70, 0.08);
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -183,7 +182,7 @@
   right: -50%;
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(129, 199, 132, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(127, 107, 94, 0.04) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -195,23 +194,23 @@
   left: -30%;
   width: 250px;
   height: 250px;
-  background: radial-gradient(circle, rgba(76, 175, 80, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(94, 79, 70, 0.03) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
 
 .product-content-design.reverse-content {
-  background: linear-gradient(135deg, #2d3d38 0%, #1f3033 100%);
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3), 
-              0 5px 20px rgba(129, 199, 132, 0.1);
-  border: 1px solid rgba(129, 199, 132, 0.2);
+  background: linear-gradient(135deg, var(--color-cafe-oscuro) 0%, var(--color-negro-gris) 100%);
+  box-shadow: 0 15px 50px rgba(18, 18, 18, 0.3),
+    0 5px 20px rgba(94, 79, 70, 0.1);
+  border: 1px solid rgba(127, 107, 94, 0.15);
 }
 
 /* ===== ENCABEZADO ELEGANTE ===== */
 .product-header-design {
   position: relative;
   z-index: 1;
-  border-bottom: 2px solid rgba(76, 175, 80, 0.2);
+  border-bottom: 2px solid rgba(94, 79, 70, 0.12);
   padding-bottom: 1.5rem;
   margin-bottom: 0.5rem;
 }
@@ -224,80 +223,73 @@
 }
 
 .product-category-design {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #2e7d32;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(129, 199, 132, 0.18));
+  letter-spacing: 2.5px;
+  color: var(--color-cafe);
+  background: rgba(94, 79, 70, 0.08);
   padding: 0.5rem 1.2rem;
   border-radius: 20px;
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  border: 1px solid rgba(94, 79, 70, 0.15);
   margin: 0;
   transition: all 0.3s ease;
 }
 
 .product-category-design:hover {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(129, 199, 132, 0.25));
-  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(94, 79, 70, 0.12);
+  border-color: rgba(94, 79, 70, 0.25);
 }
 
 .product-content-design.reverse-content .product-category-design {
-  color: #81c784;
-  border-color: rgba(129, 199, 132, 0.3);
-  background: linear-gradient(135deg, rgba(129, 199, 132, 0.15), rgba(165, 214, 167, 0.2));
+  color: var(--color-cafe-medio);
+  border-color: rgba(127, 107, 94, 0.25);
+  background: rgba(127, 107, 94, 0.15);
 }
 
 .brand-icon-design {
   width: 70px;
   height: 70px;
   object-fit: contain;
-  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 3px 10px rgba(18, 18, 18, 0.1));
   transition: all 0.3s ease;
 }
 
 .brand-icon-design:hover {
-  filter: drop-shadow(0 5px 15px rgba(76, 175, 80, 0.3));
+  filter: drop-shadow(0 5px 15px rgba(94, 79, 70, 0.2));
   transform: scale(1.05);
 }
 
 .product-title-design {
   font-size: 2.8rem;
   font-weight: 700;
-  color: #1b5e20;
-  line-height: 1.2;
+  color: var(--color-negro);
+  line-height: 1.15;
   margin: 0;
   font-family: var(--font-heading);
   letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   transition: all 0.3s ease;
 }
 
 .product-content-design.reverse-content .product-title-design {
-  background: linear-gradient(135deg, #81c784 0%, #a5d6a7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-gris-claro);
 }
 
 /* ===== DESCRIPCIÓN ELEGANTE ===== */
 .product-description-design {
-  font-size: 1.15rem;
-  line-height: 1.8;
-  color: #424242;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--color-cafe);
   margin: 0;
   position: relative;
   z-index: 1;
   font-weight: 400;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
   transition: color 0.3s ease;
 }
 
 .product-content-design.reverse-content .product-description-design {
-  color: #c9e4ce;
+  color: rgba(232, 230, 227, 0.8);
 }
 
 /* ===== ESPECIFICACIONES ELEGANTES ===== */
@@ -311,24 +303,24 @@
 
 .spec-block-design {
   padding: 1.5rem;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.06), rgba(129, 199, 132, 0.08));
-  border: 1px solid rgba(129, 199, 132, 0.2);
-  border-radius: 16px;
-  border-left: 4px solid #4caf50;
+  background: rgba(94, 79, 70, 0.04);
+  border: 1px solid rgba(94, 79, 70, 0.08);
+  border-radius: 14px;
+  border-left: 4px solid var(--color-cafe);
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .spec-block-design:hover {
   transform: translateX(5px);
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.12), rgba(129, 199, 132, 0.15));
-  border-color: rgba(129, 199, 132, 0.4);
-  box-shadow: 0 5px 20px rgba(76, 175, 80, 0.1);
+  background: rgba(94, 79, 70, 0.07);
+  border-color: rgba(94, 79, 70, 0.15);
+  box-shadow: 0 5px 20px rgba(18, 18, 18, 0.06);
 }
 
 .product-content-design.reverse-content .spec-block-design {
-  background: linear-gradient(135deg, rgba(129, 199, 132, 0.1), rgba(165, 214, 167, 0.12));
-  border-color: rgba(129, 199, 132, 0.25);
-  border-left-color: #81c784;
+  background: rgba(127, 107, 94, 0.1);
+  border-color: rgba(127, 107, 94, 0.2);
+  border-left-color: var(--color-cafe-medio);
 }
 
 .spec-header-design {
@@ -345,27 +337,27 @@
 
 .spec-title-design {
   font-weight: 700;
-  font-size: 1rem;
-  color: #2e7d32;
+  font-size: 0.9rem;
+  color: var(--color-cafe);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   margin: 0;
 }
 
 .product-content-design.reverse-content .spec-title-design {
-  color: #81c784;
+  color: var(--color-cafe-medio);
 }
 
 .spec-value-design {
   font-size: 1.05rem;
-  color: #555;
+  color: var(--color-cafe);
   margin: 0;
   line-height: 1.6;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .product-content-design.reverse-content .spec-value-design {
-  color: #b3e5d4;
+  color: rgba(232, 230, 227, 0.7);
 }
 
 /* ===== REFERENCIAS GRID ===== */
@@ -378,10 +370,10 @@
 
 .reference-chip-design {
   padding: 0.6rem 1rem;
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.15), rgba(129, 199, 132, 0.2));
-  color: #1b5e20;
-  border: 1.5px solid rgba(76, 175, 80, 0.4);
-  border-radius: 12px;
+  background: rgba(94, 79, 70, 0.08);
+  color: var(--color-negro);
+  border: 1.5px solid rgba(94, 79, 70, 0.18);
+  border-radius: 10px;
   font-size: 0.9rem;
   font-weight: 600;
   text-align: center;
@@ -392,22 +384,22 @@
 
 .reference-chip-design:hover {
   transform: translateY(-3px);
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.25), rgba(129, 199, 132, 0.3));
-  border-color: rgba(76, 175, 80, 0.6);
-  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
-  color: #1b5e20;
+  background: rgba(94, 79, 70, 0.14);
+  border-color: rgba(94, 79, 70, 0.3);
+  box-shadow: 0 5px 15px rgba(18, 18, 18, 0.08);
+  color: var(--color-negro);
 }
 
 .product-content-design.reverse-content .reference-chip-design {
-  background: linear-gradient(135deg, rgba(129, 199, 132, 0.2), rgba(165, 214, 167, 0.25));
-  color: #b3e5d4;
-  border-color: rgba(129, 199, 132, 0.4);
+  background: rgba(127, 107, 94, 0.15);
+  color: rgba(232, 230, 227, 0.8);
+  border-color: rgba(127, 107, 94, 0.25);
 }
 
 .product-content-design.reverse-content .reference-chip-design:hover {
-  background: linear-gradient(135deg, rgba(129, 199, 132, 0.3), rgba(165, 214, 167, 0.35));
-  border-color: rgba(129, 199, 132, 0.6);
-  box-shadow: 0 5px 15px rgba(129, 199, 132, 0.2);
+  background: rgba(127, 107, 94, 0.25);
+  border-color: rgba(127, 107, 94, 0.4);
+  box-shadow: 0 5px 15px rgba(127, 107, 94, 0.15);
 }
 
 /* ===== LISTA DE COLORES MEJORADA ===== */
@@ -423,14 +415,14 @@
   align-items: center;
   gap: 0.6rem;
   font-size: 0.95rem;
-  color: #555;
+  color: var(--color-cafe);
   font-weight: 500;
   cursor: default;
   transition: all 0.3s ease;
 }
 
 .color-item-design:hover {
-  color: #1f2937;
+  color: var(--color-negro);
 }
 
 .color-dot-design {
@@ -438,31 +430,31 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(18, 18, 18, 0.1);
+  box-shadow: 0 2px 6px rgba(18, 18, 18, 0.12);
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .color-item-design:hover .color-dot-design {
   transform: scale(1.15);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 12px rgba(18, 18, 18, 0.18);
 }
 
 .product-content-design.reverse-content .color-item-design {
-  color: #b3e5d4;
+  color: rgba(232, 230, 227, 0.7);
 }
 
 .product-content-design.reverse-content .color-item-design:hover {
-  color: #e8f5e9;
+  color: var(--color-gris-claro);
 }
 
 /* ===== VARIANTES NO DISPONIBLES ===== */
 .reference-chip-design[data-unavailable="true"],
 .reference-chip-design.unavailable {
-  background: linear-gradient(135deg, rgba(229, 57, 53, 0.1), rgba(244, 67, 54, 0.15));
-  color: #c62828;
-  border-color: rgba(229, 57, 53, 0.3);
+  background: rgba(140, 100, 90, 0.08);
+  color: #9E7B70;
+  border-color: rgba(140, 100, 90, 0.2);
   opacity: 0.7;
   text-decoration: line-through;
   cursor: not-allowed;
@@ -471,8 +463,8 @@
 .reference-chip-design[data-unavailable="true"]:hover,
 .reference-chip-design.unavailable:hover {
   transform: none;
-  background: linear-gradient(135deg, rgba(229, 57, 53, 0.15), rgba(244, 67, 54, 0.2));
-  box-shadow: 0 3px 8px rgba(229, 57, 53, 0.15);
+  background: rgba(140, 100, 90, 0.12);
+  box-shadow: 0 3px 8px rgba(140, 100, 90, 0.1);
 }
 
 /* ===== PLACEHOLDER IMAGES ===== */
@@ -482,7 +474,7 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  background: linear-gradient(135deg, var(--color-gris-claro) 0%, #D8D5D2 100%);
   border-radius: 8px;
   min-height: 300px;
 }
@@ -500,13 +492,13 @@
 .placeholder-icon-design {
   font-size: 3.5rem;
   display: block;
-  opacity: 0.6;
+  opacity: 0.5;
   animation: float-placeholder 3s ease-in-out infinite;
 }
 
 .placeholder-text-design {
   font-size: 0.95rem;
-  color: #757575;
+  color: var(--color-cafe-medio);
   max-width: 200px;
   margin: 0;
   line-height: 1.5;
@@ -514,9 +506,12 @@
 }
 
 @keyframes float-placeholder {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
   }
@@ -674,7 +669,7 @@
   }
 
   .product-category-design {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     padding: 0.4rem 0.9rem;
     letter-spacing: 1.5px;
   }
@@ -719,7 +714,7 @@
   }
 
   .spec-title-design {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .spec-value-design {

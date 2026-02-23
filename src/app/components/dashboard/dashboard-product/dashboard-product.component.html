@@ -4,12 +4,16 @@
     <div class="header-content">
       <div class="header-left">
         <button class="btn-back" (click)="goBack()">
-          <span>⬅️</span> Volver al Dashboard
+          <span class="material-symbols-rounded">arrow_back</span> Volver al Dashboard
         </button>
-        <h1 class="dashboard-title">Gestión de Productos</h1>
+        <h1 class="dashboard-title">
+          <span class="material-symbols-rounded title-icon">inventory</span>
+          Gestión de Productos
+        </h1>
       </div>
       <div class="header-right">
         <button class="btn-logout" (click)="logout()">
+          <span class="material-symbols-rounded">logout</span>
           <span>Cerrar Sesión</span>
         </button>
       </div>
@@ -21,45 +25,93 @@
     <!-- Loading State -->
     <div *ngIf="isLoading" class="loading-container">
       <div class="loading-spinner"></div>
-      <p>Cargando productos...</p>
+      <p class="loading-text">Cargando productos...</p>
     </div>
 
     <!-- Content -->
     <div *ngIf="!isLoading" class="dashboard-content">
-      <!-- Actions Bar -->
+
+      <!-- ===== TOP BAR ===== -->
       <div class="actions-bar">
         <button class="btn-primary" (click)="showCreateForm()" [disabled]="showForm">
-          <span>➕</span> Nuevo Producto
+          <span class="material-symbols-rounded">add</span> Nuevo Producto
         </button>
         <div class="products-count">
-          Total: {{ products.length }} productos
+          <span class="count-number">{{ products.length }}</span>
+          <span class="count-label">productos en total</span>
         </div>
       </div>
 
-      <!-- Product Form -->
+      <!-- ===== FILTERS BAR ===== -->
+      <div class="filters-bar">
+        <div class="filter-group filter-search">
+          <span class="material-symbols-rounded filter-icon">search</span>
+          <input type="text" class="filter-input" placeholder="Buscar por nombre, material, marca..."
+            [value]="searchTerm" (input)="onSearchInput($event)">
+        </div>
+
+        <div class="filter-group filter-category">
+          <select class="filter-select" [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()">
+            <option value="">Todas las categorías</option>
+            <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group filter-status">
+          <select class="filter-select" [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()">
+            <option value="">Todos los estados</option>
+            <option value="new">Nuevos</option>
+            <option value="featured">Destacados</option>
+          </select>
+        </div>
+
+        <button class="btn-clear-filters" *ngIf="hasActiveFilters" (click)="clearFilters()">
+          <span class="material-symbols-rounded">close</span> Limpiar
+        </button>
+      </div>
+
+      <!-- Results Info -->
+      <div class="results-info" *ngIf="hasActiveFilters">
+        <span class="material-symbols-rounded results-icon">filter_list</span>
+        <span class="results-text">
+          Mostrando <strong>{{ totalFilteredProducts }}</strong> de <strong>{{ products.length }}</strong> productos
+        </span>
+        <span class="results-filters" *ngIf="searchTerm">
+          · Búsqueda: "{{ searchTerm }}"
+        </span>
+        <span class="results-filters" *ngIf="filterCategory">
+          · Categoría: {{ filterCategory }}
+        </span>
+        <span class="results-filters" *ngIf="filterStatus">
+          · Estado: {{ filterStatus === 'new' ? 'Nuevo' : 'Destacado' }}
+        </span>
+      </div>
+
+      <!-- ===== PRODUCT FORM ===== -->
       <div *ngIf="showForm" class="form-section">
         <div class="form-card">
           <h2 class="form-title">
+            <span class="material-symbols-rounded">{{ editingProduct ? 'edit_note' : 'post_add' }}</span>
             {{ editingProduct ? 'Editar Producto' : 'Crear Nuevo Producto' }}
           </h2>
 
           <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
             <!-- Información Básica -->
             <div class="form-group">
-              <h3 class="group-title">Información Básica</h3>
+              <h3 class="group-title">
+                <span class="material-symbols-rounded group-icon">info</span>
+                Información Básica
+              </h3>
 
               <div class="form-row">
                 <div class="form-field">
                   <label for="name" class="form-label">Nombre del Producto *</label>
-                  <input
-                    type="text"
-                    id="name"
-                    formControlName="name"
-                    class="form-input"
+                  <input type="text" id="name" formControlName="name" class="form-input"
                     [class.error]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
-                    placeholder="Ej: Plastilina Roja"
-                  >
-                  <div class="error-message" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                    placeholder="Ej: Plastilina Roja">
+                  <div class="error-message"
+                    *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                    <span class="material-symbols-rounded error-icon">error</span>
                     <span *ngIf="productForm.get('name')?.errors?.['required']">El nombre es requerido</span>
                     <span *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo 3 caracteres</span>
                   </div>
@@ -68,22 +120,19 @@
                 <div class="form-field">
                   <label for="category" class="form-label">Categoría *</label>
                   <select id="category" formControlName="category" class="form-input">
-                    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                    <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-field">
                 <label for="description" class="form-label">Descripción *</label>
-                <textarea
-                  id="description"
-                  formControlName="description"
-                  class="form-textarea"
+                <textarea id="description" formControlName="description" class="form-textarea"
                   [class.error]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
-                  placeholder="Describe el producto..."
-                  rows="3"
-                ></textarea>
-                <div class="error-message" *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+                  placeholder="Describe el producto..." rows="3"></textarea>
+                <div class="error-message"
+                  *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+                  <span class="material-symbols-rounded error-icon">error</span>
                   <span *ngIf="productForm.get('description')?.errors?.['required']">La descripción es requerida</span>
                   <span *ngIf="productForm.get('description')?.errors?.['minlength']">Mínimo 10 caracteres</span>
                 </div>
@@ -92,70 +141,48 @@
               <div class="form-row">
                 <div class="form-field">
                   <label for="material" class="form-label">Material *</label>
-                  <input
-                    type="text"
-                    id="material"
-                    formControlName="material"
-                    class="form-input"
+                  <input type="text" id="material" formControlName="material" class="form-input"
                     [class.error]="productForm.get('material')?.invalid && productForm.get('material')?.touched"
-                    placeholder="Ej: Plastilina no tóxica"
-                  >
-                  <div class="error-message" *ngIf="productForm.get('material')?.invalid && productForm.get('material')?.touched">
+                    placeholder="Ej: Plastilina no tóxica">
+                  <div class="error-message"
+                    *ngIf="productForm.get('material')?.invalid && productForm.get('material')?.touched">
+                    <span class="material-symbols-rounded error-icon">error</span>
                     <span>El material es requerido</span>
                   </div>
                 </div>
 
                 <div class="form-field">
                   <label for="marca" class="form-label">Marca</label>
-                  <input
-                    type="text"
-                    id="marca"
-                    formControlName="marca"
-                    class="form-input"
-                    placeholder="Ej: Districol"
-                  >
+                  <input type="text" id="marca" formControlName="marca" class="form-input" placeholder="Ej: Districol">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-field">
                   <label for="gramaje" class="form-label">Gramaje</label>
-                  <input
-                    type="text"
-                    id="gramaje"
-                    formControlName="gramaje"
-                    class="form-input"
-                    placeholder="Ej: 500g"
-                  >
+                  <input type="text" id="gramaje" formControlName="gramaje" class="form-input" placeholder="Ej: 500g">
                 </div>
 
                 <div class="form-field">
                   <label for="brandIconUrl" class="form-label">URL del Icono de Marca</label>
-                  <input
-                    type="url"
-                    id="brandIconUrl"
-                    formControlName="brandIconUrl"
-                    class="form-input"
-                    placeholder="https://..."
-                  >
+                  <input type="url" id="brandIconUrl" formControlName="brandIconUrl" class="form-input"
+                    placeholder="https://...">
                 </div>
               </div>
 
               <div class="form-field">
                 <label for="options" class="form-label">Opciones Adicionales</label>
-                <textarea
-                  id="options"
-                  formControlName="options"
-                  class="form-textarea"
-                  placeholder="Opciones especiales, características..."
-                  rows="2"
-                ></textarea>
+                <textarea id="options" formControlName="options" class="form-textarea"
+                  placeholder="Opciones especiales, características..." rows="2"></textarea>
               </div>
             </div>
 
             <!-- Estados -->
             <div class="form-group">
-              <h3 class="group-title">Estados del Producto</h3>
+              <h3 class="group-title">
+                <span class="material-symbols-rounded group-icon">toggle_on</span>
+                Estados del Producto
+              </h3>
               <div class="checkbox-group">
                 <label class="checkbox-label">
                   <input type="checkbox" formControlName="isNew">
@@ -173,22 +200,22 @@
             <!-- Colores -->
             <div class="form-group">
               <div class="group-header">
-                <h3 class="group-title">Colores Disponibles</h3>
+                <h3 class="group-title">
+                  <span class="material-symbols-rounded group-icon">palette</span>
+                  Colores Disponibles
+                </h3>
                 <button type="button" class="btn-add" (click)="addColor()">
-                  <span>➕</span> Agregar Color
+                  <span class="material-symbols-rounded">add</span> Agregar Color
                 </button>
               </div>
 
               <div formArrayName="colors" class="colors-list">
-                <div class="color-item" *ngFor="let colorControl of colorsArray.controls; let i = index">
-                  <input
-                    type="text"
-                    [formControlName]="i"
-                    class="form-input color-input"
-                    placeholder="Ej: Rojo, Azul, Verde"
-                  >
+                <div class="color-item"
+                  *ngFor="let colorControl of colorsArray.controls; let i = index; trackBy: trackByIndex">
+                  <input type="text" [formControlName]="i" class="form-input color-input"
+                    placeholder="Ej: Rojo, Azul, Verde">
                   <button type="button" class="btn-remove" (click)="removeColor(i)">
-                    <span>❌</span>
+                    <span class="material-symbols-rounded">close</span>
                   </button>
                 </div>
               </div>
@@ -197,29 +224,23 @@
             <!-- Variantes -->
             <div class="form-group">
               <div class="group-header">
-                <h3 class="group-title">Variantes del Producto</h3>
+                <h3 class="group-title">
+                  <span class="material-symbols-rounded group-icon">tune</span>
+                  Variantes del Producto
+                </h3>
                 <button type="button" class="btn-add" (click)="addVariant()">
-                  <span>➕</span> Agregar Variante
+                  <span class="material-symbols-rounded">add</span> Agregar Variante
                 </button>
               </div>
 
               <div formArrayName="variants" class="variants-list">
-                <div class="variant-item" *ngFor="let variantGroup of variantsArray.controls; let i = index" [formGroupName]="i">
+                <div class="variant-item"
+                  *ngFor="let variantGroup of variantsArray.controls; let i = index; trackBy: trackByIndex"
+                  [formGroupName]="i">
                   <div class="variant-fields">
-                    <input
-                      type="text"
-                      formControlName="name"
-                      class="form-input"
-                      placeholder="Nombre de la variante"
-                    >
-                    <input
-                      type="number"
-                      formControlName="price"
-                      class="form-input"
-                      placeholder="Precio"
-                      min="0"
-                      step="0.01"
-                    >
+                    <input type="text" formControlName="name" class="form-input" placeholder="Nombre de la variante">
+                    <input type="number" formControlName="price" class="form-input" placeholder="Precio" min="0"
+                      step="0.01">
                     <label class="checkbox-label small">
                       <input type="checkbox" formControlName="available">
                       <span class="checkmark"></span>
@@ -227,7 +248,7 @@
                     </label>
                   </div>
                   <button type="button" class="btn-remove" (click)="removeVariant(i)">
-                    <span>❌</span>
+                    <span class="material-symbols-rounded">close</span>
                   </button>
                 </div>
               </div>
@@ -236,58 +257,55 @@
             <!-- Imágenes -->
             <div class="form-group">
               <div class="group-header">
-                <h3 class="group-title">Imágenes del Producto</h3>
+                <h3 class="group-title">
+                  <span class="material-symbols-rounded group-icon">image</span>
+                  Imágenes del Producto
+                </h3>
                 <button type="button" class="btn-add" (click)="addImage()">
-                  <span>➕</span> Agregar Imagen
+                  <span class="material-symbols-rounded">add</span> Agregar Imagen
                 </button>
               </div>
 
               <div formArrayName="images" class="images-list">
-                <div class="image-item" *ngFor="let imageGroup of imagesArray.controls; let i = index" [formGroupName]="i">
+                <div class="image-item"
+                  *ngFor="let imageGroup of imagesArray.controls; let i = index; trackBy: trackByIndex"
+                  [formGroupName]="i">
                   <div class="image-fields">
-                    <input
-                      type="url"
-                      formControlName="url"
-                      class="form-input"
-                      placeholder="URL de la imagen (https://...)"
-                    >
-                    <input
-                      type="text"
-                      formControlName="description"
-                      class="form-input"
-                      placeholder="Descripción de la imagen"
-                    >
+                    <input type="url" formControlName="url" class="form-input"
+                      placeholder="URL de la imagen (https://...)">
+                    <input type="text" formControlName="description" class="form-input"
+                      placeholder="Descripción de la imagen">
                   </div>
                   <button type="button" class="btn-remove" (click)="removeImage(i)">
-                    <span>❌</span>
+                    <span class="material-symbols-rounded">close</span>
                   </button>
                 </div>
               </div>
 
               <div class="file-upload">
-                <input
-                  type="file"
-                  id="images"
-                  multiple
-                  accept="image/*"
-                  (change)="onFileSelected($event)"
-                  class="file-input"
-                >
+                <input type="file" id="images" multiple accept="image/*" (change)="onFileSelected($event)"
+                  class="file-input">
                 <label for="images" class="file-label">
-                  <span>📸</span> O Seleccionar Archivos Locales
+                  <span class="material-symbols-rounded">cloud_upload</span>
+                  O Seleccionar Archivos Locales
                 </label>
-                <p class="file-help">Máximo 5 imágenes, formato JPEG, PNG, JPG, WEBP. Tamaño máximo: 5MB por archivo.</p>
+                <p class="file-help">Máximo 5 imágenes, formato JPEG, PNG, JPG, WEBP. Tamaño máximo: 5MB por archivo.
+                </p>
               </div>
 
               <!-- Preview de archivos seleccionados -->
               <div class="files-preview" *ngIf="selectedFiles.length > 0">
-                <h4>Imágenes seleccionadas:</h4>
+                <h4>
+                  <span class="material-symbols-rounded">attach_file</span>
+                  Imágenes seleccionadas:
+                </h4>
                 <div class="files-list">
-                  <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
+                  <div class="file-item" *ngFor="let file of selectedFiles; let i = index; trackBy: trackByIndex">
+                    <span class="material-symbols-rounded file-type-icon">image</span>
                     <span class="file-name">{{ file.name }}</span>
                     <span class="file-size">({{ (file.size / 1024 / 1024).toFixed(2) }} MB)</span>
                     <button type="button" class="btn-remove-file" (click)="removeFile(i)">
-                      <span>❌</span>
+                      <span class="material-symbols-rounded">close</span>
                     </button>
                   </div>
                 </div>
@@ -297,9 +315,12 @@
             <!-- Botones del formulario -->
             <div class="form-actions">
               <button type="button" class="btn-secondary" (click)="cancelEdit()">
+                <span class="material-symbols-rounded">close</span>
                 Cancelar
               </button>
               <button type="submit" class="btn-primary" [disabled]="isSubmitting || productForm.invalid">
+                <span class="material-symbols-rounded" *ngIf="!isSubmitting">{{ editingProduct ? 'save' : 'add'
+                  }}</span>
                 <span *ngIf="isSubmitting">Guardando...</span>
                 <span *ngIf="!isSubmitting">{{ editingProduct ? 'Actualizar' : 'Crear' }} Producto</span>
               </button>
@@ -308,18 +329,31 @@
         </div>
       </div>
 
-      <!-- Products List -->
+      <!-- ===== PRODUCTS LIST ===== -->
       <div class="products-section">
         <h2 class="section-title">Productos Existentes</h2>
 
+        <!-- Empty State — no products at all -->
         <div *ngIf="products.length === 0" class="empty-state">
-          <div class="empty-icon">📦</div>
+          <span class="material-symbols-rounded empty-icon">inventory_2</span>
           <h3>No hay productos</h3>
           <p>Crea tu primer producto usando el botón "Nuevo Producto"</p>
         </div>
 
-        <div *ngIf="products.length > 0" class="products-grid">
-          <div class="product-card" *ngFor="let product of products">
+        <!-- Empty State — filters returned nothing -->
+        <div *ngIf="products.length > 0 && totalFilteredProducts === 0" class="empty-state">
+          <span class="material-symbols-rounded empty-icon">search_off</span>
+          <h3>Sin resultados</h3>
+          <p>No se encontraron productos con los filtros aplicados</p>
+          <button class="btn-clear-inline" (click)="clearFilters()">
+            <span class="material-symbols-rounded">filter_list_off</span>
+            Limpiar filtros
+          </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div *ngIf="totalFilteredProducts > 0" class="products-grid">
+          <div class="product-card" *ngFor="let product of paginatedProducts; trackBy: trackByProductId">
             <!-- Imágenes -->
             <div class="product-header">
               <div class="product-images-container" *ngIf="product.images && product.images.length > 0">
@@ -327,15 +361,22 @@
                   <img [src]="product.images[0].url" [alt]="product.name" loading="lazy">
                 </div>
                 <div class="image-thumbnails" *ngIf="product.images.length > 1">
-                  <div class="thumbnail" *ngFor="let img of product.images.slice(1, 4)" 
-                       [title]="img.description" class="thumbnail-small">
+                  <div class="thumbnail" *ngFor="let img of product.images.slice(1, 4); trackBy: trackByIndex"
+                    [title]="img.description" class="thumbnail-small">
                     <img [src]="img.url" [alt]="img.description" loading="lazy">
                   </div>
                 </div>
               </div>
+              <div class="no-image" *ngIf="!product.images || product.images.length === 0">
+                <span class="material-symbols-rounded">image</span>
+              </div>
               <div class="product-badges">
-                <span class="badge" *ngIf="product.isNew">Nuevo</span>
-                <span class="badge featured" *ngIf="product.isFeatured">Destacado</span>
+                <span class="badge badge-new" *ngIf="product.isNew">
+                  <span class="material-symbols-rounded badge-icon">fiber_new</span> Nuevo
+                </span>
+                <span class="badge badge-featured" *ngIf="product.isFeatured">
+                  <span class="material-symbols-rounded badge-icon">star</span> Destacado
+                </span>
               </div>
             </div>
 
@@ -371,7 +412,7 @@
               <div class="colors-section" *ngIf="product.colors && product.colors.length > 0">
                 <strong>Colores:</strong>
                 <div class="colors-list">
-                  <span class="color-tag" *ngFor="let color of product.colors">{{ color }}</span>
+                  <span class="color-tag" *ngFor="let color of product.colors; trackBy: trackByIndex">{{ color }}</span>
                 </div>
               </div>
 
@@ -379,7 +420,7 @@
               <div class="variants-section" *ngIf="product.variants && product.variants.length > 0">
                 <strong>Variantes:</strong>
                 <div class="variants-list">
-                  <div class="variant-item" *ngFor="let variant of product.variants">
+                  <div class="variant-item" *ngFor="let variant of product.variants; trackBy: trackByIndex">
                     <div class="variant-name">{{ variant.name }}</div>
                     <div class="variant-details">
                       <span class="variant-price" *ngIf="variant.price">
@@ -396,15 +437,38 @@
 
             <div class="product-actions">
               <button class="btn-edit" (click)="editProduct(product)">
-                <span>📝</span> Editar
+                <span class="material-symbols-rounded">edit</span> Editar
               </button>
               <button class="btn-delete" (click)="deleteProduct(product)">
-                <span>🗑️</span> Eliminar
+                <span class="material-symbols-rounded">delete</span> Eliminar
               </button>
             </div>
           </div>
         </div>
+
+        <!-- ===== PAGINATION ===== -->
+        <div class="pagination" *ngIf="totalPages > 1">
+          <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+            <span class="material-symbols-rounded">chevron_left</span> Anterior
+          </button>
+
+          <div class="page-numbers">
+            <button *ngFor="let page of pageNumbers; trackBy: trackByIndex" class="page-number"
+              [class.active]="page === currentPage" (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          </div>
+
+          <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
+            Siguiente <span class="material-symbols-rounded">chevron_right</span>
+          </button>
+
+          <span class="page-info">
+            {{ showingFrom }}–{{ showingTo }} de {{ totalFilteredProducts }}
+          </span>
+        </div>
       </div>
+
     </div>
   </main>
 </div>

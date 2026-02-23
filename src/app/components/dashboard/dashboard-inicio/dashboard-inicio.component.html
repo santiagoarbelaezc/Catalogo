@@ -3,13 +3,17 @@
   <header class="dashboard-header">
     <div class="header-content">
       <div class="header-left">
-        <h1 class="dashboard-title">Panel de Administración</h1>
+        <h1 class="dashboard-title">
+          <span class="material-symbols-rounded title-icon">dashboard</span>
+          Panel de Administración
+        </h1>
         <p class="welcome-text" *ngIf="currentUser">
           Bienvenido, <span class="user-name">{{ currentUser.username }}</span>
         </p>
       </div>
       <div class="header-right">
         <button class="btn-logout" (click)="logout()">
+          <span class="material-symbols-rounded">logout</span>
           <span>Cerrar Sesión</span>
         </button>
       </div>
@@ -32,7 +36,7 @@
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon">
-              <span>📦</span>
+              <span class="material-symbols-rounded">inventory_2</span>
             </div>
             <div class="stat-content">
               <h3 class="stat-number">{{ stats.totalProducts }}</h3>
@@ -41,8 +45,8 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">
-              <span>📂</span>
+            <div class="stat-icon icon-category">
+              <span class="material-symbols-rounded">category</span>
             </div>
             <div class="stat-content">
               <h3 class="stat-number">{{ stats.categories }}</h3>
@@ -51,8 +55,8 @@
           </div>
 
           <div class="stat-card">
-            <div class="stat-icon">
-              <span>📅</span>
+            <div class="stat-icon icon-date">
+              <span class="material-symbols-rounded">calendar_today</span>
             </div>
             <div class="stat-content">
               <h3 class="stat-number">{{ today | date:'fullDate' }}</h3>
@@ -67,16 +71,17 @@
         <h2 class="section-title">Acciones Rápidas</h2>
         <div class="actions-grid">
           <button class="action-card" (click)="navigateToProducts()">
-            <div class="action-icon">➕</div>
+            <div class="action-icon">
+              <span class="material-symbols-rounded">add_circle</span>
+            </div>
             <div class="action-content">
               <h3>Agregar Producto</h3>
               <p>Crear un nuevo producto en el catálogo</p>
             </div>
+            <span class="material-symbols-rounded action-arrow">arrow_forward</span>
           </button>
         </div>
       </section>
-
-      <!-- Productos recientes eliminado para simplificar el dashboard -->
     </div>
   </main>
 </div>

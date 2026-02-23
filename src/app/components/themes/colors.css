@@ -1,34 +1,54 @@
-/* ===== PALETA CLARA Y ELEGANTE ===== */
+/* ===== PALETA NOCHE FRÍA ===== */
 :root {
-  /* Colores principales - Tema claro */
-  --color-primary: #1a1a1a;          /* Negro para texto */
-  --color-secondary: #4a4a4a;        /* Gris oscuro */
-  --color-accent: #e74c3c;           /* Rojo elegante */
-  --color-accent-hover: #c0392b;     /* Rojo más oscuro */
+  /* Palette - Tonos Noche Fría */
+  --color-negro: #121212;        /* Negro frío profundo */
+  --color-negro-gris: #1E1E1E;   /* Negro con matiz gris frío */
+  --color-cafe-oscuro: #3A3330;  /* Café muy oscuro y frío */
+  --color-cafe: #5E4F46;         /* Café frío y refinado */
+  --color-cafe-medio: #7F6B5E;   /* Café medio frío */
+  --color-gris-claro: #E8E6E3;   /* Gris muy claro frío */
+  --color-blanco: #F5F5F5;       /* Blanco puro frío */
 
-  /* Colores de fondo - Claros */
-  --color-bg-primary: #ffffff;       /* Blanco */
-  --color-bg-secondary: #f8f9fa;     /* Gris muy claro */
-  --color-bg-tertiary: #f1f2f3;      /* Gris claro para cards */
+  /* Asignaciones semánticas */
+  --color-primary: var(--color-negro);
+  --color-secondary: var(--color-cafe);
+  --color-accent: var(--color-cafe-medio);
+  --color-accent-hover: var(--color-cafe-oscuro);
 
-  /* Colores de texto */
-  --color-text-primary: #1a1a1a;     /* Negro */
-  --color-text-secondary: #6c757d;   /* Gris medio */
-  --color-text-light: #adb5bd;       /* Gris claro */
-  --color-text-inverse: #ffffff;     /* Blanco para fondos oscuros */
+  --color-background: var(--color-gris-claro);
+  --color-surface: var(--color-blanco);
 
-  /* Colores de estado */
-  --color-success: #28a745;          /* Verde */
-  --color-warning: #ffc107;          /* Amarillo */
-  --color-info: #17a2b8;             /* Azul */
+  --color-text: var(--color-negro);
+  --color-text-light: var(--color-cafe-medio);
 
-  /* Efectos */
-  --color-shadow: rgba(0, 0, 0, 0.1);
-  --color-shadow-heavy: rgba(0, 0, 0, 0.15);
-  --color-border: #e9ecef;
+  --color-border: var(--color-negro-gris);
 
-  /* Transiciones */
+  /* Back-compat aliases for components using old names */
+  --color-bg-primary: var(--color-blanco);
+  --color-bg-secondary: var(--color-gris-claro);
+  --color-bg-tertiary: #DDDBD8;
+
+  --color-text-primary: var(--color-negro);
+  --color-text-secondary: var(--color-cafe);
+  --color-text-inverse: var(--color-blanco);
+
+  /* Estado */
+  --color-success: #4E6B52;
+  --color-warning: #9E8A5A;
+  --color-info: #5A7181;
+
+  /* Shadows - Negro puro para tono frío */
+  --shadow-sm: 0 2px 8px rgba(18, 18, 18, 0.05);
+  --shadow-md: 0 4px 16px rgba(18, 18, 18, 0.08);
+  --shadow-lg: 0 8px 30px rgba(18, 18, 18, 0.12);
+  --shadow-elegant: 0 4px 20px rgba(18, 18, 18, 0.15);
+
+  --color-shadow: rgba(18, 18, 18, 0.1);
+  --color-shadow-heavy: rgba(18, 18, 18, 0.15);
+
+  /* Transitions */
   --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -1,4 +1,4 @@
-/* Declarar fuentes locales personalizadas */
+/* Declarar fuentes locales personalizadas (legacy / PDF) */
 @font-face {
   font-family: 'Fashion Fetish Light';
   src: url('/assets/fonts/Fashion-Fetish-Light.ttf') format('truetype');
@@ -22,22 +22,22 @@
 
 /* Definir familias de fuente con fallbacks */
 .fashion-fetish-light {
-  font-family: 'Fashion Fetish Light', 'Playfair Display', serif;
+  font-family: 'Fashion Fetish Light', 'Inter Tight', serif;
   font-weight: 300;
 }
 
 .fashion-fetish-regular {
-  font-family: 'Fashion Fetish Regular', 'Playfair Display', serif;
+  font-family: 'Fashion Fetish Regular', 'Inter Tight', serif;
   font-weight: 400;
 }
 
 .avenir-next {
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', 'Avenir Next LT Pro', sans-serif;
   font-weight: 400;
 }
 
 body {
-  font-family: 'Avenir Next LT Pro', 'Roboto', sans-serif;
+  font-family: 'Inter Tight', sans-serif;
 }
 
 /* Para elementos específicos que necesitan fuentes seguras en PDF */

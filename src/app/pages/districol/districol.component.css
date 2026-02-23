@@ -1,17 +1,21 @@
+/* Districol */
 .districol-container {
-
-
-  margin: 50px auto;
+  text-align: center;
+  padding: 2rem;
+  font-family: var(--font-primary);
 }
 
-.districol-container h1 {
-  text-align: center;
-  margin-bottom: 10px;
-  color: #333;
+.districol-container h2 {
+  color: var(--color-text-primary);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
 }
 
 .districol-container p {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #666;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
 }
