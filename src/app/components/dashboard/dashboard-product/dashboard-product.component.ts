@@ -50,7 +50,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   // === Pagination ===
   currentPage = 1;
-  itemsPerPage = 6;
+  itemsPerPage = 12;
 
   private subscriptions: Subscription[] = [];
 

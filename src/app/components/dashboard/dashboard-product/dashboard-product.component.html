@@ -1,474 +1,445 @@
-<div class="dashboard-container">
-  <!-- Header -->
-  <header class="dashboard-header">
-    <div class="header-content">
-      <div class="header-left">
-        <button class="btn-back" (click)="goBack()">
-          <span class="material-symbols-rounded">arrow_back</span> Volver al Dashboard
+﻿<div class="min-h-screen bg-gray-50 font-sans">
+
+  <!-- ===== HEADER ===== -->
+  <header class="bg-white sticky top-0 z-40 px-5 md:px-6 pt-5 pb-4 shadow-sm">
+    <div class="max-w-[1600px] mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3 min-w-0">
+        <button (click)="goBack()" class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center shrink-0 hover:bg-black hover:text-white active:scale-95 transition-all duration-200">
+          <span class="material-symbols-rounded" style="font-size:1.1rem">arrow_back</span>
         </button>
-        <h1 class="dashboard-title">
-          <span class="material-symbols-rounded title-icon">inventory</span>
-          Gestión de Productos
-        </h1>
+        <div class="min-w-0">
+          <h1 class="text-lg font-bold text-gray-900 leading-tight truncate">Gestión de Productos</h1>
+          <p class="text-sm text-gray-400">{{ products.length }} productos</p>
+        </div>
       </div>
-      <div class="header-right">
-        <button class="btn-logout" (click)="logout()">
-          <span class="material-symbols-rounded">logout</span>
-          <span>Cerrar Sesión</span>
+      <div class="flex items-center gap-2 shrink-0">
+        <button (click)="showCreateForm()" [disabled]="showForm"
+          class="flex items-center gap-2 px-6 py-3.5 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 active:scale-95 disabled:opacity-40 transition-all duration-200 shadow-md">
+          <span class="material-symbols-rounded" style="font-size:1rem">add</span>
+          Nuevo
+        </button>
+        <button (click)="logout()" class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center hover:bg-red-50 active:scale-95 transition-all duration-200">
+          <span class="material-symbols-rounded text-gray-500" style="font-size:1.1rem">logout</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="dashboard-main">
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="loading-container">
-      <div class="loading-spinner"></div>
-      <p class="loading-text">Cargando productos...</p>
+  <!-- ===== MAIN ===== -->
+  <main class="max-w-[1600px] mx-auto px-5 md:px-6 pb-12 pt-5">
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-32 gap-4">
+      <div class="loading-ring"></div>
+      <p class="text-sm text-gray-400">Cargando productos...</p>
     </div>
 
-    <!-- Content -->
-    <div *ngIf="!isLoading" class="dashboard-content">
+    <div *ngIf="!isLoading" class="space-y-4">
 
-      <!-- ===== TOP BAR ===== -->
-      <div class="actions-bar">
-        <button class="btn-primary" (click)="showCreateForm()" [disabled]="showForm">
-          <span class="material-symbols-rounded">add</span> Nuevo Producto
-        </button>
-        <div class="products-count">
-          <span class="count-number">{{ products.length }}</span>
-          <span class="count-label">productos en total</span>
-        </div>
-      </div>
-
-      <!-- ===== FILTERS BAR ===== -->
-      <div class="filters-bar">
-        <div class="filter-group filter-search">
-          <span class="material-symbols-rounded filter-icon">search</span>
-          <input type="text" class="filter-input" placeholder="Buscar por nombre, material, marca..."
+      <!-- ===== FILTERS ===== -->
+      <div class="bg-white rounded-3xl p-5 md:p-6 shadow-sm border border-gray-100 space-y-4">
+        <!-- Search -->
+        <div class="flex items-center gap-3 bg-gray-50 rounded-2xl px-5 py-4">
+          <span class="material-symbols-rounded text-gray-400" style="font-size:1.1rem">search</span>
+          <input type="text" class="flex-1 bg-transparent text-base text-gray-800 placeholder-gray-400 outline-none"
+            placeholder="Buscar por nombre, material, marca..."
             [value]="searchTerm" (input)="onSearchInput($event)">
+          <button *ngIf="searchTerm" (click)="clearFilters()" class="w-10 h-10 rounded-xl flex items-center justify-center text-gray-400 hover:text-black hover:bg-white transition-colors">
+            <span class="material-symbols-rounded" style="font-size:1rem">close</span>
+          </button>
         </div>
-
-        <div class="filter-group filter-category">
-          <select class="filter-select" [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()">
+        <!-- Category & Status row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <select class="flex-1 bg-gray-50 rounded-2xl px-5 py-4 text-base text-gray-700 outline-none border-0 font-medium"
+            [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()">
             <option value="">Todas las categorías</option>
             <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
           </select>
-        </div>
-
-        <div class="filter-group filter-status">
-          <select class="filter-select" [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()">
+          <select class="flex-1 bg-gray-50 rounded-2xl px-5 py-4 text-base text-gray-700 outline-none border-0 font-medium"
+            [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()">
             <option value="">Todos los estados</option>
             <option value="new">Nuevos</option>
             <option value="featured">Destacados</option>
           </select>
         </div>
-
-        <button class="btn-clear-filters" *ngIf="hasActiveFilters" (click)="clearFilters()">
-          <span class="material-symbols-rounded">close</span> Limpiar
-        </button>
-      </div>
-
-      <!-- Results Info -->
-      <div class="results-info" *ngIf="hasActiveFilters">
-        <span class="material-symbols-rounded results-icon">filter_list</span>
-        <span class="results-text">
-          Mostrando <strong>{{ totalFilteredProducts }}</strong> de <strong>{{ products.length }}</strong> productos
-        </span>
-        <span class="results-filters" *ngIf="searchTerm">
-          · Búsqueda: "{{ searchTerm }}"
-        </span>
-        <span class="results-filters" *ngIf="filterCategory">
-          · Categoría: {{ filterCategory }}
-        </span>
-        <span class="results-filters" *ngIf="filterStatus">
-          · Estado: {{ filterStatus === 'new' ? 'Nuevo' : 'Destacado' }}
-        </span>
+        <!-- Results info -->
+        <div *ngIf="hasActiveFilters" class="flex items-center gap-2 text-xs text-gray-500 px-1">
+          <span class="material-symbols-rounded" style="font-size:0.9rem">filter_list</span>
+          <span>{{ totalFilteredProducts }} de {{ products.length }} productos</span>
+          <button (click)="clearFilters()" class="ml-auto flex items-center gap-1 text-black font-semibold underline">
+            Limpiar
+          </button>
+        </div>
       </div>
 
       <!-- ===== PRODUCT FORM ===== -->
-      <div *ngIf="showForm" class="form-section">
-        <div class="form-card">
-          <h2 class="form-title">
-            <span class="material-symbols-rounded">{{ editingProduct ? 'edit_note' : 'post_add' }}</span>
-            {{ editingProduct ? 'Editar Producto' : 'Crear Nuevo Producto' }}
+      <div *ngIf="showForm" class="bg-white rounded-3xl shadow-md border border-gray-100 overflow-hidden">
+        <!-- Form Header -->
+        <div class="bg-black px-6 py-5">
+          <h2 class="text-white font-bold text-lg flex items-center gap-2">
+            <span class="material-symbols-rounded" style="font-size:1.2rem">{{ editingProduct ? 'edit_note' : 'post_add' }}</span>
+            {{ editingProduct ? 'Editar Producto' : 'Nuevo Producto' }}
           </h2>
+        </div>
 
-          <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
-            <!-- Información Básica -->
-            <div class="form-group">
-              <h3 class="group-title">
-                <span class="material-symbols-rounded group-icon">info</span>
-                Información Básica
-              </h3>
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="p-6 md:p-7 space-y-7">
 
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="name" class="form-label">Nombre del Producto *</label>
-                  <input type="text" id="name" formControlName="name" class="form-input"
-                    [class.error]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
-                    placeholder="Ej: Plastilina Roja">
-                  <div class="error-message"
-                    *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
-                    <span class="material-symbols-rounded error-icon">error</span>
-                    <span *ngIf="productForm.get('name')?.errors?.['required']">El nombre es requerido</span>
-                    <span *ngIf="productForm.get('name')?.errors?.['minlength']">Mínimo 3 caracteres</span>
-                  </div>
+          <!-- Información Básica -->
+          <div class="space-y-4">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Información Básica</h3>
+
+            <div class="space-y-3">
+              <div>
+                <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Nombre *</label>
+                <input type="text" formControlName="name"
+                  [class.ring-2]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+                  class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none ring-red-400 transition-all"
+                  placeholder="Ej: Plastilina Roja">
+                <p class="text-xs text-red-400 mt-1 px-1" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+                  {{ productForm.get('name')?.errors?.['required'] ? 'Nombre requerido' : 'Mínimo 3 caracteres' }}
+                </p>
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Categoría *</label>
+                <select formControlName="category" class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none">
+                  <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Descripción *</label>
+                <textarea formControlName="description" rows="3"
+                  [class.ring-2]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+                  class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none ring-red-400 resize-none transition-all"
+                  placeholder="Describe el producto..."></textarea>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Material *</label>
+                  <input type="text" formControlName="material"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none"
+                    placeholder="Ej: Plastilina">
                 </div>
-
-                <div class="form-field">
-                  <label for="category" class="form-label">Categoría *</label>
-                  <select id="category" formControlName="category" class="form-input">
-                    <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
-                  </select>
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Marca</label>
+                  <input type="text" formControlName="marca"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none"
+                    placeholder="Ej: Districol">
                 </div>
               </div>
 
-              <div class="form-field">
-                <label for="description" class="form-label">Descripción *</label>
-                <textarea id="description" formControlName="description" class="form-textarea"
-                  [class.error]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
-                  placeholder="Describe el producto..." rows="3"></textarea>
-                <div class="error-message"
-                  *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
-                  <span class="material-symbols-rounded error-icon">error</span>
-                  <span *ngIf="productForm.get('description')?.errors?.['required']">La descripción es requerida</span>
-                  <span *ngIf="productForm.get('description')?.errors?.['minlength']">Mínimo 10 caracteres</span>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Gramaje</label>
+                  <input type="text" formControlName="gramaje"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none"
+                    placeholder="Ej: 500g">
                 </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="material" class="form-label">Material *</label>
-                  <input type="text" id="material" formControlName="material" class="form-input"
-                    [class.error]="productForm.get('material')?.invalid && productForm.get('material')?.touched"
-                    placeholder="Ej: Plastilina no tóxica">
-                  <div class="error-message"
-                    *ngIf="productForm.get('material')?.invalid && productForm.get('material')?.touched">
-                    <span class="material-symbols-rounded error-icon">error</span>
-                    <span>El material es requerido</span>
-                  </div>
-                </div>
-
-                <div class="form-field">
-                  <label for="marca" class="form-label">Marca</label>
-                  <input type="text" id="marca" formControlName="marca" class="form-input" placeholder="Ej: Districol">
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-field">
-                  <label for="gramaje" class="form-label">Gramaje</label>
-                  <input type="text" id="gramaje" formControlName="gramaje" class="form-input" placeholder="Ej: 500g">
-                </div>
-
-                <div class="form-field">
-                  <label for="brandIconUrl" class="form-label">URL del Icono de Marca</label>
-                  <input type="url" id="brandIconUrl" formControlName="brandIconUrl" class="form-input"
+                <div>
+                  <label class="text-xs font-semibold text-gray-600 mb-1.5 block">URL Icono Marca</label>
+                  <input type="url" formControlName="brandIconUrl"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none"
                     placeholder="https://...">
                 </div>
               </div>
 
-              <div class="form-field">
-                <label for="options" class="form-label">Opciones Adicionales</label>
-                <textarea id="options" formControlName="options" class="form-textarea"
-                  placeholder="Opciones especiales, características..." rows="2"></textarea>
+              <div>
+                <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Opciones adicionales</label>
+                <textarea formControlName="options" rows="2"
+                  class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none resize-none"
+                  placeholder="Características especiales..."></textarea>
               </div>
             </div>
+          </div>
 
-            <!-- Estados -->
-            <div class="form-group">
-              <h3 class="group-title">
-                <span class="material-symbols-rounded group-icon">toggle_on</span>
-                Estados del Producto
-              </h3>
-              <div class="checkbox-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" formControlName="isNew">
-                  <span class="checkmark"></span>
-                  Producto Nuevo
-                </label>
-                <label class="checkbox-label">
-                  <input type="checkbox" formControlName="isFeatured">
-                  <span class="checkmark"></span>
-                  Producto Destacado
-                </label>
-              </div>
+          <!-- Estados -->
+          <div class="space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Estado del Producto</h3>
+            <div class="flex gap-3">
+              <label class="flex items-center gap-3 flex-1 bg-gray-50 rounded-2xl px-4 py-3.5 cursor-pointer">
+                <input type="checkbox" formControlName="isNew" class="w-5 h-5 rounded-lg accent-black">
+                <span class="text-sm font-semibold text-gray-700">Producto Nuevo</span>
+              </label>
+              <label class="flex items-center gap-3 flex-1 bg-gray-50 rounded-2xl px-4 py-3.5 cursor-pointer">
+                <input type="checkbox" formControlName="isFeatured" class="w-5 h-5 rounded-lg accent-black">
+                <span class="text-sm font-semibold text-gray-700">Destacado</span>
+              </label>
             </div>
+          </div>
 
-            <!-- Colores -->
-            <div class="form-group">
-              <div class="group-header">
-                <h3 class="group-title">
-                  <span class="material-symbols-rounded group-icon">palette</span>
-                  Colores Disponibles
-                </h3>
-                <button type="button" class="btn-add" (click)="addColor()">
-                  <span class="material-symbols-rounded">add</span> Agregar Color
-                </button>
-              </div>
-
-              <div formArrayName="colors" class="colors-list">
-                <div class="color-item"
-                  *ngFor="let colorControl of colorsArray.controls; let i = index; trackBy: trackByIndex">
-                  <input type="text" [formControlName]="i" class="form-input color-input"
-                    placeholder="Ej: Rojo, Azul, Verde">
-                  <button type="button" class="btn-remove" (click)="removeColor(i)">
-                    <span class="material-symbols-rounded">close</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Variantes -->
-            <div class="form-group">
-              <div class="group-header">
-                <h3 class="group-title">
-                  <span class="material-symbols-rounded group-icon">tune</span>
-                  Variantes del Producto
-                </h3>
-                <button type="button" class="btn-add" (click)="addVariant()">
-                  <span class="material-symbols-rounded">add</span> Agregar Variante
-                </button>
-              </div>
-
-              <div formArrayName="variants" class="variants-list">
-                <div class="variant-item"
-                  *ngFor="let variantGroup of variantsArray.controls; let i = index; trackBy: trackByIndex"
-                  [formGroupName]="i">
-                  <div class="variant-fields">
-                    <input type="text" formControlName="name" class="form-input" placeholder="Nombre de la variante">
-                    <input type="number" formControlName="price" class="form-input" placeholder="Precio" min="0"
-                      step="0.01">
-                    <label class="checkbox-label small">
-                      <input type="checkbox" formControlName="available">
-                      <span class="checkmark"></span>
-                      Disponible
-                    </label>
-                  </div>
-                  <button type="button" class="btn-remove" (click)="removeVariant(i)">
-                    <span class="material-symbols-rounded">close</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Imágenes -->
-            <div class="form-group">
-              <div class="group-header">
-                <h3 class="group-title">
-                  <span class="material-symbols-rounded group-icon">image</span>
-                  Imágenes del Producto
-                </h3>
-                <button type="button" class="btn-add" (click)="addImage()">
-                  <span class="material-symbols-rounded">add</span> Agregar Imagen
-                </button>
-              </div>
-
-              <div formArrayName="images" class="images-list">
-                <div class="image-item"
-                  *ngFor="let imageGroup of imagesArray.controls; let i = index; trackBy: trackByIndex"
-                  [formGroupName]="i">
-                  <div class="image-fields">
-                    <input type="url" formControlName="url" class="form-input"
-                      placeholder="URL de la imagen (https://...)">
-                    <input type="text" formControlName="description" class="form-input"
-                      placeholder="Descripción de la imagen">
-                  </div>
-                  <button type="button" class="btn-remove" (click)="removeImage(i)">
-                    <span class="material-symbols-rounded">close</span>
-                  </button>
-                </div>
-              </div>
-
-              <div class="file-upload">
-                <input type="file" id="images" multiple accept="image/*" (change)="onFileSelected($event)"
-                  class="file-input">
-                <label for="images" class="file-label">
-                  <span class="material-symbols-rounded">cloud_upload</span>
-                  O Seleccionar Archivos Locales
-                </label>
-                <p class="file-help">Máximo 5 imágenes, formato JPEG, PNG, JPG, WEBP. Tamaño máximo: 5MB por archivo.
-                </p>
-              </div>
-
-              <!-- Preview de archivos seleccionados -->
-              <div class="files-preview" *ngIf="selectedFiles.length > 0">
-                <h4>
-                  <span class="material-symbols-rounded">attach_file</span>
-                  Imágenes seleccionadas:
-                </h4>
-                <div class="files-list">
-                  <div class="file-item" *ngFor="let file of selectedFiles; let i = index; trackBy: trackByIndex">
-                    <span class="material-symbols-rounded file-type-icon">image</span>
-                    <span class="file-name">{{ file.name }}</span>
-                    <span class="file-size">({{ (file.size / 1024 / 1024).toFixed(2) }} MB)</span>
-                    <button type="button" class="btn-remove-file" (click)="removeFile(i)">
-                      <span class="material-symbols-rounded">close</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Botones del formulario -->
-            <div class="form-actions">
-              <button type="button" class="btn-secondary" (click)="cancelEdit()">
-                <span class="material-symbols-rounded">close</span>
-                Cancelar
-              </button>
-              <button type="submit" class="btn-primary" [disabled]="isSubmitting || productForm.invalid">
-                <span class="material-symbols-rounded" *ngIf="!isSubmitting">{{ editingProduct ? 'save' : 'add'
-                  }}</span>
-                <span *ngIf="isSubmitting">Guardando...</span>
-                <span *ngIf="!isSubmitting">{{ editingProduct ? 'Actualizar' : 'Crear' }} Producto</span>
+          <!-- Colores -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Colores</h3>
+              <button type="button" (click)="addColor()"
+                class="flex items-center gap-1.5 px-3 py-2 bg-black text-white text-xs font-bold rounded-xl active:scale-95 transition-all">
+                <span class="material-symbols-rounded" style="font-size:0.9rem">add</span> Agregar
               </button>
             </div>
-          </form>
-        </div>
+            <div formArrayName="colors" class="space-y-2">
+              <div class="flex gap-2" *ngFor="let c of colorsArray.controls; let i = index; trackBy: trackByIndex">
+                <input type="text" [formControlName]="i"
+                  class="flex-1 bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none"
+                  placeholder="Ej: Rojo, Azul...">
+                <button type="button" (click)="removeColor(i)"
+                  class="w-10 h-10 bg-red-50 rounded-2xl flex items-center justify-center hover:bg-red-100 active:scale-95 transition-all">
+                  <span class="material-symbols-rounded text-red-400" style="font-size:1rem">close</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Variantes -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Variantes</h3>
+              <button type="button" (click)="addVariant()"
+                class="flex items-center gap-1.5 px-3 py-2 bg-black text-white text-xs font-bold rounded-xl active:scale-95 transition-all">
+                <span class="material-symbols-rounded" style="font-size:0.9rem">add</span> Agregar
+              </button>
+            </div>
+            <div formArrayName="variants" class="space-y-3">
+              <div class="bg-gray-50 rounded-2xl p-4 space-y-3"
+                *ngFor="let vg of variantsArray.controls; let i = index; trackBy: trackByIndex"
+                [formGroupName]="i">
+                <div class="flex gap-2">
+                  <input type="text" formControlName="name"
+                    class="flex-1 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200"
+                    placeholder="Nombre variante">
+                  <input type="number" formControlName="price" min="0" step="0.01"
+                    class="w-28 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200"
+                    placeholder="Precio">
+                </div>
+                <div class="flex items-center justify-between">
+                  <label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
+                    <input type="checkbox" formControlName="available" class="w-4 h-4 accent-black">
+                    Disponible
+                  </label>
+                  <button type="button" (click)="removeVariant(i)"
+                    class="text-xs text-red-400 font-semibold hover:text-red-600">Eliminar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Imágenes URL -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-widest text-gray-400">Imágenes</h3>
+              <button type="button" (click)="addImage()"
+                class="flex items-center gap-1.5 px-3 py-2 bg-black text-white text-xs font-bold rounded-xl active:scale-95 transition-all">
+                <span class="material-symbols-rounded" style="font-size:0.9rem">add</span> Agregar URL
+              </button>
+            </div>
+            <div formArrayName="images" class="space-y-2">
+              <div class="flex gap-2"
+                *ngFor="let ig of imagesArray.controls; let i = index; trackBy: trackByIndex"
+                [formGroupName]="i">
+                <div class="flex-1 space-y-2">
+                  <input type="url" formControlName="url"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none"
+                    placeholder="URL imagen (https://...)">
+                  <input type="text" formControlName="description"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none"
+                    placeholder="Descripción">
+                </div>
+                <button type="button" (click)="removeImage(i)"
+                  class="w-10 h-10 bg-red-50 rounded-2xl flex items-center justify-center hover:bg-red-100 active:scale-95 transition-all self-start mt-0">
+                  <span class="material-symbols-rounded text-red-400" style="font-size:1rem">close</span>
+                </button>
+              </div>
+            </div>
+            <!-- File Upload -->
+            <div class="border-2 border-dashed border-gray-200 rounded-3xl p-5 text-center hover:border-gray-400 transition-colors">
+              <input type="file" id="images" multiple accept="image/*" (change)="onFileSelected($event)" class="hidden">
+              <label for="images" class="cursor-pointer flex flex-col items-center gap-2">
+                <div class="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+                  <span class="material-symbols-rounded text-gray-400" style="font-size:1.3rem">cloud_upload</span>
+                </div>
+                <p class="text-sm font-semibold text-gray-700">Subir archivos locales</p>
+                <p class="text-xs text-gray-400">JPEG, PNG, WebP — máx 5MB</p>
+              </label>
+            </div>
+            <!-- Selected files preview -->
+            <div *ngIf="selectedFiles.length > 0" class="bg-gray-50 rounded-2xl p-3 space-y-2">
+              <p class="text-xs font-bold text-gray-500 uppercase tracking-wide px-1">Archivos seleccionados</p>
+              <div *ngFor="let file of selectedFiles; let i = index; trackBy: trackByIndex"
+                class="flex items-center gap-3 bg-white rounded-xl px-3 py-2.5">
+                <span class="material-symbols-rounded text-gray-400" style="font-size:1rem">image</span>
+                <span class="text-xs text-gray-700 flex-1 truncate">{{ file.name }}</span>
+                <span class="text-xs text-gray-400">{{ (file.size/1024/1024).toFixed(1) }}MB</span>
+                <button type="button" (click)="removeFile(i)" class="text-red-400 hover:text-red-600">
+                  <span class="material-symbols-rounded" style="font-size:0.9rem">close</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex gap-3 pt-2">
+            <button type="button" (click)="cancelEdit()"
+              class="flex-1 py-4 bg-gray-100 text-gray-700 font-bold text-sm rounded-2xl hover:bg-gray-200 active:scale-98 transition-all">
+              Cancelar
+            </button>
+            <button type="submit" [disabled]="isSubmitting || productForm.invalid"
+              class="flex-1 py-4 bg-black text-white font-bold text-sm rounded-2xl hover:bg-gray-800 active:scale-98 disabled:opacity-40 transition-all shadow-md">
+              <span *ngIf="isSubmitting">Guardando...</span>
+              <span *ngIf="!isSubmitting">{{ editingProduct ? 'Actualizar' : 'Crear Producto' }}</span>
+            </button>
+          </div>
+
+        </form>
       </div>
 
       <!-- ===== PRODUCTS LIST ===== -->
-      <div class="products-section">
-        <h2 class="section-title">Productos Existentes</h2>
+      <div>
+        <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3 px-1">Productos</p>
 
-        <!-- Empty State — no products at all -->
-        <div *ngIf="products.length === 0" class="empty-state">
-          <span class="material-symbols-rounded empty-icon">inventory_2</span>
-          <h3>No hay productos</h3>
-          <p>Crea tu primer producto usando el botón "Nuevo Producto"</p>
+        <!-- Empty: no products -->
+        <div *ngIf="products.length === 0" class="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-100">
+          <div class="w-16 h-16 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-rounded text-gray-400" style="font-size:1.8rem;font-variation-settings:'FILL' 1">inventory_2</span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-1">Sin productos</h3>
+          <p class="text-sm text-gray-400">Crea tu primer producto con el botón "Nuevo"</p>
         </div>
 
-        <!-- Empty State — filters returned nothing -->
-        <div *ngIf="products.length > 0 && totalFilteredProducts === 0" class="empty-state">
-          <span class="material-symbols-rounded empty-icon">search_off</span>
-          <h3>Sin resultados</h3>
-          <p>No se encontraron productos con los filtros aplicados</p>
-          <button class="btn-clear-inline" (click)="clearFilters()">
-            <span class="material-symbols-rounded">filter_list_off</span>
+        <!-- Empty: filters -->
+        <div *ngIf="products.length > 0 && totalFilteredProducts === 0" class="bg-white rounded-3xl p-10 text-center shadow-sm border border-gray-100">
+          <div class="w-16 h-16 bg-gray-100 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-rounded text-gray-400" style="font-size:1.8rem">search_off</span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-1">Sin resultados</h3>
+          <p class="text-sm text-gray-400 mb-4">Prueba con otros filtros</p>
+          <button (click)="clearFilters()" class="px-5 py-2.5 bg-black text-white text-sm font-bold rounded-2xl active:scale-95 transition-all">
             Limpiar filtros
           </button>
         </div>
 
         <!-- Products Grid -->
-        <div *ngIf="totalFilteredProducts > 0" class="products-grid">
-          <div class="product-card" *ngFor="let product of paginatedProducts; trackBy: trackByProductId">
-            <!-- Imágenes -->
-            <div class="product-header">
-              <div class="product-images-container" *ngIf="product.images && product.images.length > 0">
-                <div class="main-image">
-                  <img [src]="product.images[0].url" [alt]="product.name" loading="lazy">
-                </div>
-                <div class="image-thumbnails" *ngIf="product.images.length > 1">
-                  <div class="thumbnail" *ngFor="let img of product.images.slice(1, 4); trackBy: trackByIndex"
-                    [title]="img.description" class="thumbnail-small">
-                    <img [src]="img.url" [alt]="img.description" loading="lazy">
-                  </div>
-                </div>
-              </div>
-              <div class="no-image" *ngIf="!product.images || product.images.length === 0">
-                <span class="material-symbols-rounded">image</span>
-              </div>
-              <div class="product-badges">
-                <span class="badge badge-new" *ngIf="product.isNew">
-                  <span class="material-symbols-rounded badge-icon">fiber_new</span> Nuevo
+        <div *ngIf="totalFilteredProducts > 0" class="products-section grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId"
+            class="bg-white rounded-2xl border border-gray-100 overflow-hidden h-full min-h-[620px] max-h-[620px] flex flex-col">
+
+            <!-- Product Image -->
+            <div class="relative product-image-square bg-gray-100" *ngIf="product.images && product.images.length > 0">
+              <img [src]="product.images[0].url" [alt]="product.name"
+                class="w-full h-full object-contain p-2" loading="lazy">
+              <!-- Badges -->
+              <div class="absolute top-2 left-2 flex gap-1.5">
+                <span *ngIf="product.isNew"
+                  class="flex items-center gap-1 px-2 py-1 bg-black/80 text-white text-[10px] font-semibold rounded-lg">
+                  <span class="material-symbols-rounded" style="font-size:0.72rem;font-variation-settings:'FILL' 1">fiber_new</span> Nuevo
                 </span>
-                <span class="badge badge-featured" *ngIf="product.isFeatured">
-                  <span class="material-symbols-rounded badge-icon">star</span> Destacado
+                <span *ngIf="product.isFeatured"
+                  class="flex items-center gap-1 px-2 py-1 bg-white/90 text-gray-700 text-[10px] font-semibold rounded-lg">
+                  <span class="material-symbols-rounded" style="font-size:0.72rem;font-variation-settings:'FILL' 1">star</span> Destacado
                 </span>
               </div>
             </div>
+            <!-- No image placeholder -->
+            <div *ngIf="!product.images || product.images.length === 0"
+              class="product-image-square bg-gray-100 flex items-center justify-center">
+              <span class="material-symbols-rounded text-gray-300" style="font-size:2rem">image</span>
+            </div>
 
-            <div class="product-content">
-              <div class="product-header-info">
-                <div>
-                  <h3 class="product-name">{{ product.name }}</h3>
-                  <p class="product-category">{{ product.category }}</p>
+            <!-- Content -->
+            <div class="p-4 flex-1 min-h-0 flex flex-col gap-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="min-w-0">
+                  <h3 class="font-bold text-gray-900 text-base leading-tight truncate">{{ product.name }}</h3>
+                  <span class="inline-block mt-1 px-2.5 py-0.5 bg-gray-100 text-gray-500 text-xs font-semibold rounded-full">
+                    {{ product.category }}
+                  </span>
                 </div>
-                <div class="product-brand" *ngIf="product.brandIconUrl">
-                  <img [src]="product.brandIconUrl" [alt]="product.marca" class="brand-icon">
-                </div>
+                <img *ngIf="product.brandIconUrl" [src]="product.brandIconUrl" [alt]="product.marca"
+                  class="w-10 h-10 object-contain rounded-lg shrink-0 bg-gray-50 p-1">
               </div>
 
-              <p class="product-description">{{ product.description }}</p>
+              <div class="flex-1 min-h-0 overflow-y-auto pr-1 dashboard-card-scroll space-y-3">
+                <p class="text-sm text-gray-500 leading-relaxed line-clamp-3">{{ product.description }}</p>
 
-              <div class="product-info-section">
-                <div class="info-row" *ngIf="product.material">
-                  <strong>Material:</strong>
-                  <span>{{ product.material }}</span>
+                <!-- Info chips -->
+                <div class="flex flex-wrap gap-1.5">
+                  <span *ngIf="product.material" class="px-2.5 py-1 bg-gray-50 text-gray-600 text-xs rounded-xl">
+                    {{ product.material }}
+                  </span>
+                  <span *ngIf="product.gramaje" class="px-2.5 py-1 bg-gray-50 text-gray-600 text-xs rounded-xl">
+                    {{ product.gramaje }}
+                  </span>
+                  <span *ngIf="product.marca" class="px-2.5 py-1 bg-gray-50 text-gray-600 text-xs rounded-xl">
+                    {{ product.marca }}
+                  </span>
                 </div>
-                <div class="info-row" *ngIf="product.marca">
-                  <strong>Marca:</strong>
-                  <span>{{ product.marca }}</span>
-                </div>
-                <div class="info-row" *ngIf="product.gramaje">
-                  <strong>Gramaje:</strong>
-                  <span>{{ product.gramaje }}</span>
-                </div>
-              </div>
 
-              <!-- Colores disponibles -->
-              <div class="colors-section" *ngIf="product.colors && product.colors.length > 0">
-                <strong>Colores:</strong>
-                <div class="colors-list">
-                  <span class="color-tag" *ngFor="let color of product.colors; trackBy: trackByIndex">{{ color }}</span>
+                <!-- Colors -->
+                <div *ngIf="product.colors && product.colors.length > 0" class="flex flex-wrap gap-1.5">
+                  <span *ngFor="let color of product.colors; trackBy: trackByIndex"
+                    class="px-2.5 py-1 bg-black text-white text-xs font-medium rounded-full">
+                    {{ color }}
+                  </span>
                 </div>
-              </div>
 
-              <!-- Variantes -->
-              <div class="variants-section" *ngIf="product.variants && product.variants.length > 0">
-                <strong>Variantes:</strong>
-                <div class="variants-list">
-                  <div class="variant-item" *ngFor="let variant of product.variants; trackBy: trackByIndex">
-                    <div class="variant-name">{{ variant.name }}</div>
-                    <div class="variant-details">
-                      <span class="variant-price" *ngIf="variant.price">
-                        ${{ variant.price | number:'1.0-2' }}
-                      </span>
-                      <span class="variant-available" [class.unavailable]="!variant.available">
-                        {{ variant.available ? '✓ Disponible' : '✗ No disponible' }}
-                      </span>
+                <!-- Variants -->
+                <div *ngIf="product.variants && product.variants.length > 0" class="space-y-1.5">
+                  <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Variantes</p>
+                  <div class="flex flex-wrap gap-1.5">
+                    <div *ngFor="let variant of product.variants; trackBy: trackByIndex"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium"
+                      [class.bg-gray-900]="variant.available" [class.text-white]="variant.available"
+                      [class.bg-gray-100]="!variant.available" [class.text-gray-400]="!variant.available">
+                      <span>{{ variant.name }}</span>
+                      <span *ngIf="variant.price" class="opacity-70">· ${{ variant.price | number:'1.0-2' }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div class="product-actions">
-              <button class="btn-edit" (click)="editProduct(product)">
-                <span class="material-symbols-rounded">edit</span> Editar
-              </button>
-              <button class="btn-delete" (click)="deleteProduct(product)">
-                <span class="material-symbols-rounded">delete</span> Eliminar
-              </button>
+              <!-- Actions -->
+              <div class="flex gap-2 pt-1 mt-auto">
+                <button (click)="editProduct(product)"
+                  class="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 text-gray-800 text-sm font-bold rounded-2xl hover:bg-gray-200 active:scale-97 transition-all">
+                  <span class="material-symbols-rounded" style="font-size:1rem">edit</span>
+                  Editar
+                </button>
+                <button (click)="deleteProduct(product)"
+                  class="flex-1 flex items-center justify-center gap-2 py-3 bg-red-50 text-red-500 text-sm font-bold rounded-2xl hover:bg-red-100 active:scale-97 transition-all">
+                  <span class="material-symbols-rounded" style="font-size:1rem">delete</span>
+                  Eliminar
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- ===== PAGINATION ===== -->
-        <div class="pagination" *ngIf="totalPages > 1">
-          <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">
-            <span class="material-symbols-rounded">chevron_left</span> Anterior
+        <!-- Pagination -->
+        <div *ngIf="totalPages > 1" class="flex items-center justify-between gap-4 mt-4 bg-white rounded-3xl p-4 shadow-sm border border-gray-100">
+          <div class="hidden md:block text-sm text-gray-500 font-medium">
+            {{ showingFrom }}–{{ showingTo }} de {{ totalFilteredProducts }} productos
+          </div>
+          <button class="w-11 h-11 bg-gray-100 rounded-2xl flex items-center justify-center hover:bg-black hover:text-white active:scale-95 transition-all disabled:opacity-30"
+            [disabled]="currentPage === 1" (click)="prevPage()">
+            <span class="material-symbols-rounded" style="font-size:1.1rem">chevron_left</span>
           </button>
-
-          <div class="page-numbers">
-            <button *ngFor="let page of pageNumbers; trackBy: trackByIndex" class="page-number"
-              [class.active]="page === currentPage" (click)="goToPage(page)">
+          <div class="flex gap-1.5">
+            <button *ngFor="let page of pageNumbers; trackBy: trackByIndex"
+              (click)="goToPage(page)"
+              class="w-9 h-9 rounded-xl text-sm font-bold transition-all"
+              [class.bg-black]="page === currentPage" [class.text-white]="page === currentPage"
+              [class.bg-gray-100]="page !== currentPage" [class.text-gray-600]="page !== currentPage">
               {{ page }}
             </button>
           </div>
-
-          <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">
-            Siguiente <span class="material-symbols-rounded">chevron_right</span>
+          <button class="w-11 h-11 bg-gray-100 rounded-2xl flex items-center justify-center hover:bg-black hover:text-white active:scale-95 transition-all disabled:opacity-30"
+            [disabled]="currentPage === totalPages" (click)="nextPage()">
+            <span class="material-symbols-rounded" style="font-size:1.1rem">chevron_right</span>
           </button>
-
-          <span class="page-info">
-            {{ showingFrom }}–{{ showingTo }} de {{ totalFilteredProducts }}
-          </span>
         </div>
-      </div>
 
+      </div>
     </div>
   </main>
+
 </div>

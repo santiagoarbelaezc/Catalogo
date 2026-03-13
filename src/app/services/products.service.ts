@@ -3,14 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 
+import { environment } from '../../environments/environment';
+
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProductsService {
-  
-  private apiUrl = 'https://d20quunkr79ym2.cloudfront.net/api/productos';
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = `${environment.apiUrl}/productos`;
+
+  constructor(private http: HttpClient) { }
 
   /**
    * 📖 Obtener todos los productos
@@ -79,7 +82,7 @@ export class ProductsService {
     formData.append('name', product.name);
     formData.append('description', product.description);
     formData.append('material', product.material);
-    
+
     if (product.category) formData.append('category', product.category);
     if (product.options) formData.append('options', product.options);
     if (product.isNew !== undefined) formData.append('isNew', product.isNew.toString());
@@ -90,8 +93,8 @@ export class ProductsService {
 
     // Agregar colores como string separado por comas
     if (product.colors && product.colors.length > 0) {
-      const colorString = Array.isArray(product.colors) 
-        ? product.colors.join(',') 
+      const colorString = Array.isArray(product.colors)
+        ? product.colors.join(',')
         : product.colors;
       formData.append('colors', colorString);
     }

@@ -1,93 +1,102 @@
-<nav class="navbar" [class.hidden]="!isVisible">
-  <div class="nav-container">
-    <!-- Left: Location -->
-    <div class="navbar-left">
-      <div class="location">
-        <fa-icon [icon]="faMapMarkerAlt" class="location-icon"></fa-icon>
-        <span class="location-text">Cra. 19 #19-35</span>
+﻿<!-- ===== NAVBAR - APP STYLE ===== -->
+<nav class="navbar-wrap" [class.navbar-hidden]="!isVisible">
+
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-20">
+
+    <!-- LEFT: Location pill -->
+    <div class="flex items-center gap-2 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-600 font-semibold">
+      <fa-icon [icon]="faMapMarkerAlt" class="text-gray-500" style="font-size:0.85rem"></fa-icon>
+      <span class="hidden sm:inline">Cra. 19 #19-35</span>
+      <span class="sm:hidden">Ubicación</span>
+    </div>
+
+    <!-- CENTER: Desktop Nav Links -->
+    <div class="hidden md:flex items-center gap-2">
+      <a routerLink="/catalogo" class="nav-item">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catálogo" class="nav-logo-img">
+        <span class="nav-label">Catálogo</span>
+      </a>
+      <a routerLink="/plaxtilineas" class="nav-item">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="nav-logo-img">
+        <span class="nav-label">Plaxtilineas</span>
+      </a>
+      <a routerLink="/espumasplasticos" class="nav-item">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumas" class="nav-logo-img">
+        <span class="nav-label">Espumas</span>
+      </a>
+      <a routerLink="/districol" class="nav-item">
+        <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770137278/districol_es6ukx.png" alt="districol" class="nav-logo-img">
+        <span class="nav-label">Districol</span>
+      </a>
+    </div>
+
+    <!-- RIGHT: Phone + Login + Hamburger -->
+    <div class="flex items-center gap-3">
+      <!-- Phone pill — desktop only -->
+      <div class="hidden lg:flex items-center gap-2 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-600 font-semibold">
+        <fa-icon [icon]="faPhone" style="font-size:0.85rem"></fa-icon>
+        <span>3006680125</span>
       </div>
-    </div>
 
-    <!-- Center: Links (Desktop) -->
-    <div class="navbar-center desktop-menu">
-      <a routerLink="/catalogo" class="nav-link">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catalogo" class="nav-logo">
-          <span class="logo-name">Catálogo</span>
-        </div>
+      <!-- Login btn -->
+      <a routerLink="/login"
+        class="hidden md:flex items-center gap-2 px-5 py-3 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 active:scale-95 transition-all duration-200 shadow-md">
+        <span>Ingresar</span>
+        <fa-icon [icon]="faStore" style="font-size:0.8rem"></fa-icon>
       </a>
-      <a routerLink="/plaxtilineas" class="nav-link">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="nav-logo">
-          <span class="logo-name">Plaxtilineas</span>
-        </div>
-      </a>
-      <a routerLink="/espumasplasticos" class="nav-link">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumasplasticos" class="nav-logo">
-          <span class="logo-name">Espumas Plásticos</span>
-        </div>
-      </a>
-      <a routerLink="/districol" class="nav-link">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770137278/districol_es6ukx.png" alt="districol" class="nav-logo">
-          <span class="logo-name">Districol</span>
-        </div>
-      </a>
-    </div>
 
-    <!-- Mobile Menu Button -->
-    <div class="mobile-menu-button">
-      <button class="hamburger-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
-        <fa-icon [icon]="isMobileMenuOpen ? faTimes : faBars"></fa-icon>
+      <!-- Mobile hamburger -->
+      <button
+        class="md:hidden w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-700 hover:bg-gray-200 active:scale-95 transition-all duration-200"
+        (click)="toggleMobileMenu()">
+        <fa-icon [icon]="isMobileMenuOpen ? faTimes : faBars" style="font-size:1.1rem"></fa-icon>
       </button>
     </div>
+  </div>
 
-    <!-- Right: Contact -->
-    <div class="navbar-right">
-      <div class="contact-info">
-        
-        <span class="phone">
-          <fa-icon [icon]="faPhone" class="phone-icon"></fa-icon>
+  <!-- MOBILE MENU DROPDOWN -->
+  <div class="mobile-dropdown md:hidden" [class.mobile-dropdown-open]="isMobileMenuOpen">
+    <div class="px-4 pt-2 pb-4 space-y-1 bg-white border-t border-gray-100">
+      <!-- Nav items -->
+      <a routerLink="/catalogo" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <div class="mobile-nav-icon bg-gray-100 rounded-xl p-2">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catálogo" class="w-8 h-5 object-contain">
+        </div>
+        <span>Catálogo</span>
+      </a>
+      <a routerLink="/plaxtilineas" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <div class="mobile-nav-icon bg-gray-100 rounded-xl p-2">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="w-8 h-5 object-contain">
+        </div>
+        <span>Plaxtilineas</span>
+      </a>
+      <a routerLink="/espumasplasticos" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <div class="mobile-nav-icon bg-gray-100 rounded-xl p-2">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumas" class="w-8 h-5 object-contain">
+        </div>
+        <span>Espumas Plásticos</span>
+      </a>
+      <a routerLink="/districol" class="mobile-nav-item" (click)="toggleMobileMenu()">
+        <div class="mobile-nav-icon bg-gray-100 rounded-xl p-2">
+          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770137278/districol_es6ukx.png" alt="districol" class="w-8 h-5 object-contain">
+        </div>
+        <span>Districol</span>
+      </a>
+
+      <!-- Divider + Login -->
+      <div class="pt-2 mt-2 border-t border-gray-100">
+        <a routerLink="/login"
+          class="flex items-center justify-center gap-2 w-full py-3.5 bg-black text-white text-sm font-bold rounded-2xl active:scale-98 transition-all duration-200 shadow-md"
+          (click)="toggleMobileMenu()">
+          <fa-icon [icon]="faStore" style="font-size:0.85rem"></fa-icon>
+          Ingresar al Panel
+        </a>
+        <p class="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-1.5">
+          <fa-icon [icon]="faPhone" style="font-size:0.7rem"></fa-icon>
           3006680125
-        </span>
+        </p>
       </div>
-
-      <!-- Botón Iniciar Sesión -->
-      <a routerLink="/login" class="nav-link login-link"><span class="login-icon">🔐</span><span class="login-text">Iniciar Sesión</span></a>
     </div>
   </div>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" [class.open]="isMobileMenuOpen">
-    <div class="mobile-menu-content">
-      <a routerLink="/catalogo" class="mobile-nav-link" (click)="toggleMobileMenu()">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catalogo" class="nav-logo">
-          <span class="logo-name">Catálogo</span>
-        </div>
-      </a>
-      <a routerLink="/plaxtilineas" class="mobile-nav-link" (click)="toggleMobileMenu()">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/plaxtilineas_ujgbfz.png" alt="plaxtilineas" class="nav-logo">
-          <span class="logo-name">Plaxtilineas</span>
-        </div>
-      </a>
-      <a routerLink="/espumasplasticos" class="mobile-nav-link" (click)="toggleMobileMenu()">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770064558/espumas_y4y3du.png" alt="espumasplasticos" class="nav-logo">
-          <span class="logo-name">Espumas Plásticos</span>
-        </div>
-      </a>
-      <a routerLink="/districol" class="mobile-nav-link" (click)="toggleMobileMenu()">
-        <div class="logo-container">
-          <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770137278/districol_es6ukx.png" alt="districol" class="nav-logo">
-          <span class="logo-name">Districol</span>
-        </div>
-      </a>
-
-      <!-- Mobile Login -->
-      <a routerLink="/login" class="mobile-nav-link mobile-login-link" (click)="toggleMobileMenu()">🔐 Iniciar Sesión</a>
-    </div>
-  </div>
 </nav>

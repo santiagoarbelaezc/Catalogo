@@ -1,70 +1,147 @@
-<app-navbar></app-navbar>
+﻿<app-navbar></app-navbar>
 
-<!-- Nueva sección de portada -->
-<div class="catalog-container">
+<div class="plax-page font-sans">
 
-  <!-- HEADER -->
-  <header class="catalog-header">
-    <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770774037/logo_dzyf74.png"
-         alt="Plaxtilineas"
-         class="main-logo">
+  <!-- ===== HERO HEADER ===== -->
+  <header class="plax-hero">
 
-    <h1>PLAXTILINEAS</h1>
-    <p class="subtitle">TRADICIÓN QUE PROYECTA FUTURO</p>
-  </header>
+    <!-- Decorative background blobs -->
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
 
-  <!-- FRASE -->
-  <section class="catalog-message">
-    <p>
-      Ofrecemos insumos esenciales con calidad y soluciones innovadoras,
-      adaptándose a cada cliente
-    </p>
-  </section>
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <img
+          src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770774037/logo_dzyf74.png"
+          alt="Plaxtilineas"
+          class="hero-logo">
+      </div>
 
-  <!-- BANNER -->
-  <section class="catalog-banner">
-    <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770774078/banner_i1zm0k.jpg"
-         alt="Banner"
-         class="banner-img">
-  </section>
+      <h1 class="hero-title">PLAXTILINEAS</h1>
+      <p class="hero-subtitle">TRADICIÓN QUE PROYECTA FUTURO</p>
 
-  <!-- ALIADOS -->
-  <section class="catalog-allies">
-
-    <h2>NUESTROS ALIADOS</h2>
-
-    <div class="brands-grid">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/logo-plastextil_ibgjci.png" alt="Plastextil" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878740/espumas_santafe_k82s21.png" alt="Espumas Santafé" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/espumas_medellin_dd3gcm.png" alt="Espumas Medellín" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/Testicol_do2hm1.png" alt="Testicol" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/POLYLON_ahvqpe.png" alt="Polylon" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/grupoExcala_abrci9.png" alt="Grupo Excala" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/logo-pegatex_ixgyw0.png" alt="Pegatex" class="brand-logo">
-
-      <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/preflex_vjabto.png" alt="Preflex" class="brand-logo">
-
+      <div class="hero-pill">
+        <span class="material-symbols-rounded" style="font-size:1rem">verified</span>
+        Calidad garantizada
+      </div>
     </div>
 
+  </header>
+
+  <!-- ===== MESSAGE QUOTE ===== -->
+  <section class="plax-quote">
+    <div class="quote-card">
+      <span class="material-symbols-rounded quote-icon">format_quote</span>
+      <p class="quote-text">
+        Ofrecemos insumos esenciales con calidad y soluciones innovadoras,
+        adapt&aacute;ndonos a cada cliente para impulsar su crecimiento.
+      </p>
+    </div>
   </section>
 
-</div>
+  <!-- ===== BANNER ===== -->
+  <section class="plax-banner">
+    <div class="banner-frame">
+      <img
+        src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770774078/banner_i1zm0k.jpg"
+        alt="Banner Plaxtilineas"
+        class="banner-img">
+      <div class="banner-overlay">
+        <span class="banner-badge">
+          <span class="material-symbols-rounded" style="font-size:1rem">star</span>
+          Líderes en el sector
+        </span>
+      </div>
+    </div>
+  </section>
 
-<!-- Sección original de productos -->
-<section id="plaxtilineas-section" class="catalog-section plaxtilineas-container">
-  <div class="products-grid">
+  <!-- ===== ALLIES ===== -->
+  <section class="plax-allies">
+    <div class="allies-inner">
+
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">handshake</span>
+        NUESTROS ALIADOS
+      </div>
+      <h2 class="section-title">Marcas que nos respaldan</h2>
+
+      <div class="brands-grid">
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/logo-plastextil_ibgjci.png" alt="Plastextil" class="brand-img">
+          </div>
+          <span class="brand-name">Plastextil</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878740/espumas_santafe_k82s21.png" alt="Espumas Santafé" class="brand-img">
+          </div>
+          <span class="brand-name">Espumas Santafé</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/espumas_medellin_dd3gcm.png" alt="Espumas Medellín" class="brand-img">
+          </div>
+          <span class="brand-name">Espumas Medellín</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/Testicol_do2hm1.png" alt="Testicol" class="brand-img">
+          </div>
+          <span class="brand-name">Testicol</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/POLYLON_ahvqpe.png" alt="Polylon" class="brand-img">
+          </div>
+          <span class="brand-name">Polylon</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/grupoExcala_abrci9.png" alt="Grupo Excala" class="brand-img">
+          </div>
+          <span class="brand-name">Grupo Excala</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/logo-pegatex_ixgyw0.png" alt="Pegatex" class="brand-img">
+          </div>
+          <span class="brand-name">Pegatex</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878742/preflex_vjabto.png" alt="Preflex" class="brand-img">
+          </div>
+          <span class="brand-name">Preflex</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section id="plaxtilineas-section" class="plax-products">
+    <div class="products-header">
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">inventory_2</span>
+        CATÁLOGO
+      </div>
+      <h2 class="section-title">Nuestros Productos</h2>
+    </div>
+
     <app-catalog-item
       *ngFor="let product of products; let i = index"
       [product]="product"
-      [backgroundGradient]="'#F0F0F0,#AAAAAA'"
       [reverseLayout]="i % 2 === 1">
     </app-catalog-item>
-  </div>
-</section>
+  </section>
+
+</div>
