@@ -116,9 +116,14 @@
 
               <div>
                 <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Categoría *</label>
-                <select formControlName="category" class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none">
+                <select formControlName="category" 
+                  [class.ring-2]="productForm.get('category')?.invalid && productForm.get('category')?.touched"
+                  class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none ring-red-400 transition-all">
                   <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat }}</option>
                 </select>
+                <p class="text-xs text-red-400 mt-1 px-1" *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched">
+                  Categoría requerida
+                </p>
               </div>
 
               <div>
@@ -127,14 +132,21 @@
                   [class.ring-2]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
                   class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none ring-red-400 resize-none transition-all"
                   placeholder="Describe el producto..."></textarea>
+                <p class="text-xs text-red-400 mt-1 px-1" *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+                  {{ productForm.get('description')?.errors?.['required'] ? 'Descripción requerida' : 'Mínimo 10 caracteres' }}
+                </p>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Material *</label>
                   <input type="text" formControlName="material"
-                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none"
+                    [class.ring-2]="productForm.get('material')?.invalid && productForm.get('material')?.touched"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3.5 text-sm text-gray-800 outline-none ring-red-400 transition-all"
                     placeholder="Ej: Plastilina">
+                  <p class="text-xs text-red-400 mt-1 px-1" *ngIf="productForm.get('material')?.invalid && productForm.get('material')?.touched">
+                    Material requerido
+                  </p>
                 </div>
                 <div>
                   <label class="text-xs font-semibold text-gray-600 mb-1.5 block">Marca</label>
@@ -220,10 +232,12 @@
                 [formGroupName]="i">
                 <div class="flex gap-2">
                   <input type="text" formControlName="name"
-                    class="flex-1 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200"
+                    [class.ring-2]="vg.get('name')?.invalid && vg.get('name')?.touched"
+                    class="flex-1 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200 ring-red-400 transition-all"
                     placeholder="Nombre variante">
                   <input type="number" formControlName="price" min="0" step="0.01"
-                    class="w-28 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200"
+                    [class.ring-2]="vg.get('price')?.invalid && vg.get('price')?.touched"
+                    class="w-28 bg-white rounded-xl px-3 py-2.5 text-sm outline-none border border-gray-200 ring-red-400 transition-all"
                     placeholder="Precio">
                 </div>
                 <div class="flex items-center justify-between">
@@ -253,10 +267,12 @@
                 [formGroupName]="i">
                 <div class="flex-1 space-y-2">
                   <input type="url" formControlName="url"
-                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none"
+                    [class.ring-2]="ig.get('url')?.invalid && ig.get('url')?.touched"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none ring-red-400 transition-all"
                     placeholder="URL imagen (https://...)">
                   <input type="text" formControlName="description"
-                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none"
+                    [class.ring-2]="ig.get('description')?.invalid && ig.get('description')?.touched"
+                    class="w-full bg-gray-50 rounded-2xl px-4 py-3 text-sm outline-none ring-red-400 transition-all"
                     placeholder="Descripción">
                 </div>
                 <button type="button" (click)="removeImage(i)"

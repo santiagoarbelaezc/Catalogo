@@ -102,13 +102,13 @@ export class ProductsService {
     formData.append('description', product.description);
     formData.append('material', product.material);
 
-    if (product.category) formData.append('category', product.category);
-    if (product.options) formData.append('options', product.options);
-    if (product.isNew !== undefined) formData.append('isNew', product.isNew.toString());
-    if (product.isFeatured !== undefined) formData.append('isFeatured', product.isFeatured.toString());
-    if (product.marca) formData.append('marca', product.marca);
-    if (product.gramaje) formData.append('gramaje', product.gramaje);
-    if (product.brandIconUrl) formData.append('brandIconUrl', product.brandIconUrl);
+    if (product.category !== undefined && product.category !== null) formData.append('category', product.category);
+    if (product.options !== undefined && product.options !== null) formData.append('options', product.options);
+    if (product.isNew !== undefined && product.isNew !== null) formData.append('isNew', product.isNew.toString());
+    if (product.isFeatured !== undefined && product.isFeatured !== null) formData.append('isFeatured', product.isFeatured.toString());
+    if (product.marca !== undefined && product.marca !== null) formData.append('marca', product.marca);
+    if (product.gramaje !== undefined && product.gramaje !== null) formData.append('gramaje', product.gramaje);
+    if (product.brandIconUrl !== undefined && product.brandIconUrl !== null) formData.append('brandIconUrl', product.brandIconUrl);
 
     // Agregar colores como string separado por comas
     if (product.colors && product.colors.length > 0) {

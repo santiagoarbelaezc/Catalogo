@@ -322,6 +322,10 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.imagesArray.clear();
     this.selectedFiles = [];
     this.showForm = true;
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   editProduct(product: any) {
@@ -367,6 +371,10 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     this.selectedFiles = [];
     this.showForm = true;
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   cancelEdit() {
@@ -395,6 +403,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       }
     } else {
       this.markFormGroupTouched();
+      this.toastService.error('Faltan campos obligatorios. Revisa las áreas en rojo.');
     }
   }
 
