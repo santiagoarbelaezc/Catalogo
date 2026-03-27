@@ -24,9 +24,9 @@ export class CatalogoPrintComponent implements OnInit {
     // this.products = this.catalogService.getAllCatalogProducts();
     
     this.productsService.getAllProducts().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.products = response.data;
+      next: (products: any[]) => {
+        if (products && Array.isArray(products)) {
+          this.products = products;
         }
       },
       error: (error) => {

@@ -22,9 +22,9 @@ export class EspumasplasticosComponent implements OnInit {
 
   ngOnInit(): void {
     this.productsService.getAllProducts().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.products = response.data.filter(
+      next: (products: any[]) => {
+        if (products && Array.isArray(products)) {
+          this.products = products.filter(
             (product: any) => product.category === 'Espumas'
           );
         }

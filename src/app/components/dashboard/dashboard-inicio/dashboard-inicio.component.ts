@@ -48,9 +48,9 @@ export class DashboardInicioComponent implements OnInit, OnDestroy {
 
     // Cargar productos para estadísticas
     const productsSub = this.productsService.getAllProducts().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.calculateStats(response.data);
+      next: (products: any[]) => {
+        if (products && Array.isArray(products)) {
+          this.calculateStats(products);
         }
         this.isLoading = false;
       },

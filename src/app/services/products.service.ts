@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 
 import { environment } from '../../environments/environment';
@@ -20,7 +21,10 @@ export class ProductsService {
    * GET /api/productos
    */
   getAllProducts(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(this.apiUrl).pipe(
+      map(res => res.data ?? res),
+      catchError(err => of([]))
+    );
   }
 
   /**
@@ -28,7 +32,10 @@ export class ProductsService {
    * GET /api/productos/:id
    */
   getProductById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+      map(res => res.data ?? res),
+      catchError(err => of(null))
+    );
   }
 
   /**
@@ -36,7 +43,10 @@ export class ProductsService {
    * GET /api/productos/categoria/:category
    */
   getProductsByCategory(category: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/categoria/${category}`);
+    return this.http.get<any>(`${this.apiUrl}/categoria/${category}`).pipe(
+      map(res => res.data ?? res),
+      catchError(err => of([]))
+    );
   }
 
   /**
@@ -44,7 +54,9 @@ export class ProductsService {
    * POST /api/productos
    */
   createProduct(productData: FormData): Observable<any> {
-    return this.http.post<any>(this.apiUrl, productData);
+    return this.http.post<any>(this.apiUrl, productData).pipe(
+      catchError(err => throwError(() => err))
+    );
   }
 
   /**
@@ -52,7 +64,10 @@ export class ProductsService {
    * PUT /api/productos/:id
    */
   updateProduct(id: number, productData: FormData): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, productData);
+    productData.append('_method', 'PUT');
+    return this.http.post<any>(`${this.apiUrl}/${id}`, productData).pipe(
+      catchError(err => throwError(() => err))
+    );
   }
 
   /**
@@ -60,7 +75,9 @@ export class ProductsService {
    * DELETE /api/productos/:id
    */
   deleteProduct(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}`).pipe(
+      catchError(err => throwError(() => err))
+    );
   }
 
   /**
@@ -68,7 +85,9 @@ export class ProductsService {
    * DELETE /api/productos/:id/permanent
    */
   permanentlyDeleteProduct(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/${id}/permanent`);
+    return this.http.delete<any>(`${this.apiUrl}/${id}/permanent`).pipe(
+      catchError(err => throwError(() => err))
+    );
   }
 
   /**

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators, F
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
+import { ToastService } from '../../../services/toast.service';
 import { Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -41,6 +42,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   editingProduct: any = null;
   selectedFiles: File[] = [];
   categories = ['Plaxtilineas', 'Districol', 'Espumas'];
+  loadingError = false;
 
   // === Filters ===
   searchTerm = '';
@@ -58,6 +60,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private productsService: ProductsService,
+    private toastService: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
@@ -230,20 +233,22 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadProducts() {
+  loadProducts() {
     this.isLoading = true;
+    this.loadingError = false;
     this.cdr.markForCheck();
 
     const productsSub = this.productsService.getAllProducts().subscribe({
       next: (response) => {
-        if (response.success) {
-          this.products = response.data || [];
-        }
+        // Fallback or exact
+        const data = response.data !== undefined ? response.data : response;
+        this.products = data || [];
         this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Error cargando productos:', error);
+        this.loadingError = true;
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -410,7 +415,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     const createSub = this.productsService.createProduct(formData).subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response.success !== false) {
+          this.toastService.success('Producto creado satisfactoriamente.');
           this.loadProducts();
           this.cancelEdit();
         }
@@ -418,7 +424,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        console.error('Error creando producto:', error);
         this.isSubmitting = false;
         this.cdr.markForCheck();
       }
@@ -443,7 +448,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     const updateSub = this.productsService.updateProduct(id, formData).subscribe({
       next: (response) => {
-        if (response.success) {
+        if (response.success !== false) {
+          this.toastService.success('Producto actualizado exitosamente.');
           this.loadProducts();
           this.cancelEdit();
         }
@@ -451,7 +457,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (error) => {
-        console.error('Error actualizando producto:', error);
         this.isSubmitting = false;
         this.cdr.markForCheck();
       }
@@ -463,12 +468,13 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     if (confirm(`¿Estás seguro de que quieres eliminar "${product.name}"?`)) {
       const deleteSub = this.productsService.deleteProduct(product.id).subscribe({
         next: (response) => {
-          if (response.success) {
+          if (response.success !== false) {
+            this.toastService.success('Producto eliminado correctamente.');
             this.loadProducts();
           }
         },
         error: (error) => {
-          console.error('Error eliminando producto:', error);
+          // El interceptor ya maneja el error toast
         }
       });
       this.subscriptions.push(deleteSub);

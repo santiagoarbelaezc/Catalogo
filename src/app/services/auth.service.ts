@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 export interface User {
@@ -43,12 +43,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  private getSkipToastHeaders(): HttpHeaders {
+    return new HttpHeaders({ 'X-Skip-Error-Toast': 'true' });
+  }
+
   /**
    * 🟢 Login de usuario
    * POST /api/auth/login
    */
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials, { headers: this.getSkipToastHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.setToken(response.data.token);
@@ -63,7 +67,7 @@ export class AuthService {
    * POST /api/auth/register
    */
   register(userData: { username: string; email: string; password: string; role?: string }): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData, { headers: this.getSkipToastHeaders() }).pipe(
       tap(response => {
         if (response.success) {
           this.setToken(response.data.token);
@@ -78,12 +82,9 @@ export class AuthService {
    * POST /api/auth/logout
    */
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
-      tap(() => {
-        this.clearToken();
-        this.clearCurrentUser();
-      })
-    );
+    this.clearToken();
+    this.clearCurrentUser();
+    return of({ success: true, message: 'Sesión cerrada exitosamente.' });
   }
 
   /**

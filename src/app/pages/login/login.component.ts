@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,8 +13,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  isLoading = false;
-  errorMessage = '';
+  loginError = signal<string | null>(null);
+  loading = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -29,14 +29,14 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
+      this.loading.set(true);
+      this.loginError.set(null);
 
       const { email, password } = this.loginForm.value;
 
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
-          this.isLoading = false;
+          this.loading.set(false);
           if (response.success) {
             console.log('Login exitoso:', response.data.user);
             // Redirigir al dashboard o página principal
@@ -44,8 +44,8 @@ export class LoginComponent {
           }
         },
         error: (error) => {
-          this.isLoading = false;
-          this.errorMessage = error.error?.message || 'Error al iniciar sesión';
+          this.loading.set(false);
+          this.loginError.set(error.error?.message || 'Error al iniciar sesión');
           console.error('Error en login:', error);
         }
       });
