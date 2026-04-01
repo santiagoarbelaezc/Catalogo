@@ -111,22 +111,19 @@ export class ProductsService {
     if (product.brandIconUrl !== undefined && product.brandIconUrl !== null) formData.append('brandIconUrl', product.brandIconUrl);
 
     // Agregar colores como string separado por comas
-    if (product.colors && product.colors.length > 0) {
-      const colorString = Array.isArray(product.colors)
-        ? product.colors.join(',')
-        : product.colors;
-      formData.append('colors', colorString);
-    }
+    // Siempre se envía para que el backend pueda borrar en caso de quedar vacío
+    const colorString = Array.isArray(product.colors) && product.colors.length > 0
+      ? product.colors.join(',')
+      : '';
+    formData.append('colors', colorString);
 
     // Agregar variantes como JSON string
-    if (product.variants && product.variants.length > 0) {
-      formData.append('variants', JSON.stringify(product.variants));
-    }
+    // Siempre se envía (array vacío si no hay variantes)
+    formData.append('variants', JSON.stringify(product.variants ?? []));
 
-    // Agregar imágenes de URL (si existen)
-    if (product.images && product.images.length > 0) {
-      formData.append('images', JSON.stringify(product.images));
-    }
+    // Agregar imágenes de URL
+    // Siempre se envía (array vacío si se borraron todas las imágenes)
+    formData.append('images', JSON.stringify(product.images ?? []));
 
     // Agregar archivos de imágenes con el campo 'imagenes'
     // Usar Array.from() para convertir FileList a Array
