@@ -1,14 +1,87 @@
 <app-navbar></app-navbar>
-<!-- Banner interactivo -->
-<!-- Contenido principal -->
-<section id="plaxtilineas-section" class="catalog-section">
-  <app-plaxtilineas></app-plaxtilineas>
-</section>
 
-<section id="espumasplasticos-section" class="catalog-section">
-  <app-espumasplasticos></app-espumasplasticos>
-</section>
+<div class="home-page font-sans">
 
-<section id="districol-section" class="catalog-section">
-  <app-districol></app-districol>
-</section>
+  <!-- ===== GLOBAL HERO ===== -->
+  <header class="home-hero">
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <h1 class="hero-title" style="letter-spacing: 2px;">CATÁLOGO GENERAL</h1>
+      </div>
+
+      <p class="hero-subtitle">TODAS NUESTRAS MARCAS EN UN SOLO LUGAR</p>
+
+      <div class="hero-pill">
+        <span class="material-symbols-rounded" style="font-size:1rem">inventory_2</span>
+        Descubre nuestros productos
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== QUICK BRANDS OVERVIEW ===== -->
+  <section class="brands-bar">
+    <div class="brand-item">
+      <span class="brand-dot bg-black"></span>
+      <strong>Plaxtilineas:</strong> Cuerdas, Mallas y Plásticos
+    </div>
+    <div class="brand-item">
+      <span class="brand-dot bg-blue"></span>
+      <strong>Espumas:</strong> Sábanas y Confort
+    </div>
+    <div class="brand-item">
+      <span class="brand-dot bg-purple"></span>
+      <strong>Districol:</strong> Colchones y Descanso
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section id="catalogo-grid" class="home-products">
+    <div class="products-header">
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">apps</span>
+        TODOS LOS PRODUCTOS
+      </div>
+      <h2 class="section-title">Explora nuestra colección</h2>
+    </div>
+
+    <!-- Si no hay productos (cargando) -->
+    <div *ngIf="products.length === 0" class="loading-state">
+      <div class="loading-ring"></div>
+      <p>Cargando catálogo...</p>
+    </div>
+
+    <!-- Catálogo Mixto -->
+    <div class="products-grid" *ngIf="products.length > 0">
+      <app-catalog-item
+        *ngFor="let product of paginatedProducts; let i = index"
+        [product]="product"
+        [reverseLayout]="i % 2 === 1">
+      </app-catalog-item>
+    </div>
+
+    <!-- ===== PAGINATION ===== -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <span class="material-symbols-rounded">chevron_left</span>
+      </button>
+
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of pagesList" 
+          class="page-btn num-btn" 
+          [class.active]="page === currentPage"
+          (click)="changePage(page)">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+        <span class="material-symbols-rounded">chevron_right</span>
+      </button>
+    </div>
+  </section>
+
+</div>
