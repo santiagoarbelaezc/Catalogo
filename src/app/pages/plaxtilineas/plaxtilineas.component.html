@@ -1,4 +1,4 @@
-﻿<app-navbar></app-navbar>
+<app-navbar></app-navbar>
 
 <div class="plax-page font-sans">
 
@@ -138,10 +138,31 @@
     </div>
 
     <app-catalog-item
-      *ngFor="let product of products; let i = index"
+      *ngFor="let product of paginatedProducts; let i = index"
       [product]="product"
       [reverseLayout]="i % 2 === 1">
     </app-catalog-item>
+
+    <!-- ===== PAGINATION ===== -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <span class="material-symbols-rounded">chevron_left</span>
+      </button>
+
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of pagesList" 
+          class="page-btn num-btn" 
+          [class.active]="page === currentPage"
+          (click)="changePage(page)">
+          {{ page }}
+        </button>
+      </div>
+
+      <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+        <span class="material-symbols-rounded">chevron_right</span>
+      </button>
+    </div>
   </section>
 
 </div>
