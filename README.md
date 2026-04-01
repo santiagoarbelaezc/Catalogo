@@ -149,10 +149,6 @@ Desde el dashboard se puede crear un producto nuevo con nombre, descripción, ca
 
 El catálogo permite trabajar con las tres empresas desde la misma interfaz. Cada empresa tiene su propia sección, su paleta de colores, y sus categorías de productos. Los productos no se mezclan entre empresas.
 
-### 📄 Exportación a PDF
-
-Genera el catálogo completo o una selección de productos en formato PDF profesional, listo para enviar a clientes o para impresión. El PDF incluye portada personalizada por empresa, índice de productos, páginas de productos con imágenes y especificaciones, e información de contacto al final.
-
 ### 🔗 Compartir el Sitio
 
 Desde el panel se puede copiar y compartir el enlace directo al catálogo público de cada empresa, facilitando el envío a clientes por WhatsApp, correo electrónico o redes sociales.
