@@ -1,21 +1,247 @@
-/* Districol */
-.districol-container {
+/* ===== DISTRICOL PAGE - APP STYLE ===== */
+
+.material-symbols-rounded {
+  font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.districol-page {
+  font-family: "Inter Tight", sans-serif;
+  background: #f9fafb;
+  min-height: 100vh;
+  padding-top: 80px;
+}
+
+/* ===== HERO ===== */
+.districol-hero {
+  position: relative;
+  background: #6b21a8; /* Púrpura elegante */
+  color: #fff;
   text-align: center;
-  padding: 2rem;
-  font-family: var(--font-primary);
+  padding: 5rem 2rem 4rem;
+  overflow: hidden;
 }
 
-.districol-container h2 {
-  color: var(--color-text-primary);
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0 0 1rem 0;
+.hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.2;
+  filter: blur(60px);
+  pointer-events: none;
 }
 
-.districol-container p {
-  color: var(--color-text-secondary);
-  font-size: 1rem;
-  line-height: 1.6;
+.hero-blob-1 {
+  width: 400px;
+  height: 400px;
+  background: #d8b4fe; /* Púrpura claro */
+  top: -100px;
+  left: -100px;
+}
+
+.hero-blob-2 {
+  width: 300px;
+  height: 300px;
+  background: #c084fc; /* Púrpura medio */
+  bottom: -80px;
+  right: -60px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
   max-width: 600px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin: 0;
+  line-height: 1;
+  color: #fff;
+}
+
+.hero-subtitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.7);
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.95);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.5rem 1.1rem;
+  border-radius: 99px;
+  margin-top: 0.5rem;
+  backdrop-filter: blur(8px);
+}
+
+/* ===== QUOTE ===== */
+.districol-quote {
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.quote-card {
+  background: #7e22ce; /* Púrpura intenso */
+  color: #fff;
+  border-radius: 28px;
+  padding: 2.5rem 3rem;
+  max-width: 700px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 12px 40px rgba(107, 33, 168, 0.2);
+}
+
+.quote-icon {
+  font-size: 3rem;
+  color: rgba(255,255,255,0.15);
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+}
+
+.quote-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+/* ===== BANNER ===== */
+.districol-banner {
+  padding: 0 1.5rem 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.banner-frame {
+  position: relative;
+  max-width: 1100px;
+  width: 100%;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.14);
+  aspect-ratio: 16 / 6;
+}
+
+.banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(107,33,168,0.5) 0%, transparent 60%);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5rem 2rem;
+}
+
+.banner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.5rem 1.1rem;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+
+/* Shared section labels */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #f3e8ff;
+  color: #7e22ce;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  margin-bottom: 0.75rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -0.5px;
+  margin: 0 0 2rem 0;
+}
+
+/* ===== PRODUCTS SECTION ===== */
+.districol-products {
+  background: #f9fafb;
+}
+
+.products-header {
+  padding: 3rem 1.5rem 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .districol-hero {
+    padding: 3.5rem 1.5rem 3rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .quote-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .quote-text {
+    font-size: 0.95rem;
+  }
+
+  .banner-frame {
+    aspect-ratio: 16 / 9;
+    border-radius: 20px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
 }

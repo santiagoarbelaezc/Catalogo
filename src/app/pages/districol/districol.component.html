@@ -1,15 +1,73 @@
 <app-navbar></app-navbar>
 
-<section id="districol-section" class="catalog-section districol-container">
-  <!-- Banner interactivo -->
+<div class="districol-page font-sans">
 
+  <!-- ===== HERO HEADER ===== -->
+  <header class="districol-hero">
 
-  <div class="products-grid">
+    <!-- Decorative background blobs -->
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <h1 class="hero-title" style="letter-spacing: 2px;">DISTRICOL</h1>
+      </div>
+
+      <p class="hero-subtitle">DISTRIBUIDORA DE COLCHONES</p>
+
+      <div class="hero-pill">
+        <span class="material-symbols-rounded" style="font-size:1rem">verified</span>
+        Descanso premium
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ===== MESSAGE QUOTE ===== -->
+  <section class="districol-quote">
+    <div class="quote-card">
+      <span class="material-symbols-rounded quote-icon">format_quote</span>
+      <p class="quote-text">
+        Nos dedicamos a mejorar tu calidad de vida a través de un descanso profundo.
+        Cada colchón y producto está diseñado pensando en tu bienestar y salud.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== BANNER ===== -->
+  <section class="districol-banner">
+    <div class="banner-frame">
+      <img
+        src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770094874/WhatsApp_Image_2026-02-02_at_11.59.24_PM_crlguk.jpg"
+        alt="Banner Districol"
+        class="banner-img"
+        style="object-position: center 30%;">
+      <div class="banner-overlay">
+        <span class="banner-badge">
+          <span class="material-symbols-rounded" style="font-size:1rem">star</span>
+          El descanso perfecto
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section id="districol-section" class="districol-products">
+    <div class="products-header">
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">inventory_2</span>
+        CATÁLOGO
+      </div>
+      <h2 class="section-title">Nuestros Productos</h2>
+    </div>
+
+    <!-- El ngFor iterará sobre los productos reales obtenidos de la base de datos -->
     <app-catalog-item
       *ngFor="let product of products; let i = index"
       [product]="product"
-      [backgroundGradient]="'#DAA520,#D7B615'"
       [reverseLayout]="i % 2 === 1">
     </app-catalog-item>
-  </div>
-</section>
+  </section>
+
+</div>

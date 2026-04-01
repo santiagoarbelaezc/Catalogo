@@ -1,15 +1,102 @@
 <app-navbar></app-navbar>
 
-<section id="espumasplasticos-section" class="catalog-section espumasplasticos-container">
-  <!-- Banner interactivo -->
+<div class="espumas-page font-sans">
 
+  <!-- ===== HERO HEADER ===== -->
+  <header class="espumas-hero">
 
-  <div class="products-grid">
+    <!-- Decorative background blobs -->
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-logo-wrap">
+        <h1 class="hero-title">ESPUMAS</h1>
+      </div>
+
+      <p class="hero-subtitle">CONFORT Y CALIDAD DESDE ADENTRO</p>
+
+      <div class="hero-pill">
+        <span class="material-symbols-rounded" style="font-size:1rem">verified</span>
+        Descanso garantizado
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ===== MESSAGE QUOTE ===== -->
+  <section class="espumas-quote">
+    <div class="quote-card">
+      <span class="material-symbols-rounded quote-icon">format_quote</span>
+      <p class="quote-text">
+        Proporcionamos las mejores espumas y plásticos innovadores para la industria,
+        garantizando siempre el máximo confort y durabilidad en cada producto.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== BANNER ===== -->
+  <section class="espumas-banner">
+    <div class="banner-frame">
+      <img
+        src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770074973/banner_wmjmcg.jpg"
+        alt="Banner Espumas"
+        class="banner-img">
+      <div class="banner-overlay">
+        <span class="banner-badge">
+          <span class="material-symbols-rounded" style="font-size:1rem">star</span>
+          Expertos en descanso
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ALLIES ===== -->
+  <section class="espumas-allies">
+    <div class="allies-inner">
+
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">handshake</span>
+        NUESTROS ALIADOS
+      </div>
+      <h2 class="section-title">Marcas que nos respaldan</h2>
+
+      <div class="brands-grid">
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878740/espumas_santafe_k82s21.png" alt="Espumas Santafé" class="brand-img">
+          </div>
+          <span class="brand-name">Espumas Santafé</span>
+        </div>
+
+        <div class="brand-card">
+          <div class="brand-img-box">
+            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/espumas_medellin_dd3gcm.png" alt="Espumas Medellín" class="brand-img">
+          </div>
+          <span class="brand-name">Espumas Medellín</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRODUCTS ===== -->
+  <section id="espumasplasticos-section" class="espumas-products">
+    <div class="products-header">
+      <div class="section-label">
+        <span class="material-symbols-rounded" style="font-size:0.9rem">inventory_2</span>
+        CATÁLOGO
+      </div>
+      <h2 class="section-title">Nuestros Productos</h2>
+    </div>
+
+    <!-- El ngFor iterará sobre los productos reales obtenidos de la BD -->
     <app-catalog-item
       *ngFor="let product of products; let i = index"
       [product]="product"
-      [backgroundGradient]="'#33AE80,#8AC9AF'"
       [reverseLayout]="i % 2 === 1">
     </app-catalog-item>
-  </div>
-</section>
+  </section>
+
+</div>
