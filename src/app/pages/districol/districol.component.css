@@ -16,7 +16,7 @@
 /* ===== HERO ===== */
 .districol-hero {
   position: relative;
-  background: #6b21a8; /* Púrpura elegante */
+  background: #003B4A; /* Azul Oscuro (Districol) */
   color: #fff;
   text-align: center;
   padding: 5rem 2rem 4rem;
@@ -34,7 +34,7 @@
 .hero-blob-1 {
   width: 400px;
   height: 400px;
-  background: #d8b4fe; /* Púrpura claro */
+  background: #4F9B96; /* Cyan claro */
   top: -100px;
   left: -100px;
 }
@@ -42,7 +42,7 @@
 .hero-blob-2 {
   width: 300px;
   height: 300px;
-  background: #c084fc; /* Púrpura medio */
+  background: #16697A; /* Cyan oscuro */
   bottom: -80px;
   right: -60px;
 }
@@ -106,14 +106,14 @@
 }
 
 .quote-card {
-  background: #7e22ce; /* Púrpura intenso */
+  background: #003B4A;
   color: #fff;
   border-radius: 28px;
   padding: 2.5rem 3rem;
   max-width: 700px;
   width: 100%;
   position: relative;
-  box-shadow: 0 12px 40px rgba(107, 33, 168, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 59, 74, 0.2);
 }
 
 .quote-icon {
@@ -162,7 +162,7 @@
 .banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(107,33,168,0.5) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(0,59,74,0.5) 0%, transparent 60%);
   display: flex;
   align-items: flex-end;
   padding: 1.5rem 2rem;
@@ -188,8 +188,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: #f3e8ff;
-  color: #7e22ce;
+  background: #ccfbf1;
+  color: #003B4A;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -280,8 +280,8 @@
 }
 
 .page-btn:hover:not(:disabled) {
-  background: #f3e8ff;
-  border-color: #d8b4fe;
+  background: #ccfbf1;
+  border-color: #5eead4;
 }
 
 .page-btn:disabled {
@@ -291,7 +291,7 @@
 }
 
 .page-btn.active {
-  background: #7e22ce;
+  background: #003B4A;
   color: #fff;
-  border-color: #7e22ce;
+  border-color: #003B4A;
 }
