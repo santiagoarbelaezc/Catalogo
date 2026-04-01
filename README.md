@@ -13,7 +13,6 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![PHP](https://img.shields.io/badge/PHP-8.x-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
 [![Firebase](https://img.shields.io/badge/Firebase-Hosting-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![AWS](https://img.shields.io/badge/AWS-Production-FF9900?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
 
 **Un solo panel. Tres sitios web. Gestión total de productos.**
 
@@ -49,6 +48,10 @@ Desde este panel se pueden **crear, editar y eliminar productos**, y los cambios
 ### 🎯 Objetivo Principal
 
 Eliminar la necesidad de actualizar tres sitios web por separado. Con una sola operación desde el panel de administración, el producto queda publicado y visible en el sitio correspondiente de forma inmediata.
+
+---
+
+## 🏢 Desplegado en Hostinger
 
 ---
 
