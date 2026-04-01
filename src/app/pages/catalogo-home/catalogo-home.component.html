@@ -54,13 +54,13 @@
     </div>
 
     <!-- Catálogo Mixto -->
-    <div class="products-grid" *ngIf="products.length > 0">
+    <ng-container *ngIf="products.length > 0">
       <app-catalog-item
         *ngFor="let product of paginatedProducts; let i = index"
         [product]="product"
         [reverseLayout]="i % 2 === 1">
       </app-catalog-item>
-    </div>
+    </ng-container>
 
     <!-- ===== PAGINATION ===== -->
     <div class="pagination-container" *ngIf="totalPages > 1">

@@ -25,7 +25,18 @@ export class CatalogoHomeComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
-          this.products = products;
+          // Orden solicitado por el usuario: 1. Plaxtilineas, 2. Districol, 3. Espumas
+          const orderMap: { [key: string]: number } = {
+            'Plaxtilineas': 1,
+            'Districol': 2,
+            'Espumas': 3
+          };
+          
+          this.products = products.sort((a, b) => {
+            const orderA = orderMap[a.category] || 99;
+            const orderB = orderMap[b.category] || 99;
+            return orderA - orderB;
+          });
         }
       },
       error: (error: any) => {
