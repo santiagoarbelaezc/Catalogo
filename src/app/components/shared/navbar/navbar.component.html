@@ -1,17 +1,30 @@
-﻿<!-- ===== NAVBAR - APP STYLE ===== -->
+<!-- ===== NAVBAR - APP STYLE ===== -->
 <nav class="navbar-wrap" [class.navbar-hidden]="!isVisible">
 
-  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex items-center justify-between h-20">
+  <!-- TOP BAR (External Links) -->
+  <div class="bg-gray-900 text-gray-300 text-[0.7rem] sm:text-xs py-1.5 px-4 flex justify-center gap-4 sm:gap-8 font-medium">
+    <span class="hidden sm:inline text-gray-500">Nuestras empresas:</span>
+    <a href="https://www.plaxtilineas.com/" target="_blank" class="hover:text-white transition-colors">Plaxtilineas</a>
+    <a href="https://colchonesdistricol.com/" target="_blank" class="hover:text-white transition-colors">Districol</a>
+    <a href="https://espumasyplasticos.com/" target="_blank" class="hover:text-white transition-colors">Espumas y Plásticos</a>
+  </div>
 
-    <!-- LEFT: Location pill -->
-    <div class="flex items-center gap-2 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-600 font-semibold">
-      <fa-icon [icon]="faMapMarkerAlt" class="text-gray-500" style="font-size:0.85rem"></fa-icon>
-      <span class="hidden sm:inline">Cra. 19 #19-35</span>
-      <span class="sm:hidden">Ubicación</span>
-    </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+
+    <!-- LEFT: Location pill (Redirect to Google Maps) -->
+    <a href="https://www.google.com/maps/dir/?api=1&destination=Cra.19+%23+19-35+Armenia+Quindio" target="_blank"
+       class="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 border border-gray-100 rounded-2xl px-3 py-2 transition-colors cursor-pointer mr-2">
+      <div class="bg-red-100 text-red-600 rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+        <fa-icon [icon]="faMapMarkerAlt"></fa-icon>
+      </div>
+      <div class="hidden lg:flex flex-col">
+        <span class="text-xs font-extrabold text-gray-800 leading-tight">Localiza la tienda</span>
+        <span class="text-[0.65rem] text-gray-500 font-medium leading-tight">Cra 19 # 19-35 Armenia Quindio</span>
+      </div>
+    </a>
 
     <!-- CENTER: Desktop Nav Links -->
-    <div class="hidden md:flex items-center gap-2">
+    <div class="hidden xl:flex items-center gap-1">
       <a routerLink="/catalogo" class="nav-item">
         <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770138351/home_h4q8vz.png" alt="catálogo" class="nav-logo-img">
         <span class="nav-label">Catálogo</span>
@@ -30,24 +43,33 @@
       </a>
     </div>
 
-    <!-- RIGHT: Phone + Login + Hamburger -->
-    <div class="flex items-center gap-3">
-      <!-- Phone pill — desktop only -->
-      <div class="hidden lg:flex items-center gap-2 bg-gray-100 rounded-2xl px-4 py-2.5 text-sm text-gray-600 font-semibold">
-        <fa-icon [icon]="faPhone" style="font-size:0.85rem"></fa-icon>
-        <span>3006680125</span>
+    <!-- RIGHT: Search, WhatsApp, Login, Hamburger -->
+    <div class="flex items-center gap-2 sm:gap-3 ml-auto xl:ml-0">
+      
+      <!-- Search Bar -->
+      <div class="hidden md:flex items-center bg-gray-100 rounded-2xl px-3 py-2 border border-gray-200 focus-within:bg-white focus-within:border-gray-300 transition-all">
+        <fa-icon [icon]="faSearch" class="text-gray-400 text-sm"></fa-icon>
+        <input type="text" placeholder="Buscar productos..." 
+               class="bg-transparent border-none outline-none text-sm text-gray-700 ml-2 w-32 lg:w-48 xl:w-56 focus:outline-none transition-all placeholder-gray-400">
       </div>
+
+      <!-- WhatsApp pill -->
+      <a href="https://wa.me/573006680125" target="_blank"
+         class="hidden md:flex items-center gap-2 bg-[#25D366] bg-opacity-10 hover:bg-opacity-20 text-[#128C7E] rounded-2xl px-4 py-2 text-sm font-bold transition-colors">
+        <fa-icon [icon]="faPhone"></fa-icon>
+        <span class="hidden lg:inline">WhatsApp</span>
+      </a>
 
       <!-- Login btn -->
       <a routerLink="/login"
-        class="hidden md:flex items-center gap-2 px-5 py-3 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 active:scale-95 transition-all duration-200 shadow-md">
-        <span>Ingresar</span>
+        class="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-black text-white text-sm font-bold rounded-2xl hover:bg-gray-800 active:scale-95 transition-all duration-200 shadow-md whitespace-nowrap">
+        <span class="hidden md:inline">Ingresar</span>
         <fa-icon [icon]="faStore" style="font-size:0.8rem"></fa-icon>
       </a>
 
       <!-- Mobile hamburger -->
       <button
-        class="md:hidden w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-700 hover:bg-gray-200 active:scale-95 transition-all duration-200"
+        class="xl:hidden w-11 h-11 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-700 hover:bg-gray-200 active:scale-95 transition-all duration-200"
         (click)="toggleMobileMenu()">
         <fa-icon [icon]="isMobileMenuOpen ? faTimes : faBars" style="font-size:1.1rem"></fa-icon>
       </button>
@@ -55,8 +77,16 @@
   </div>
 
   <!-- MOBILE MENU DROPDOWN -->
-  <div class="mobile-dropdown md:hidden" [class.mobile-dropdown-open]="isMobileMenuOpen">
+  <div class="mobile-dropdown xl:hidden" [class.mobile-dropdown-open]="isMobileMenuOpen">
     <div class="px-4 pt-2 pb-4 space-y-1 bg-white border-t border-gray-100">
+      
+      <!-- Search inside mobile menu -->
+      <div class="md:hidden flex items-center bg-gray-50 rounded-xl px-3 py-3 mb-4 border border-gray-200">
+        <fa-icon [icon]="faSearch" class="text-gray-400 text-sm"></fa-icon>
+        <input type="text" placeholder="Buscar productos..." 
+               class="bg-transparent border-none outline-none text-sm text-gray-700 ml-2 w-full focus:outline-none">
+      </div>
+
       <!-- Nav items -->
       <a routerLink="/catalogo" class="mobile-nav-item" (click)="toggleMobileMenu()">
         <div class="mobile-nav-icon bg-gray-100 rounded-xl p-2">
@@ -83,18 +113,22 @@
         <span>Districol</span>
       </a>
 
+      <!-- WhatsApp Mobile -->
+      <a href="https://wa.me/573006680125" target="_blank" class="mobile-nav-item md:hidden text-[#128C7E] bg-[#25D366] bg-opacity-10" (click)="toggleMobileMenu()">
+        <div class="mobile-nav-icon rounded-xl p-2 text-[#25D366]">
+          <fa-icon [icon]="faPhone"></fa-icon>
+        </div>
+        <span class="font-bold">WhatsApp (+57 300 668 0125)</span>
+      </a>
+
       <!-- Divider + Login -->
-      <div class="pt-2 mt-2 border-t border-gray-100">
+      <div class="pt-2 mt-2 border-t border-gray-100 sm:hidden">
         <a routerLink="/login"
           class="flex items-center justify-center gap-2 w-full py-3.5 bg-black text-white text-sm font-bold rounded-2xl active:scale-98 transition-all duration-200 shadow-md"
           (click)="toggleMobileMenu()">
           <fa-icon [icon]="faStore" style="font-size:0.85rem"></fa-icon>
           Ingresar al Panel
         </a>
-        <p class="text-center text-xs text-gray-400 mt-3 flex items-center justify-center gap-1.5">
-          <fa-icon [icon]="faPhone" style="font-size:0.7rem"></fa-icon>
-          3006680125
-        </p>
       </div>
     </div>
   </div>

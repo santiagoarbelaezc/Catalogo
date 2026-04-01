@@ -1,7 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMapMarkerAlt, faPhone, faStore, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faPhone, faStore, faBars, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +21,7 @@ export class NavbarComponent {
   faStore = faStore;
   faBars = faBars;
   faTimes = faTimes;
+  faSearch = faSearch;
 
   constructor() {}
 
