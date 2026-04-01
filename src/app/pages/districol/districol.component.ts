@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CatalogItemComponent } from '../../components/catalog/catalog-item/catalog-item.component';
 
-import { CatalogDataService } from '../../services/catalog-data.service';
+import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
 import { NavbarComponent } from "../../components/shared/navbar/navbar.component";
 
@@ -18,9 +18,20 @@ export class DistricolComponent implements OnInit {
 
   
 
-  constructor(private catalogDataService: CatalogDataService) {}
-
+  constructor(private productsService: ProductsService) {}
+  
   ngOnInit(): void {
-    this.products = this.catalogDataService.getDistricolProducts();
+    this.productsService.getAllProducts().subscribe({
+      next: (products: any[]) => {
+        if (products && Array.isArray(products)) {
+          this.products = products.filter(
+            (product: any) => product.category === 'Districol'
+          );
+        }
+      },
+      error: (error: any) => {
+        console.error('Error cargando productos Districol:', error);
+      }
+    });
   }
 }
