@@ -207,18 +207,8 @@ Selecciona empresa (Plaxtilíneas / EspumasYPlásticos / Districol)
 
 ---
 
-## 📄 Exportación y Compartir
+## 📄 Compartir
 
-### Exportación a PDF
-
-La función de exportación genera un documento PDF profesional del catálogo. El proceso es el siguiente:
-
-1. El administrador selecciona los productos a incluir (todos o una selección).
-2. Elige la plantilla de diseño y las opciones (incluir precios, portada, pie de página).
-3. Hace preview del resultado antes de descargar.
-4. Descarga el archivo PDF listo para compartir o imprimir.
-
-El PDF generado incluye portada con logo y colores de la empresa, tabla de contenidos automática, páginas de productos con imágenes y especificaciones técnicas, numeración de páginas, y datos de contacto al final.
 
 ### Compartir el Sitio
 
