@@ -53,6 +53,8 @@ Eliminar la necesidad de actualizar tres sitios web por separado. Con una sola o
 
 ## 🏢 Desplegado en Hostinger
 
+Con Plaxtilineas, Espumas y Plasticos, Districol
+
 ---
 
 ## 🏢 Sitios Web Gestionados
