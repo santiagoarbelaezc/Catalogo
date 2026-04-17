@@ -230,6 +230,13 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.goToPage(this.currentPage - 1);
   }
 
+  // === Utils ===
+  getMinPrice(product: any): number {
+    if (!product.variants || product.variants.length === 0) return 0;
+    const prices = product.variants.map((v: any) => parseFloat(v.price) || 0);
+    return Math.min(...prices);
+  }
+
   // === trackBy ===
   trackByProductId(index: number, product: any): number {
     return product.id;
@@ -243,8 +250,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      material: ['', [Validators.required]],
+      description: ['', [Validators.required, Validators.minLength(3)]],
+      material: [''],
       category: ['Plaxtilineas', [Validators.required]],
       options: [''],
       isNew: [true],
@@ -317,7 +324,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   addImage(url: string = '', description: string = '') {
     const imageGroup = this.fb.group({
       url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
-      description: [description, Validators.required]
+      description: [description]
     });
     this.imagesArray.push(imageGroup);
   }
