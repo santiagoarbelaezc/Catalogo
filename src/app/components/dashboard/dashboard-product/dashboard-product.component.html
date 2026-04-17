@@ -85,11 +85,11 @@
             </div>
           </div>
           
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full lg:w-auto">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:w-auto mt-4 lg:mt-0">
             <div class="space-y-3">
               <label class="text-[11px] font-black text-black uppercase tracking-[0.3em] px-1">Línea/Categoría</label>
               <select [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()"
-                class="w-full md:w-64 bg-white border-2 border-black rounded-2xl px-6 py-5 text-sm font-black text-black outline-none appearance-none cursor-pointer">
+                class="w-full lg:w-48 xl:w-64 bg-white border-2 border-black rounded-2xl px-6 py-5 text-sm font-black text-black outline-none appearance-none cursor-pointer">
                 <option value="">TODAS LAS LÍNEAS</option>
                 <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat">{{ cat | uppercase }}</option>
               </select>
@@ -97,10 +97,22 @@
             <div class="space-y-3">
               <label class="text-[11px] font-black text-black uppercase tracking-[0.3em] px-1">Estado</label>
               <select [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()"
-                class="w-full md:w-64 bg-white border-2 border-black rounded-2xl px-6 py-5 text-sm font-black text-black outline-none appearance-none cursor-pointer">
+                class="w-full lg:w-48 xl:w-64 bg-white border-2 border-black rounded-2xl px-6 py-5 text-sm font-black text-black outline-none appearance-none cursor-pointer">
                 <option value="">CUALQUIER ESTADO</option>
                 <option value="new">NUEVO LANZAMIENTO</option>
                 <option value="featured">DESTACADO PREMIUM</option>
+              </select>
+            </div>
+            <div class="space-y-3">
+              <label class="text-[11px] font-black text-black uppercase tracking-[0.3em] px-1">Ordenar por</label>
+              <select [(ngModel)]="sortOrder" (ngModelChange)="onSortChange()"
+                class="w-full lg:w-48 xl:w-64 bg-white border-2 border-black rounded-2xl px-6 py-5 text-sm font-black text-black outline-none appearance-none cursor-pointer">
+                <option value="newest">MÁS RECIENTES</option>
+                <option value="oldest">MÁS ANTIGUOS</option>
+                <option value="price_asc">PRECIO: MENOR A MAYOR</option>
+                <option value="price_desc">PRECIO: MAYOR A MENOR</option>
+                <option value="az">ALFABÉTICO (A-Z)</option>
+                <option value="za">ALFABÉTICO (Z-A)</option>
               </select>
             </div>
           </div>

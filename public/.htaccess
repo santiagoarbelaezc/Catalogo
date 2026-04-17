@@ -1,8 +1,16 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+
+  # 1. Si el archivo o directorio existe físicamente, servirlo y detener.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2. Prevenir que archivos estáticos faltantes devuelvan index.html
+  # Esto asegura que el navegador no confunda estilos o scripts con HTML
+  RewriteCond %{REQUEST_URI} !\.(css|js|map|png|jpg|jpeg|gif|svg|ico|ttf|woff|woff2|eot|json)$ [NC]
+
+  # 3. Reescribir todas las demás rutas (rutas de Angular) a index.html
+  RewriteRule ^ index.html [L]
 </IfModule>
