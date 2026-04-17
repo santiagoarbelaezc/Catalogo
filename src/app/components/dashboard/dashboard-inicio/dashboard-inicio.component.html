@@ -1,80 +1,106 @@
-﻿<div class="min-h-screen bg-gray-50 font-sans">
+<!-- Pure White & Black Dashboard -->
+<div class="min-h-screen bg-white px-6 py-12 font-sans selection:bg-black selection:text-white">
 
-  <!-- ===== TOP BAR ===== -->
-  <header class="bg-white sticky top-0 z-40 px-5 pt-5 pb-4 shadow-sm">
-    <div class="max-w-3xl mx-auto flex items-center justify-between">
-      <div class="flex items-center gap-4">
-        <div class="w-14 h-14 bg-black rounded-3xl flex items-center justify-center shadow-lg">
-          <span class="material-symbols-rounded text-white" style="font-size:1.5rem">dashboard</span>
+  <!-- Inner Content Wrapper -->
+  <div class="max-w-5xl mx-auto space-y-16 animate-fade-in">
+    
+    <!-- Header Section -->
+    <header class="flex flex-col md:flex-row items-center md:items-end justify-between gap-10">
+      <div class="flex items-center gap-6">
+        <div class="w-16 h-16 bg-black rounded-full flex items-center justify-center shadow-xl">
+          <span class="material-symbols-rounded text-white" style="font-size:1.8rem">dashboard</span>
         </div>
         <div>
-          <h1 class="text-xl font-black text-gray-900 leading-tight">Panel Admin</h1>
-          <p class="text-sm text-gray-400" *ngIf="currentUser">{{ currentUser.username }}</p>
+          <h1 class="text-3xl font-black text-black leading-tight tracking-tighter uppercase">Panel Administrativo</h1>
+          <p class="text-sm font-bold text-black opacity-40 uppercase tracking-[0.2em] mt-1" *ngIf="currentUser">
+            Sesión iniciada: {{ currentUser.username }}
+          </p>
         </div>
       </div>
-      <button
-        (click)="logout()"
-        class="flex items-center gap-2 px-5 py-3 bg-gray-100 text-gray-700 text-sm font-bold rounded-2xl hover:bg-black hover:text-white active:scale-95 transition-all duration-200">
-        <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      
+      <button (click)="logout()" 
+        class="group flex items-center gap-3 px-8 py-4 bg-white text-black text-[10px] font-black uppercase tracking-[0.3em] rounded-full border-2 border-black hover:bg-black hover:text-white active:scale-95 transition-all duration-300">
+        <span class="material-symbols-rounded" style="font-size:1.2rem">logout</span>
         Cerrar Sesión
       </button>
-    </div>
-  </header>
+    </header>
 
-  <!-- ===== MAIN ===== -->
-  <main class="max-w-3xl mx-auto px-5 pb-12 pt-5">
-
-    <!-- Loading -->
-    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-32 gap-4">
-      <div class="loading-ring"></div>
-      <p class="text-sm text-gray-400 font-medium">Cargando...</p>
-    </div>
-
-    <!-- Content -->
-    <div *ngIf="!isLoading" class="space-y-6 animate-fade-in">
-
-      <!-- Welcome Banner -->
-      <div class="bg-black rounded-3xl p-8 text-white shadow-xl">
-        <p class="text-xs uppercase tracking-widest text-gray-400 mb-2">Bienvenido de nuevo</p>
-        <h2 class="text-3xl font-black leading-tight" *ngIf="currentUser">{{ currentUser.username }}</h2>
-        <h2 class="text-3xl font-black leading-tight" *ngIf="!currentUser">Administrador</h2>
-        <p class="text-gray-400 mt-2">{{ today | date:'EEEE, d \u2019 MMMM yyyy' }}</p>
-        <div class="mt-6 flex gap-3">
-          <div class="flex-1 bg-white/10 rounded-2xl p-4">
-            <p class="text-xs text-gray-400 mb-1">Productos</p>
-            <p class="text-3xl font-black">{{ stats.totalProducts }}</p>
+    <!-- Welcome / Summary Section -->
+    <section class="border-t-2 border-black pt-16">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 class="text-5xl font-black text-black tracking-tighter leading-none mb-6">SISTEMA<br>DISTRICOL</h2>
+          <p class="text-lg font-medium text-black max-w-sm leading-relaxed">
+            Gestión centralizada de catálogo, inventario y líneas de productos para Districol Premium.
+          </p>
+          <div class="mt-10 flex items-center gap-4">
+             <span class="w-12 h-0.5 bg-black"></span>
+             <p class="text-xs font-black uppercase tracking-[0.4em] text-black">
+               {{ today | date:'EEEE, d MMMM yyyy' }}
+             </p>
           </div>
-          <div class="flex-1 bg-white/10 rounded-2xl p-4">
-            <p class="text-xs text-gray-400 mb-1">Categorías</p>
-            <p class="text-3xl font-black">{{ stats.categories }}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="border-2 border-black p-10 rounded-[2rem] text-center">
+            <p class="text-[10px] font-black text-black uppercase tracking-[0.4em] mb-4">Productos</p>
+            <p class="text-6xl font-black text-black leading-none tracking-tighter tabular-nums">{{ stats.totalProducts }}</p>
+          </div>
+          <div class="border-2 border-black p-10 rounded-[2rem] text-center">
+            <p class="text-[10px] font-black text-black uppercase tracking-[0.4em] mb-4">Categorías</p>
+            <p class="text-6xl font-black text-black leading-none tracking-tighter tabular-nums">{{ stats.categories }}</p>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- Quick Actions -->
-      <div>
-        <p class="text-sm font-bold uppercase tracking-widest text-gray-400 mb-4 px-1">Acciones rápidas</p>
-        <div class="space-y-3">
-
-          <button
-            (click)="navigateToProducts()"
-            class="group w-full flex items-center gap-5 px-6 py-5 bg-white rounded-3xl shadow-sm border border-gray-100 hover:border-gray-300 hover:shadow-lg active:scale-98 transition-all duration-200 text-left">
-            <div class="w-16 h-16 bg-black rounded-3xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-200 shadow-md">
-              <span class="material-symbols-rounded text-white" style="font-size:1.6rem">inventory_2</span>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-black text-gray-900 text-lg">Gestionar Productos</p>
-              <p class="text-sm text-gray-400 mt-0.5">Crear, editar y eliminar</p>
-            </div>
-            <div class="w-10 h-10 bg-gray-100 rounded-2xl flex items-center justify-center group-hover:bg-black transition-colors duration-200">
-              <span class="material-symbols-rounded text-gray-400 group-hover:text-white transition-colors duration-200" style="font-size:1.2rem">arrow_forward</span>
-            </div>
-          </button>
-
+    <!-- Navigation / Modules -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
+      
+      <!-- Inventory Module -->
+      <button (click)="navigateToProducts()" 
+        class="group relative bg-black p-12 rounded-[2.5rem] text-left text-white overflow-hidden shadow-2xl hover:scale-[1.02] transition-all duration-500">
+        <div class="relative z-10">
+          <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 group-hover:rotate-12 transition-transform duration-500">
+            <span class="material-symbols-rounded text-black" style="font-size:2rem">inventory_2</span>
+          </div>
+          <h3 class="text-2xl font-black uppercase tracking-tighter">Gestionar Inventario</h3>
+          <p class="text-white/60 font-medium mt-4 text-sm leading-relaxed max-w-xs">Control de catálogo, fotos, descripciones y materiales.</p>
+          
+          <div class="mt-10 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em]">
+            Entrar al módulo <span class="material-symbols-rounded">east</span>
+          </div>
         </div>
-      </div>
+        <!-- Decorative subtle element -->
+        <span class="material-symbols-rounded absolute -bottom-10 -right-10 text-white/5" style="font-size:15rem">inventory_2</span>
+      </button>
 
-    </div>
-  </main>
+      <!-- Categories Module -->
+      <button (click)="navigateTo('/dashboard/categorias')" 
+        class="group relative bg-white p-12 rounded-[2.5rem] text-left border-4 border-black overflow-hidden hover:bg-black hover:text-white transition-all duration-500">
+        <div class="relative z-10">
+          <div class="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mb-8 group-hover:bg-white transition-colors duration-500">
+            <span class="material-symbols-rounded text-white group-hover:text-black" style="font-size:2rem">category</span>
+          </div>
+          <h3 class="text-2xl font-black uppercase tracking-tighter">Líneas y Secciones</h3>
+          <p class="text-black/40 group-hover:text-white/60 font-medium mt-4 text-sm leading-relaxed max-w-xs">Organización jerárquica de productos y filtros del catálogo.</p>
+          
+          <div class="mt-10 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em]">
+            Administrar <span class="material-symbols-rounded">east</span>
+          </div>
+        </div>
+      </button>
+
+    </section>
+
+    <!-- Footer Identity -->
+    <footer class="pt-20 pb-10 border-b-2 border-black flex flex-col md:flex-row items-center justify-between gap-6">
+       <span class="text-xs font-black uppercase tracking-[0.5em] text-black">Districol Premium Catálogo</span>
+       <div class="flex gap-10">
+         <span class="text-[10px] font-bold text-black/30 uppercase tracking-widest">v2.0 Minimal</span>
+         <span class="text-[10px] font-bold text-black/30 uppercase tracking-widest">2024</span>
+       </div>
+    </footer>
+  </div>
 
 </div>
