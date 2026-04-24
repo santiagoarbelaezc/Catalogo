@@ -404,3 +404,46 @@
   color: #fff;
   border-color: #111;
 }
+
+/* Botón Flotante de Impresión (FAB) */
+.print-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-color, #1a1a1a);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.print-fab:hover {
+  transform: scale(1.1) rotate(5deg);
+  background: #333;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.print-fab:active {
+  transform: scale(0.95);
+}
+
+.print-fab .material-symbols-rounded {
+  font-size: 24px;
+}
+
+@media (max-width: 768px) {
+  .print-fab {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+  }
+}

@@ -4,6 +4,7 @@ import { NavbarComponent } from "../../components/shared/navbar/navbar.component
 import { CatalogItemComponent } from "../../components/catalog/catalog-item/catalog-item.component";
 import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-catalogo-home',
@@ -19,7 +20,10 @@ export class CatalogoHomeComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 16; // Mostramos un poco más (16) en el Home
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.productsService.getAllProducts().subscribe({
@@ -66,5 +70,10 @@ export class CatalogoHomeComponent implements OnInit {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
+  }
+
+  goToPrint(): void {
+    const url = this.router.serializeUrl(this.router.createUrlTree(['/catalogo-print']));
+    window.open(url, '_blank');
   }
 }

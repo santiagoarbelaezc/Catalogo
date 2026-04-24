@@ -1,11 +1,46 @@
-<section class="print-catalog-section">
-  <div class="print-products-grid">
-    <div class="product-item-container" *ngFor="let product of products; let i = index">
-      <app-catalog-short
-        [product]="product"
-        [backgroundGradient]="'#FFFFFF,#FFFFFF'"
-        [reverseLayout]="i % 2 === 1">
-      </app-catalog-short>
-    </div>
+<div class="print-page-header">
+  <div>
+    <div class="brand-name">{{ brandName }}</div>
+    <div class="catalog-label">Catálogo de productos</div>
   </div>
-</section>
+  <div class="print-date">{{ currentDate }}</div>
+</div>
+
+<div class="products-print-grid">
+  <div class="product-print-card" *ngFor="let product of products">
+    
+    <img 
+      class="card-image" 
+      [src]="product.images[0].url" 
+      [alt]="product.name"
+      *ngIf="product.images && product.images.length > 0"
+    />
+    <div class="card-image" style="background:#f4f4f4;" *ngIf="!product.images || product.images.length === 0"></div>
+
+    <div class="card-body">
+      <div class="card-brand">{{ product.marca || product.category }}</div>
+      <h2 class="card-name">{{ product.name }}</h2>
+      <p class="card-description" *ngIf="product.description">{{ product.description }}</p>
+
+      <div class="card-divider"></div>
+
+      <div *ngIf="product.material">
+        <div class="meta-label">Material</div>
+        <div class="meta-value">{{ product.material }}</div>
+      </div>
+
+      <div *ngIf="product.variants && product.variants.length > 0">
+        <div class="meta-label">Opciones</div>
+        <div class="flex flex-wrap gap-1 mt-1">
+          <span class="variant-pill" *ngFor="let v of product.variants">{{ v.name }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="print-page-footer">
+  <span>{{ brandName }}</span>
+  <span>{{ products.length }} productos</span>
+</div>

@@ -1,124 +1,191 @@
-.print-catalog-section {
-  padding: 1rem;
-  background: white;
-  font-family: var(--font-primary);
+/* ============================================
+   RESET Y CONFIGURACIÓN DE PÁGINA
+   ============================================ */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  @page {
+    size: A4;
+    margin: 15mm 12mm 18mm 12mm;
+  }
+
+  /* Ocultar todo lo que no es catálogo */
+  app-navbar,
+  app-sidebar,
+  app-footer,
+  .btn-print,
+  .print-fab,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #1a1a1a;
+  }
 }
 
-.print-products-grid {
+/* ============================================
+   HEADER DE PÁGINA (número de página, marca, fecha)
+   ============================================ */
+.print-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #1a1a1a;
+  margin-bottom: 28px;
+}
+
+.print-page-header .brand-name {
+  font-family: 'Georgia', serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: #1a1a1a;
+}
+
+.print-page-header .catalog-label {
+  font-family: sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.print-page-header .print-date {
+  font-family: sans-serif;
+  font-size: 9px;
+  color: #bbb;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================
+   GRILLA DE PRODUCTOS
+   ============================================ */
+.products-print-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px 14px;
+}
+
+/* ============================================
+   TARJETA DE PRODUCTO
+   ============================================ */
+.product-print-card {
+  border: 0.5px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
-/* Contenedor individual para cada producto con separación visual */
-.product-item-container {
-  position: relative;
-  background: var(--background-white);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+/* Imagen del producto */
+.product-print-card .card-image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background-color: #f4f4f4;
 }
 
-/* Separador visual elegante entre productos */
-.product-item-container::after {
-  content: '';
-  position: absolute;
-  bottom: -1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-  opacity: 0.4;
+/* Cuerpo de la tarjeta */
+.product-print-card .card-body {
+  padding: 10px 12px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Último producto sin separador */
-.product-item-container:last-child::after {
-  display: none;
+/* Marca / etiqueta superior */
+.product-print-card .card-brand {
+  font-family: sans-serif;
+  font-size: 7.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 4px;
 }
 
-/* Estilos específicos para impresión */
-@media print {
-  .print-catalog-section {
-    padding: 0.75rem 1.25rem;
-    margin: 0;
-    background: white;
-  }
-
-  .print-products-grid {
-    gap: 1.5rem;
-  }
-
-  .product-item-container {
-    box-shadow: none;
-    border: 1px solid #ddd;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    page-break-inside: avoid;
-  }
-
-  .product-item-container::after {
-    display: none;
-  }
-
-  /* Ajustes para que dos productos quepan perfectamente en una página carta */
-  .product-item-container:nth-child(2n) {
-    margin-bottom: 2rem;
-  }
-
-  .product-item-container:nth-child(2n)::after {
-    content: '';
-    display: block;
-    page-break-after: always;
-  }
-
-  /* Asegurar que cada producto quepa en una página si es necesario */
-  app-catalog-short {
-    page-break-inside: avoid;
-    margin-bottom: 0;
-  }
+/* Nombre del producto — serif, protagonista */
+.product-print-card .card-name {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #1a1a1a;
+  margin: 0 0 6px;
 }
 
-/* Mejoras específicas para móviles */
-@media (max-width: 768px) {
-  .print-catalog-section {
-    padding: 0.5rem;
-  }
-
-  .print-products-grid {
-    gap: 2.5rem;
-  }
-
-  .product-item-container {
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .product-item-container::after {
-    width: 80px;
-    height: 3px;
-    bottom: -1.5rem;
-    opacity: 0.6;
-  }
+/* Descripción corta */
+.product-print-card .card-description {
+  font-family: sans-serif;
+  font-size: 9px;
+  line-height: 1.55;
+  color: #777;
+  margin-bottom: 8px;
+  flex: 1;
 }
 
-@media (max-width: 480px) {
-  .print-products-grid {
-    gap: 3rem;
-  }
+/* Divisor */
+.product-print-card .card-divider {
+  height: 0.5px;
+  background: #ececec;
+  margin: 6px 0;
+}
 
-  .product-item-container {
-    margin-bottom: 2.5rem;
-    border-radius: 6px;
-  }
+/* Etiquetas de metadatos (MATERIAL, OPCIONES) */
+.product-print-card .meta-label {
+  font-family: sans-serif;
+  font-size: 7px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-bottom: 2px;
+  margin-top: 6px;
+}
 
-  .product-item-container::after {
-    width: 100px;
-    height: 4px;
-    bottom: -2rem;
-    opacity: 0.5;
-  }
+/* Valores de metadatos */
+.product-print-card .meta-value {
+  font-family: sans-serif;
+  font-size: 9.5px;
+  color: #444;
+  line-height: 1.4;
+}
+
+/* Pills para variantes/opciones */
+.product-print-card .variant-pill {
+  display: inline-block;
+  border: 0.5px solid #ccc;
+  border-radius: 3px;
+  padding: 2px 7px;
+  font-family: sans-serif;
+  font-size: 8px;
+  color: #555;
+  margin: 2px 2px 0 0;
+  letter-spacing: 0.04em;
+}
+
+/* ============================================
+   PIE DE PÁGINA DE IMPRESIÓN
+   ============================================ */
+.print-page-footer {
+  margin-top: 28px;
+  padding-top: 10px;
+  border-top: 0.5px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.print-page-footer span {
+  font-family: sans-serif;
+  font-size: 8px;
+  color: #bbb;
+  letter-spacing: 0.08em;
 }

@@ -5,6 +5,7 @@ import { CatalogItemComponent } from '../../components/catalog/catalog-item/cata
 import { CatalogDataService } from '../../services/catalog-data.service';
 import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
+import { Router } from '@angular/router';
 import { NavbarComponent } from "../../components/shared/navbar/navbar.component";
 
 @Component({
@@ -47,7 +48,8 @@ export class PlaxtilineasComponent implements OnInit {
 
   constructor(
     private catalogDataService: CatalogDataService,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -65,5 +67,12 @@ export class PlaxtilineasComponent implements OnInit {
         console.error('Error cargando productos Plaxtilineas:', error);
       }
     });
+  }
+
+  goToPrint(): void {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/catalogo-print'], { queryParams: { brand: 'Plaxtilineas' } })
+    );
+    window.open(url, '_blank');
   }
 }
