@@ -1,0 +1,234 @@
+.filter-navbar-container {
+  max-width: 1000px;
+  margin: 0 auto 3.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-family: 'Inter Tight', sans-serif;
+}
+
+/* Main Pill Structure - Matches Navbar items */
+.filter-main-pill {
+  background: #f9fafb; /* gray-50/100 */
+  border: 1px solid #f1f5f9;
+  border-radius: 28px; /* Extra rounded like navbar */
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.05),
+    0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.filter-main-pill:focus-within {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Segments */
+.pill-segment {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 20px;
+  transition: opacity 0.2s;
+}
+
+.pill-segment:hover {
+  opacity: 0.8;
+}
+
+.segment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.segment-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #94a3b8; /* gray-400 */
+  letter-spacing: 0.8px;
+  margin-left: 26px; /* Align with input start after icon */
+}
+
+.input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.segment-icon {
+  font-size: 1.1rem;
+  color: #1e293b; /* gray-800 */
+}
+
+/* Divider */
+.pill-divider {
+  width: 1px;
+  height: 36px;
+  background: #e2e8f0;
+  flex-shrink: 0;
+}
+
+/* Fields */
+.pill-input, .pill-select {
+  border: none;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  outline: none;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.pill-input::placeholder {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.search-segment { flex: 1.5; }
+.sort-segment { flex: 1; }
+.price-segment { flex: 1.2; }
+
+/* Custom Select Styling */
+.sort-segment .input-wrap {
+  position: relative;
+}
+
+.pill-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 20px;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+/* Price Dual Inputs */
+.dual-inputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.price-field {
+  width: 60px;
+}
+
+.dash {
+  color: #cbd5e1;
+  font-weight: 300;
+}
+
+/* Action Button */
+.pill-action {
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.reset-pill-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 18px;
+  border: none;
+  background: #1e293b; /* gray-900 */
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.reset-pill-btn:hover {
+  background: #000;
+  transform: rotate(90deg);
+}
+
+/* Status Label */
+.filter-floating-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid #f1f5f9;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  animation: slideUp 0.4s ease-out;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e; /* green-500 */
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .filter-main-pill {
+    flex-direction: column;
+    border-radius: 24px;
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .pill-divider {
+    width: 100%;
+    height: 1px;
+  }
+  
+  .pill-segment {
+    width: 100%;
+    padding: 0;
+  }
+  
+  .segment-label {
+    margin-left: 26px;
+  }
+  
+  .reset-pill-btn {
+    width: 100%;
+    border-radius: 14px;
+    gap: 8px;
+  }
+  
+  .reset-pill-btn::after {
+    content: 'Limpiar filtros';
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+}
+
+/* Remove spin buttons */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}

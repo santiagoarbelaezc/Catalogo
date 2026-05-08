@@ -47,6 +47,12 @@
       <h2 class="section-title">Explora nuestra colección</h2>
     </div>
 
+    <!-- Filtros -->
+    <app-catalog-filter-bar 
+      [totalProducts]="filteredProducts.length"
+      (filtersChanged)="applyFilters($event)">
+    </app-catalog-filter-bar>
+
     <!-- Si no hay productos (cargando) -->
     <div *ngIf="products.length === 0" class="loading-state">
       <div class="loading-ring"></div>

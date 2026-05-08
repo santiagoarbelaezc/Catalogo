@@ -111,6 +111,12 @@
       <h2 class="section-title">Nuestros Productos</h2>
     </div>
 
+    <!-- Filtros -->
+    <app-catalog-filter-bar 
+      [totalProducts]="filteredProducts.length"
+      (filtersChanged)="applyFilters($event)">
+    </app-catalog-filter-bar>
+
     <app-catalog-item
       *ngFor="let product of paginatedProducts; let i = index"
       [product]="product"

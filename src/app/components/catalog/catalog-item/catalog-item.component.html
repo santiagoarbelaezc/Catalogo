@@ -1,4 +1,4 @@
-﻿<section class="catalog-item-wrap font-sans">
+<section class="catalog-item-wrap font-sans">
   <div class="catalog-item-card" [class.reverse]="reverseLayout">
     <div class="images-col" [class.order-first]="reverseLayout" [class.order-last]="!reverseLayout">
       <div class="main-img-box" *ngIf="product.images && product.images.length > 0">
@@ -24,6 +24,10 @@
 
       <h2 class="product-name">{{ product.name }}</h2>
       <p class="product-desc">{{ product.description }}</p>
+
+      <div class="product-price" *ngIf="priceDisplay">
+        <span class="price-value">{{ priceDisplay }}</span>
+      </div>
 
       <div class="specs-block">
         <div class="spec-row" *ngIf="product.material">

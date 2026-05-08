@@ -6,15 +6,25 @@ import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
 import { Router } from '@angular/router';
 
+import { CatalogFilterBarComponent, CatalogFilters } from '../../components/catalog/catalog-filter-bar/catalog-filter-bar.component';
+
 @Component({
   selector: 'app-catalogo-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, CatalogItemComponent],
+  imports: [CommonModule, NavbarComponent, CatalogItemComponent, CatalogFilterBarComponent],
   templateUrl: './catalogo-home.component.html',
   styleUrl: './catalogo-home.component.css'
 })
 export class CatalogoHomeComponent implements OnInit {
   products: CatalogProduct[] = [];
+  filteredProducts: CatalogProduct[] = [];
+  
+  currentFilters: CatalogFilters = {
+    minPrice: null,
+    maxPrice: null,
+    sortBy: 'name-asc',
+    searchQuery: ''
+  };
   
   // Paginación
   currentPage: number = 1;
@@ -29,18 +39,11 @@ export class CatalogoHomeComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
-          // Orden solicitado por el usuario: 1. Plaxtilineas, 2. Districol, 3. Espumas
-          const orderMap: { [key: string]: number } = {
-            'Plaxtilineas': 1,
-            'Districol': 2,
-            'Espumas': 3
-          };
-          
+          // Ordenar por nombre A-Z por defecto
           this.products = products.sort((a, b) => {
-            const orderA = orderMap[a.category] || 99;
-            const orderB = orderMap[b.category] || 99;
-            return orderA - orderB;
+            return a.name.localeCompare(b.name);
           });
+          this.applyFilters(this.currentFilters);
         }
       },
       error: (error: any) => {
@@ -51,11 +54,63 @@ export class CatalogoHomeComponent implements OnInit {
 
   get paginatedProducts(): CatalogProduct[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.products.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get totalPages(): number {
-    return Math.ceil(this.products.length / this.itemsPerPage);
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+  }
+
+  private getProductMinPrice(product: CatalogProduct): number {
+    const variants = product.references || product.variants || [];
+    if (variants.length === 0) return 0;
+    const prices = variants
+      .map(v => v.price)
+      .filter((p): p is number => p !== undefined && p !== null);
+    return prices.length > 0 ? Math.min(...prices) : 0;
+  }
+
+  applyFilters(filters: CatalogFilters): void {
+    this.currentFilters = filters;
+    this.currentPage = 1; // Reset to first page on filter change
+
+    let result = [...this.products];
+
+    // Filter by Search Query
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      result = result.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        p.category.toLowerCase().includes(query) ||
+        (p.description && p.description.toLowerCase().includes(query))
+      );
+    }
+
+    // Filter by Price
+    if (filters.minPrice !== null) {
+      result = result.filter(p => this.getProductMinPrice(p) >= (filters.minPrice ?? 0));
+    }
+    if (filters.maxPrice !== null) {
+      result = result.filter(p => this.getProductMinPrice(p) <= (filters.maxPrice ?? Infinity));
+    }
+
+    // Sort
+    result.sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'name-asc':
+          return a.name.localeCompare(b.name);
+        case 'name-desc':
+          return b.name.localeCompare(a.name);
+        case 'price-asc':
+          return this.getProductMinPrice(a) - this.getProductMinPrice(b);
+        case 'price-desc':
+          return this.getProductMinPrice(b) - this.getProductMinPrice(a);
+        default:
+          return 0;
+      }
+    });
+
+    this.filteredProducts = result;
   }
 
   get pagesList(): number[] {

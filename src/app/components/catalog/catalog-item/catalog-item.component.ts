@@ -15,6 +15,32 @@ export class CatalogItemComponent {
   @Input() backgroundGradient: string = 'var(--primary-bg),var(--primary-bg)'; // Degradado por defecto (color sólido)
   @Input() reverseLayout: boolean = false; // Para invertir el orden de las secciones
 
+  get priceDisplay(): string | null {
+    const variants = this.product.references || this.product.variants || [];
+    const prices = variants
+      .map(v => v.price)
+      .filter((p): p is number => p !== undefined && p !== null);
+
+    if (prices.length === 0) return null;
+
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+
+    if (min === max) {
+      return this.formatPrice(min);
+    } else {
+      return `Desde ${this.formatPrice(min)}`;
+    }
+  }
+
+  private formatPrice(price: number): string {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      maximumFractionDigits: 0
+    }).format(price);
+  }
+
   // Mapeo de colores a códigos HEX
   getColorCode(colorName: string): string {
     const colorMap: { [key: string]: string } = {

@@ -1,0 +1,82 @@
+<div class="filter-navbar-container">
+  
+  <div class="filter-main-pill">
+    
+    <!-- SEGMENT: SEARCH -->
+    <div class="pill-segment search-segment">
+      <div class="segment-info">
+        <span class="segment-label">Buscador</span>
+        <div class="input-wrap">
+          <span class="material-symbols-rounded segment-icon">search</span>
+          <input 
+            type="text" 
+            [(ngModel)]="searchQuery" 
+            (ngModelChange)="onFilterChange()" 
+            placeholder="¿Qué producto buscas?"
+            class="pill-input search-field">
+        </div>
+      </div>
+    </div>
+
+    <div class="pill-divider"></div>
+
+    <!-- SEGMENT: SORT -->
+    <div class="pill-segment sort-segment">
+      <div class="segment-info">
+        <span class="segment-label">Ordenar</span>
+        <div class="input-wrap">
+          <span class="material-symbols-rounded segment-icon">sort</span>
+          <select [(ngModel)]="sortBy" (change)="onFilterChange()" class="pill-select">
+            <option value="name-asc">Nombre: A-Z</option>
+            <option value="name-desc">Nombre: Z-A</option>
+            <option value="price-asc">Precio: Bajo-Alto</option>
+            <option value="price-desc">Precio: Alto-Bajo</option>
+          </select>
+          <span class="material-symbols-rounded dropdown-arrow">expand_more</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pill-divider"></div>
+
+    <!-- SEGMENT: PRICE -->
+    <div class="pill-segment price-segment">
+      <div class="segment-info">
+        <span class="segment-label">Presupuesto</span>
+        <div class="input-wrap price-inputs-wrap">
+          <span class="material-symbols-rounded segment-icon">payments</span>
+          <div class="dual-inputs">
+            <input 
+              type="number" 
+              [(ngModel)]="minPrice" 
+              (ngModelChange)="onFilterChange()" 
+              placeholder="Mín"
+              class="pill-input price-field">
+            <span class="dash">/</span>
+            <input 
+              type="number" 
+              [(ngModel)]="maxPrice" 
+              (ngModelChange)="onFilterChange()" 
+              placeholder="Máx"
+              class="pill-input price-field">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESET BUTTON -->
+    <div class="pill-action" *ngIf="searchQuery || minPrice || maxPrice || sortBy !== 'name-asc'">
+      <button class="reset-pill-btn" (click)="resetFilters()" title="Limpiar filtros">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- FLOATING STATUS -->
+  <div class="filter-floating-status" *ngIf="totalProducts > 0">
+    <div class="status-dot"></div>
+    <span>{{ totalProducts }} productos encontrados</span>
+  </div>
+
+</div>

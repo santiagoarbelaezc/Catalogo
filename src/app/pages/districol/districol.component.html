@@ -62,6 +62,12 @@
       <h2 class="section-title">Nuestros Productos</h2>
     </div>
 
+    <!-- Filtros -->
+    <app-catalog-filter-bar 
+      [totalProducts]="filteredProducts.length"
+      (filtersChanged)="applyFilters($event)">
+    </app-catalog-filter-bar>
+
     <!-- El ngFor iterará sobre los productos reales obtenidos de la base de datos -->
     <app-catalog-item
       *ngFor="let product of paginatedProducts; let i = index"

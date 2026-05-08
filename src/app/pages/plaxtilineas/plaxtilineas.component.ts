@@ -8,15 +8,25 @@ import { CatalogProduct } from '../../models/product.model';
 import { Router } from '@angular/router';
 import { NavbarComponent } from "../../components/shared/navbar/navbar.component";
 
+import { CatalogFilterBarComponent, CatalogFilters } from '../../components/catalog/catalog-filter-bar/catalog-filter-bar.component';
+
 @Component({
   selector: 'app-plaxtilineas',
   standalone: true,
-  imports: [CommonModule, CatalogItemComponent, NavbarComponent],
+  imports: [CommonModule, CatalogItemComponent, NavbarComponent, CatalogFilterBarComponent],
   templateUrl: './plaxtilineas.component.html',
   styleUrl: './plaxtilineas.component.css'
 })
 export class PlaxtilineasComponent implements OnInit {
   products: CatalogProduct[] = [];
+  filteredProducts: CatalogProduct[] = [];
+  
+  currentFilters: CatalogFilters = {
+    minPrice: null,
+    maxPrice: null,
+    sortBy: 'name-asc',
+    searchQuery: ''
+  };
   
   // Paginación
   currentPage: number = 1;
@@ -24,11 +34,54 @@ export class PlaxtilineasComponent implements OnInit {
 
   get paginatedProducts(): CatalogProduct[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.products.slice(startIndex, startIndex + this.itemsPerPage);
+    return this.filteredProducts.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   get totalPages(): number {
-    return Math.ceil(this.products.length / this.itemsPerPage);
+    return Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+  }
+
+  private getProductMinPrice(product: CatalogProduct): number {
+    const variants = product.references || product.variants || [];
+    if (variants.length === 0) return 0;
+    const prices = variants
+      .map(v => v.price)
+      .filter((p): p is number => p !== undefined && p !== null);
+    return prices.length > 0 ? Math.min(...prices) : 0;
+  }
+
+  applyFilters(filters: CatalogFilters): void {
+    this.currentFilters = filters;
+    this.currentPage = 1;
+
+    let result = [...this.products];
+
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      result = result.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        (p.description && p.description.toLowerCase().includes(query))
+      );
+    }
+
+    if (filters.minPrice !== null) {
+      result = result.filter(p => this.getProductMinPrice(p) >= (filters.minPrice ?? 0));
+    }
+    if (filters.maxPrice !== null) {
+      result = result.filter(p => this.getProductMinPrice(p) <= (filters.maxPrice ?? Infinity));
+    }
+
+    result.sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'name-asc': return a.name.localeCompare(b.name);
+        case 'name-desc': return b.name.localeCompare(a.name);
+        case 'price-asc': return this.getProductMinPrice(a) - this.getProductMinPrice(b);
+        case 'price-desc': return this.getProductMinPrice(b) - this.getProductMinPrice(a);
+        default: return 0;
+      }
+    });
+
+    this.filteredProducts = result;
   }
 
   get pagesList(): number[] {
@@ -58,9 +111,10 @@ export class PlaxtilineasComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
-          this.products = products.filter(
-            (product: any) => product.category === 'Plaxtilineas'
-          );
+          this.products = products
+            .filter((product: any) => product.category === 'Plaxtilineas')
+            .sort((a, b) => a.name.localeCompare(b.name));
+          this.applyFilters(this.currentFilters);
         }
       },
       error: (error) => {
