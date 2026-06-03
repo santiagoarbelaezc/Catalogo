@@ -67,6 +67,27 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   activeActionFilter: string | null = null;
   showReports = false;
 
+  // === MODAL REPORT STATE ===
+  reportTab = 0; // 0=Resumen, 1=Calidad, 2=Por Categoría
+  reportLineFilter = ''; // '', 'Plaxtilineas', 'Espumas', 'Districol'
+  reportCategoryFilter = ''; // ID or name of selected category
+  activeActionCard: string | null = null; // 'description'|'images'|'variants'|'price'
+  problemProducts: any[] = []; // Products matching active action card
+
+  statsGlobal = {
+    total: 0,
+    plaxtilineas: 0,
+    espumas: 0,
+    districol: 0,
+    otros: 0,
+    missingDescription: 0,
+    missingImages: 0,
+    missingPrice: 0,
+    missingVariants: 0,
+    complete: 0,
+    completePct: 0
+  };
+
   statsData = {
     missingDescription: 0,
     missingImages: 0,
@@ -74,28 +95,70 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     missingVariants: 0
   };
 
+  // Unique category names for Pestaña 3
+  get uniqueCategoryNames(): string[] {
+    const names = new Set<string>();
+    this.products.forEach(p => { if (p.category_name) names.add(p.category_name); });
+    return Array.from(names).sort();
+  }
+
+  // Products for the selected category in Pestaña 3
+  get categoryAnalysisProducts(): any[] {
+    if (!this.reportCategoryFilter) return [];
+    return this.products.filter(p => p.category_name === this.reportCategoryFilter);
+  }
+
+  // Count products WITH a property in the selected category
+  getCategoryCount(type: 'images' | 'description' | 'variants' | 'price'): number {
+    return this.categoryAnalysisProducts.filter(p => {
+      if (type === 'images') return p.images && p.images.length > 0;
+      if (type === 'description') return p.description && p.description.trim() !== '';
+      if (type === 'variants') return p.variants && p.variants.length > 0;
+      if (type === 'price') return p.variants && p.variants.length > 0 && !p.variants.some((v: any) => !v.price || v.price <= 0);
+      return false;
+    }).length;
+  }
+
+  // Stats computed for the currently filtered line (Pestaña 2)
+  get filteredLineStats() {
+    const src = this.reportLineFilter
+      ? this.products.filter(p => p.category?.trim() === this.reportLineFilter)
+      : this.products;
+    let missingDesc = 0, missingImg = 0, missingVars = 0, missingPrice = 0;
+    src.forEach(p => {
+      if (!p.description || p.description.trim() === '') missingDesc++;
+      if (!p.images || p.images.length === 0) missingImg++;
+      if (!p.variants || p.variants.length === 0) missingVars++;
+      else if (p.variants.some((v: any) => !v.price || v.price <= 0)) missingPrice++;
+    });
+    return { total: src.length, missingDesc, missingImg, missingVars, missingPrice };
+  }
+
   public lineChartOptions: any = {
     responsive: true,
-    plugins: { legend: { position: 'right' } },
-    cutout: '70%'
+    maintainAspectRatio: false,
+    plugins: { legend: { position: 'right', labels: { font: { size: 12 }, padding: 16 } } },
+    cutout: '65%'
   };
   public lineChartType: ChartType = 'doughnut';
   public lineChartData: ChartData<'doughnut'> = {
     labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
-    datasets: [ { data: [0, 0, 0, 0], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0 } ]
+    datasets: [ { data: [0, 0, 0, 0], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0, hoverOffset: 8 } ]
   };
 
   public categoryChartOptions: any = {
     responsive: true,
-    indexAxis: 'y', // Horizontal bar
+    maintainAspectRatio: false,
+    indexAxis: 'y',
     plugins: { legend: { display: false } },
-    scales: { x: { beginAtZero: true } }
+    scales: { x: { beginAtZero: true, grid: { color: '#f1f5f9' } }, y: { grid: { display: false } } }
   };
   public categoryChartType: ChartType = 'bar';
   public categoryChartData: ChartData<'bar'> = {
     labels: [],
-    datasets: [ { data: [], backgroundColor: '#6366f1', borderRadius: 4, barThickness: 15 } ]
+    datasets: [ { data: [], backgroundColor: '#6366f1', borderRadius: 6, barPercentage: 0.6 } ]
   };
+  // =============================
 
   private subscriptions: Subscription[] = [];
 
@@ -306,65 +369,112 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   // --- REPORTS & STATS LOGIC ---
   toggleReports() {
     this.showReports = !this.showReports;
+    if (this.showReports) {
+      this.reportTab = 0;
+      this.reportLineFilter = '';
+      this.reportCategoryFilter = '';
+      this.activeActionCard = null;
+      this.problemProducts = [];
+      this.calculateStats();
+    }
+  }
+
+  closeModal() {
+    this.showReports = false;
+    this.cdr.markForCheck();
   }
 
   calculateStats() {
-    let missingDesc = 0;
-    let missingImg = 0;
-    let missingPrice = 0;
-    let missingVars = 0;
-
+    let missingDesc = 0, missingImg = 0, missingPrice = 0, missingVars = 0;
     let plaxti = 0, espumas = 0, distri = 0, otros = 0;
+    let complete = 0;
     const catCounts: { [key: string]: number } = {};
 
     this.products.forEach(p => {
-      // Actionable Stats
-      if (!p.description || p.description.trim() === '') missingDesc++;
-      if (!p.images || p.images.length === 0) missingImg++;
-      if (!p.variants || p.variants.length === 0) missingVars++;
-      else {
-        const hasMissingPrice = p.variants.some((v: any) => !v.price || v.price <= 0);
-        if (hasMissingPrice) missingPrice++;
-      }
+      const hasDesc = !!(p.description && p.description.trim() !== '');
+      const hasImg = !!(p.images && p.images.length > 0);
+      const hasVars = !!(p.variants && p.variants.length > 0);
+      const hasPrice = hasVars && !p.variants.some((v: any) => !v.price || v.price <= 0);
 
-      // Line Chart
+      if (!hasDesc) missingDesc++;
+      if (!hasImg) missingImg++;
+      if (!hasVars) missingVars++;
+      else if (!hasPrice) missingPrice++;
+      if (hasDesc && hasImg && hasVars && hasPrice) complete++;
+
       const cat = p.category ? p.category.trim() : '';
       if (cat === 'Plaxtilineas') plaxti++;
       else if (cat === 'Espumas') espumas++;
       else if (cat === 'Districol') distri++;
       else otros++;
 
-      // Category Chart
       const catName = p.category_name || 'Sin Categoría';
       catCounts[catName] = (catCounts[catName] || 0) + 1;
     });
 
+    const total = this.products.length;
+    this.statsGlobal = {
+      total, plaxtilineas: plaxti, espumas, districol: distri, otros,
+      missingDescription: missingDesc, missingImages: missingImg,
+      missingPrice, missingVariants: missingVars,
+      complete, completePct: total > 0 ? Math.round((complete / total) * 100) : 0
+    };
+
     this.statsData = {
-      missingDescription: missingDesc,
-      missingImages: missingImg,
-      missingPrice: missingPrice,
-      missingVariants: missingVars
+      missingDescription: missingDesc, missingImages: missingImg,
+      missingPrice, missingVariants: missingVars
     };
 
     this.lineChartData = {
       labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
-      datasets: [ { data: [plaxti, espumas, distri, otros], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0 } ]
+      datasets: [ { data: [plaxti, espumas, distri, otros], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0, hoverOffset: 8 } ]
     };
 
-    // Top 5 Categories
-    const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
     this.categoryChartData = {
       labels: sortedCats.map(c => c[0]),
-      datasets: [ { data: sortedCats.map(c => c[1]), backgroundColor: '#6366f1', borderRadius: 4, barPercentage: 0.5 } ]
+      datasets: [ { data: sortedCats.map(c => c[1]), backgroundColor: '#6366f1', borderRadius: 6, barPercentage: 0.6 } ]
     };
+  }
+
+  selectActionCard(type: 'description' | 'images' | 'variants' | 'price') {
+    if (this.activeActionCard === type) {
+      this.activeActionCard = null;
+      this.problemProducts = [];
+      this.cdr.markForCheck();
+      return;
+    }
+    this.activeActionCard = type;
+    const src = this.reportLineFilter
+      ? this.products.filter(p => p.category?.trim() === this.reportLineFilter)
+      : this.products;
+    this.problemProducts = src.filter(p => {
+      if (type === 'description') return !p.description || p.description.trim() === '';
+      if (type === 'images') return !p.images || p.images.length === 0;
+      if (type === 'variants') return !p.variants || p.variants.length === 0;
+      if (type === 'price') return p.variants && p.variants.length > 0 && p.variants.some((v: any) => !v.price || v.price <= 0);
+      return false;
+    });
+    this.cdr.markForCheck();
+  }
+
+  applyActionFilter() {
+    if (!this.activeActionCard) return;
+    this.filterActionable(this.activeActionCard as any);
+    this.closeModal();
   }
 
   filterActionable(type: 'description' | 'images' | 'variants' | 'price' | null) {
     this.activeActionFilter = type;
-    this.filterBrand = ''; // Clear brand filter
+    this.filterBrand = '';
     this.searchTerm = '';
     this.currentPage = 1;
-    if (this.showReports) this.showReports = false; // Close reports to see table
+    this.cdr.markForCheck();
+  }
+
+  onReportLineFilterChange() {
+    this.activeActionCard = null;
+    this.problemProducts = [];
     this.cdr.markForCheck();
   }
   // -----------------------------
@@ -493,6 +603,11 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     if (!product.variants || product.variants.length === 0) return 0;
     const prices = product.variants.map((v: any) => parseFloat(v.price) || 0);
     return Math.min(...prices);
+  }
+
+  hasValidPrice(product: any): boolean {
+    return product.variants && product.variants.length > 0 &&
+      !product.variants.some((v: any) => !v.price || parseFloat(v.price) <= 0);
   }
 
   // === trackBy ===

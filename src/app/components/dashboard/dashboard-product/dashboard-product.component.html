@@ -105,99 +105,353 @@
          </div>
       </section>
 
-      <!-- Advanced Analytics Report Panel -->
-      <section *ngIf="showReports" class="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm animate-fade-in space-y-8 relative overflow-hidden">
-        <!-- Decorative bg -->
-        <div class="absolute top-0 right-0 w-64 h-64 bg-violet-50 rounded-full blur-3xl opacity-50 -z-10 -translate-y-1/2 translate-x-1/2"></div>
-        
-        <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
-          <div class="w-10 h-10 rounded-full bg-violet-100 flex items-center justify-center text-violet-600">
-            <span class="material-symbols-rounded">bar_chart</span>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold text-slate-900 tracking-tight">Reporte de Inventario</h3>
-            <p class="text-xs font-medium text-slate-500">Estadísticas y acciones sugeridas para optimizar el catálogo</p>
-          </div>
-        </div>
+      <!-- ===================== MODAL REPORTE ANALÍTICO ===================== -->
+      <div *ngIf="showReports" class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto" style="background: rgba(255,255,255,0.75); backdrop-filter: blur(4px);" (click)="closeModal()">
+        <div class="relative bg-white rounded-3xl w-full flex flex-col overflow-hidden border border-slate-200/80" style="margin: 16px; min-height: calc(100vh - 32px); max-height: calc(100vh - 32px);" (click)="$event.stopPropagation()">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          <!-- Actionable Cards -->
-          <div class="lg:col-span-5 space-y-4">
-            <h4 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">warning</span>
-              Atención Requerida
-            </h4>
-            
-            <div class="grid grid-cols-2 gap-4">
-              <!-- Missing Description -->
-              <button (click)="filterActionable('description')" class="group text-left p-4 rounded-2xl border transition-all"
-                [ngClass]="activeActionFilter === 'description' ? 'border-violet-500 bg-violet-50/50 shadow-md ring-2 ring-violet-200' : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:shadow-sm'">
-                <div class="text-2xl font-bold mb-1" [ngClass]="statsData.missingDescription > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                  {{ statsData.missingDescription }}
-                </div>
-                <div class="text-xs font-semibold text-slate-600 group-hover:text-violet-700 transition-colors">Sin Descripción</div>
-              </button>
-
-              <!-- Missing Images -->
-              <button (click)="filterActionable('images')" class="group text-left p-4 rounded-2xl border transition-all"
-                [ngClass]="activeActionFilter === 'images' ? 'border-violet-500 bg-violet-50/50 shadow-md ring-2 ring-violet-200' : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:shadow-sm'">
-                <div class="text-2xl font-bold mb-1" [ngClass]="statsData.missingImages > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                  {{ statsData.missingImages }}
-                </div>
-                <div class="text-xs font-semibold text-slate-600 group-hover:text-violet-700 transition-colors">Sin Imágenes</div>
-              </button>
-
-              <!-- Missing Variants -->
-              <button (click)="filterActionable('variants')" class="group text-left p-4 rounded-2xl border transition-all"
-                [ngClass]="activeActionFilter === 'variants' ? 'border-violet-500 bg-violet-50/50 shadow-md ring-2 ring-violet-200' : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:shadow-sm'">
-                <div class="text-2xl font-bold mb-1" [ngClass]="statsData.missingVariants > 0 ? 'text-amber-500' : 'text-emerald-500'">
-                  {{ statsData.missingVariants }}
-                </div>
-                <div class="text-xs font-semibold text-slate-600 group-hover:text-violet-700 transition-colors">Sin Variantes</div>
-              </button>
-
-              <!-- Missing Price -->
-              <button (click)="filterActionable('price')" class="group text-left p-4 rounded-2xl border transition-all"
-                [ngClass]="activeActionFilter === 'price' ? 'border-violet-500 bg-violet-50/50 shadow-md ring-2 ring-violet-200' : 'border-slate-200 bg-slate-50 hover:border-violet-300 hover:shadow-sm'">
-                <div class="text-2xl font-bold mb-1" [ngClass]="statsData.missingPrice > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                  {{ statsData.missingPrice }}
-                </div>
-                <div class="text-xs font-semibold text-slate-600 group-hover:text-violet-700 transition-colors">Sin Precio (0)</div>
-              </button>
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between px-7 py-4 border-b border-slate-100 shrink-0 bg-white">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center">
+                <span class="material-symbols-rounded text-slate-600" style="font-size:1.1rem">analytics</span>
+              </div>
+              <div>
+                <h2 class="text-base font-bold text-slate-900 tracking-tight">Reporte Analítico de Inventario</h2>
+                <p class="text-xs font-medium text-slate-400">{{ products.length }} productos · Actualizado ahora</p>
+              </div>
             </div>
-            
-            <button *ngIf="activeActionFilter" (click)="filterActionable(null)" class="w-full mt-2 py-2 text-xs font-bold text-slate-500 hover:text-slate-800 flex justify-center items-center gap-1 transition-colors">
-              <span class="material-symbols-rounded" style="font-size:1rem">close</span> Limpiar filtro de acciones
+            <button (click)="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all">
+              <span class="material-symbols-rounded" style="font-size:1.2rem">close</span>
             </button>
           </div>
 
-          <!-- Charts -->
-          <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-8 border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-8">
-            <div>
-              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-6 text-center">Distribución por Línea</h4>
-              <div class="relative h-[200px] w-full flex justify-center">
-                 <canvas baseChart
-                   [data]="lineChartData"
-                   [options]="lineChartOptions"
-                   [type]="lineChartType">
-                 </canvas>
+          <!-- Layout: Sidebar + Content -->
+          <div class="flex flex-1 overflow-hidden">
+
+            <!-- Sidebar Navigation -->
+            <div class="w-48 shrink-0 flex flex-col border-r border-slate-100 py-4 px-2.5 gap-0.5 bg-slate-50">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Secciones</p>
+              <button (click)="reportTab=0" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
+                [ngClass]="reportTab===0 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" [ngClass]="reportTab===0 ? 'bg-slate-100' : 'bg-transparent'">
+                  <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">bar_chart</span>
+                </span>
+                Resumen
+              </button>
+              <button (click)="reportTab=1" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
+                [ngClass]="reportTab===1 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" [ngClass]="reportTab===1 ? 'bg-slate-100' : 'bg-transparent'">
+                  <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">warning</span>
+                </span>
+                <span class="flex-1">Calidad</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-600">
+                  {{ statsGlobal.missingDescription + statsGlobal.missingImages + statsGlobal.missingVariants + statsGlobal.missingPrice }}
+                </span>
+              </button>
+              <button (click)="reportTab=2" class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
+                [ngClass]="reportTab===2 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" [ngClass]="reportTab===2 ? 'bg-slate-100' : 'bg-transparent'">
+                  <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">category</span>
+                </span>
+                Por Categoría
+              </button>
+
+              <!-- Mini stats -->
+              <div class="mt-auto pt-4 border-t border-slate-200 space-y-2 px-1">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Líneas</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Plaxtilineas</span>
+                  <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.plaxtilineas }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Espumas</span>
+                  <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.espumas }}</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Districol</span>
+                  <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.districol }}</span>
+                </div>
               </div>
             </div>
-            <div>
-              <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-6 text-center">Top 5 Categorías</h4>
-              <div class="relative h-[200px] w-full flex justify-center">
-                 <canvas baseChart
-                   [data]="categoryChartData"
-                   [options]="categoryChartOptions"
-                   [type]="categoryChartType">
-                 </canvas>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto">
+
+            <!-- ===== PESTAÑA 0: RESUMEN GENERAL ===== -->
+            <div *ngIf="reportTab===0" class="p-7 space-y-6">
+
+              <!-- KPI Strip -->
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div class="col-span-2 md:col-span-1 bg-slate-900 rounded-2xl p-5 text-white flex flex-col gap-1">
+                  <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</p>
+                  <p class="text-3xl font-bold">{{ statsGlobal.total }}</p>
+                  <p class="text-xs text-slate-400">productos</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
+                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Plaxtilineas</p></div>
+                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.plaxtilineas }}</p>
+                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.plaxtilineas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
+                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span><p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Espumas</p></div>
+                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.espumas }}</p>
+                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.espumas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
+                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span><p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Districol</p></div>
+                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.districol }}</p>
+                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.districol / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                </div>
+                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
+                  <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">Completos</p>
+                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.completePct }}%</p>
+                  <p class="text-xs text-slate-400">{{ statsGlobal.complete }} prods.</p>
+                </div>
               </div>
-            </div>
-          </div>
+
+              <!-- Progress bar completeness -->
+              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
+                <div class="flex items-center justify-between mb-3">
+                  <p class="text-sm font-bold text-slate-700">Completitud del Catálogo</p>
+                  <p class="text-sm font-bold text-violet-600">{{ statsGlobal.completePct }}%</p>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-3">
+                  <div class="h-3 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 transition-all duration-700"
+                    [style.width.%]="statsGlobal.completePct"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">{{ statsGlobal.complete }} de {{ statsGlobal.total }} productos tienen descripción, imagen, variantes y precio completos.</p>
+              </div>
+
+              <!-- Charts Row -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
+                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Distribución por Línea de Negocio</h4>
+                  <div style="height:280px; position:relative;">
+                    <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+                  </div>
+                </div>
+                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
+                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Top 10 Categorías con más Productos</h4>
+                  <div style="height:280px; position:relative;">
+                    <canvas baseChart [data]="categoryChartData" [options]="categoryChartOptions" [type]="categoryChartType"></canvas>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /Pestaña 0 -->
+
+            <!-- ===== PESTAÑA 1: CALIDAD DEL CATÁLOGO ===== -->
+            <div *ngIf="reportTab===1" class="p-8 space-y-6">
+
+              <!-- Line Filter -->
+              <div class="flex items-center gap-3 flex-wrap">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ver por Línea:</p>
+                <button (click)="reportLineFilter=''; onReportLineFilterChange()" class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
+                  [ngClass]="reportLineFilter==='' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'">Todas</button>
+                <button (click)="reportLineFilter='Plaxtilineas'; onReportLineFilterChange()" class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
+                  [ngClass]="reportLineFilter==='Plaxtilineas' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300'">Plaxtilineas</button>
+                <button (click)="reportLineFilter='Espumas'; onReportLineFilterChange()" class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
+                  [ngClass]="reportLineFilter==='Espumas' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'">Espumas</button>
+                <button (click)="reportLineFilter='Districol'; onReportLineFilterChange()" class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
+                  [ngClass]="reportLineFilter==='Districol' ? 'bg-amber-700 text-white border-amber-700' : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300'">Districol</button>
+                <span class="ml-auto text-xs text-slate-400 font-medium">{{ filteredLineStats.total }} productos</span>
+              </div>
+
+              <!-- Action Cards -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Sin Descripción -->
+                <button (click)="selectActionCard('description')" class="group text-left p-5 rounded-2xl border-2 transition-all"
+                  [ngClass]="activeActionCard==='description' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
+                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center" [ngClass]="activeActionCard==='description' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
+                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">description</span>
+                  </div>
+                  <div class="text-3xl font-black mb-1" [ngClass]="filteredLineStats.missingDesc > 0 ? 'text-rose-500' : 'text-emerald-500'">
+                    {{ filteredLineStats.missingDesc }}
+                  </div>
+                  <div class="text-xs font-bold text-slate-700">Sin Descripción</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Requieren texto descriptivo</div>
+                </button>
+
+                <!-- Sin Imágenes -->
+                <button (click)="selectActionCard('images')" class="group text-left p-5 rounded-2xl border-2 transition-all"
+                  [ngClass]="activeActionCard==='images' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
+                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center" [ngClass]="activeActionCard==='images' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
+                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">image</span>
+                  </div>
+                  <div class="text-3xl font-black mb-1" [ngClass]="filteredLineStats.missingImg > 0 ? 'text-rose-500' : 'text-emerald-500'">
+                    {{ filteredLineStats.missingImg }}
+                  </div>
+                  <div class="text-xs font-bold text-slate-700">Sin Imágenes</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Requieren foto del producto</div>
+                </button>
+
+                <!-- Sin Variantes -->
+                <button (click)="selectActionCard('variants')" class="group text-left p-5 rounded-2xl border-2 transition-all"
+                  [ngClass]="activeActionCard==='variants' ? 'border-amber-500 bg-amber-50 shadow-lg shadow-amber-100' : 'border-slate-200 bg-white hover:border-amber-300 hover:shadow-md'">
+                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center" [ngClass]="activeActionCard==='variants' ? 'bg-amber-100' : 'bg-slate-100 group-hover:bg-amber-50'">
+                    <span class="material-symbols-rounded text-amber-500" style="font-size:1.2rem">inventory_2</span>
+                  </div>
+                  <div class="text-3xl font-black mb-1" [ngClass]="filteredLineStats.missingVars > 0 ? 'text-amber-500' : 'text-emerald-500'">
+                    {{ filteredLineStats.missingVars }}
+                  </div>
+                  <div class="text-xs font-bold text-slate-700">Sin Variantes</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Sin tallas, colores o unidades</div>
+                </button>
+
+                <!-- Sin Precio -->
+                <button (click)="selectActionCard('price')" class="group text-left p-5 rounded-2xl border-2 transition-all"
+                  [ngClass]="activeActionCard==='price' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
+                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center" [ngClass]="activeActionCard==='price' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
+                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">sell</span>
+                  </div>
+                  <div class="text-3xl font-black mb-1" [ngClass]="filteredLineStats.missingPrice > 0 ? 'text-rose-500' : 'text-emerald-500'">
+                    {{ filteredLineStats.missingPrice }}
+                  </div>
+                  <div class="text-xs font-bold text-slate-700">Sin Precio</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">Variantes con precio en 0</div>
+                </button>
+              </div>
+
+              <!-- Problem Products Table (shown when a card is active) -->
+              <div *ngIf="activeActionCard && problemProducts.length > 0" class="border border-slate-200 rounded-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-5 py-3 bg-slate-50 border-b border-slate-100">
+                  <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">{{ problemProducts.length }} productos que requieren atención</p>
+                  <button (click)="applyActionFilter()" class="flex items-center gap-1.5 text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors px-3 py-1.5 bg-violet-50 hover:bg-violet-100 rounded-full">
+                    <span class="material-symbols-rounded" style="font-size:0.9rem">filter_list</span>
+                    Ver en inventario
+                  </button>
+                </div>
+                <div class="divide-y divide-slate-100 max-h-64 overflow-y-auto">
+                  <div *ngFor="let p of problemProducts; trackBy: trackByProductId" class="flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
+                        <span class="material-symbols-rounded text-slate-400" style="font-size:1rem">inventory_2</span>
+                      </div>
+                      <div>
+                        <p class="text-sm font-semibold text-slate-800">{{ p.name }}</p>
+                        <p class="text-[10px] text-slate-400">{{ p.category_name || 'Sin categoría' }} · {{ p.category || '—' }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <span class="text-[10px] px-2 py-1 rounded-full font-bold"
+                        [ngClass]="p.category === 'Plaxtilineas' ? 'bg-emerald-100 text-emerald-700' : p.category === 'Espumas' ? 'bg-blue-100 text-blue-700' : p.category === 'Districol' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'">
+                        {{ p.category || 'Sin línea' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="activeActionCard && problemProducts.length === 0" class="text-center py-12">
+                <span class="material-symbols-rounded text-emerald-400 text-5xl">check_circle</span>
+                <p class="text-emerald-600 font-bold mt-2">¡Perfecto! No hay productos con este problema</p>
+              </div>
+
+            </div><!-- /Pestaña 1 -->
+
+            <!-- ===== PESTAÑA 2: ANÁLISIS POR CATEGORÍA ===== -->
+            <div *ngIf="reportTab===2" class="p-8 space-y-6">
+
+              <!-- Category Selector -->
+              <div class="flex items-center gap-4 flex-wrap">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider shrink-0">Selecciona una categoría:</p>
+                <div class="relative">
+                  <select [(ngModel)]="reportCategoryFilter" class="appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 pr-10 outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-100 transition-all cursor-pointer">
+                    <option value="">— Elige una categoría —</option>
+                    <option *ngFor="let name of uniqueCategoryNames" [value]="name">{{ name }}</option>
+                  </select>
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded" style="font-size:1.1rem">expand_more</span>
+                </div>
+              </div>
+
+              <!-- Category KPIs -->
+              <div *ngIf="reportCategoryFilter && categoryAnalysisProducts.length > 0" class="space-y-6">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div class="bg-indigo-600 text-white rounded-2xl p-5">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest text-indigo-200">Total</p>
+                    <p class="text-3xl font-bold mt-1">{{ categoryAnalysisProducts.length }}</p>
+                    <p class="text-xs text-indigo-200 mt-1">en {{ reportCategoryFilter }}</p>
+                  </div>
+                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Imagen</p>
+                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('images') }}</p>
+                    <p class="text-xs text-emerald-400 mt-1">productos</p>
+                  </div>
+                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Descripción</p>
+                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('description') }}</p>
+                    <p class="text-xs text-emerald-400 mt-1">productos</p>
+                  </div>
+                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Variantes</p>
+                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('variants') }}</p>
+                    <p class="text-xs text-emerald-400 mt-1">productos</p>
+                  </div>
+                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
+                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Precio</p>
+                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('price') }}</p>
+                    <p class="text-xs text-emerald-400 mt-1">productos</p>
+                  </div>
+                </div>
+
+                <!-- Products Health Table -->
+                <div class="border border-slate-200 rounded-2xl overflow-hidden">
+                  <div class="px-5 py-3 bg-slate-50 border-b border-slate-100">
+                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">Productos de esta categoría</p>
+                  </div>
+                  <div class="divide-y divide-slate-100 max-h-80 overflow-y-auto">
+                    <div *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId" class="flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors">
+                      <div>
+                        <p class="text-sm font-semibold text-slate-800">{{ p.name }}</p>
+                        <p class="text-[10px] text-slate-400">{{ p.category || '—' }}</p>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <!-- Health indicators -->
+                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
+                          [ngClass]="p.description && p.description.trim() ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
+                          title="Descripción">
+                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.description && p.description.trim() ? 'check' : 'close' }}</span>
+                        </span>
+                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
+                          [ngClass]="p.images && p.images.length > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
+                          title="Imagen">
+                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.images && p.images.length > 0 ? 'check' : 'close' }}</span>
+                        </span>
+                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
+                          [ngClass]="p.variants && p.variants.length > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'"
+                          title="Variantes">
+                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.variants && p.variants.length > 0 ? 'check' : 'close' }}</span>
+                        </span>
+                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
+                          [ngClass]="hasValidPrice(p) ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
+                          title="Precio">
+                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ hasValidPrice(p) ? 'check' : 'close' }}</span>
+                        </span>
+                        <span class="text-[9px] text-slate-400 hidden md:flex gap-0.5 ml-1">
+                          <span title="Desc">D</span><span title="Img">I</span><span title="Var">V</span><span title="Prc">P</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="!reportCategoryFilter" class="flex flex-col items-center justify-center py-24 text-center">
+                <span class="material-symbols-rounded text-slate-200 text-8xl mb-4">category</span>
+                <p class="text-slate-400 font-semibold">Selecciona una categoría para ver su análisis detallado</p>
+              </div>
+
+            </div><!-- /Pestaña 2 -->
+
+          </div><!-- /Scrollable Content -->
+
+          </div><!-- /Sidebar + Content flex -->
 
         </div>
-      </section>
+      </div>
+      <!-- ===================== FIN MODAL ===================== -->
+
+
 
       <!-- Search and Filters Section -->
       <section class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
