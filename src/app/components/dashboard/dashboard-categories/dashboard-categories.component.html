@@ -28,7 +28,7 @@
         </div>
         
         <!-- Crear Categoría -->
-        <div class="p-4 border-b border-slate-100">
+        <div class="p-4 border-b border-slate-100 bg-white">
           <div class="flex gap-2">
             <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..." (keyup.enter)="addCategory()"
               class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
@@ -39,31 +39,45 @@
           </div>
         </div>
 
+        <!-- Buscador Categorías -->
+        <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
+            <input type="text" [(ngModel)]="searchCategory" (ngModelChange)="updateCategoriesView()" placeholder="Buscar categoría..."
+              class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+          </div>
+        </div>
+
         <!-- Lista de Categorías -->
         <div class="flex-1 overflow-y-auto p-4 space-y-2">
           <div *ngIf="isLoadingCategories" class="text-center py-8 text-slate-400">
             Cargando categorías...
           </div>
           
-          <div *ngIf="!isLoadingCategories && categories.length === 0" class="text-center py-8 text-slate-400 text-sm">
-            No hay categorías registradas.
+          <div *ngIf="!isLoadingCategories && groupedCategories.length === 0 && searchCategory" class="text-center py-8 text-slate-400 text-sm">
+            No se encontraron categorías.
           </div>
 
-          <div *ngFor="let cat of categories" 
-               (click)="selectCategory(cat)"
-               [class.ring-2]="selectedCategory?.id === cat.id"
-               [class.ring-slate-800]="selectedCategory?.id === cat.id"
-               [class.bg-slate-50]="selectedCategory?.id === cat.id"
-               class="group flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer transition-all">
-            <span class="font-medium text-slate-700">{{ cat.name }}</span>
-            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button (click)="confirmEdit('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
-                <span class="material-symbols-rounded text-[1.1rem]">edit</span>
-              </button>
-              <button (click)="confirmDelete('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
-                <span class="material-symbols-rounded text-[1.1rem]">delete</span>
-              </button>
-              <span class="material-symbols-rounded text-slate-300 ml-2">chevron_right</span>
+          <div *ngFor="let group of groupedCategories" class="mb-4 animate-fade-in">
+            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">{{ group.letter }}</h3>
+            <div class="space-y-1">
+              <div *ngFor="let cat of group.categories" 
+                   (click)="selectCategory(cat)"
+                   [class.ring-2]="selectedCategory?.id === cat.id"
+                   [class.ring-slate-800]="selectedCategory?.id === cat.id"
+                   [class.bg-slate-50]="selectedCategory?.id === cat.id"
+                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer transition-all bg-white">
+                <span class="font-medium text-slate-700 text-sm">{{ cat.name }}</span>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button (click)="confirmEdit('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+                  </button>
+                  <button (click)="confirmDelete('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+                  </button>
+                  <span class="material-symbols-rounded text-slate-300 ml-1" style="font-size: 1.1rem;">chevron_right</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -88,7 +102,7 @@
 
         <ng-container *ngIf="selectedCategory">
           <!-- Crear Subcategoría -->
-          <div class="p-4 border-b border-slate-100">
+          <div class="p-4 border-b border-slate-100 bg-white">
             <div class="flex gap-2">
               <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..." (keyup.enter)="addSubcategory()"
                 class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
@@ -99,29 +113,40 @@
             </div>
           </div>
 
+          <!-- Buscador Subcategorías -->
+          <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
+              <input type="text" [(ngModel)]="searchSubcategory" (ngModelChange)="updateSubcategoriesView()" placeholder="Buscar subcategoría..."
+                class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+            </div>
+          </div>
+
           <!-- Lista de Subcategorías -->
           <div class="flex-1 overflow-y-auto p-4 space-y-2">
             <div *ngIf="isLoadingSubcategories" class="text-center py-8 text-slate-400">
               Cargando subcategorías...
             </div>
             
-            <div *ngIf="!isLoadingSubcategories && subcategories.length === 0" class="text-center py-8 text-slate-400 text-sm">
-              No hay subcategorías registradas en {{ selectedCategory.name }}.
+            <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && searchSubcategory" class="text-center py-8 text-slate-400 text-sm">
+              No se encontraron subcategorías.
             </div>
 
-            <div *ngFor="let sub of subcategories" 
-                 class="group flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-300 transition-all">
-              <div class="flex items-center gap-3">
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                <span class="font-medium text-slate-700">{{ sub.name }}</span>
-              </div>
-              <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button (click)="confirmEdit('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
-                  <span class="material-symbols-rounded text-[1.1rem]">edit</span>
-                </button>
-                <button (click)="confirmDelete('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
-                  <span class="material-symbols-rounded text-[1.1rem]">delete</span>
-                </button>
+            <div class="space-y-1">
+              <div *ngFor="let sub of filteredSubcategories" 
+                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-slate-300 transition-all bg-white">
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                  <span class="font-medium text-slate-700 text-sm">{{ sub.name }}</span>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button (click)="confirmEdit('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+                  </button>
+                  <button (click)="confirmDelete('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -178,6 +203,24 @@
         </button>
         <button (click)="executeEdit()" [disabled]="!editTargetNewName.trim() || editTargetNewName.trim() === editTargetOldName.trim()" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 disabled:opacity-50 transition-all shadow-sm w-full sm:w-auto">
           Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Validación de Duplicados -->
+  <div *ngIf="showValidationModal" class="fixed inset-0 z-[60] flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
+      <div class="p-6 md:p-8 flex flex-col items-center text-center space-y-4">
+        <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center">
+          <span class="material-symbols-rounded text-amber-500 text-3xl">error</span>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">Acción no permitida</h2>
+        <p class="text-sm text-slate-500 font-medium">{{ validationMessage }}</p>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-center w-full">
+        <button (click)="showValidationModal = false" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 transition-all shadow-sm w-full">
+          Entendido
         </button>
       </div>
     </div>

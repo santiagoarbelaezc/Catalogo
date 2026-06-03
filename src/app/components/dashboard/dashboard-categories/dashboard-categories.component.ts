@@ -23,6 +23,12 @@ export class DashboardCategoriesComponent implements OnInit {
   newCategoryName = '';
   newSubcategoryName = '';
 
+  searchCategory = '';
+  searchSubcategory = '';
+
+  groupedCategories: { letter: string, categories: Category[] }[] = [];
+  filteredSubcategories: Subcategory[] = [];
+
   showDeleteModal = false;
   deleteTargetId: number | null = null;
   deleteTargetType: 'category' | 'subcategory' = 'category';
@@ -33,6 +39,9 @@ export class DashboardCategoriesComponent implements OnInit {
   editTargetType: 'category' | 'subcategory' = 'category';
   editTargetOldName: string = '';
   editTargetNewName: string = '';
+
+  showValidationModal = false;
+  validationMessage = '';
 
   constructor(
     private categoriesService: CategoriesService,
@@ -48,12 +57,20 @@ export class DashboardCategoriesComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
-  loadCategories(): void {
+  loadCategories(selectCategoryName?: string): void {
     this.isLoadingCategories = true;
     this.categoriesService.getCategories().subscribe({
       next: (res) => {
         if (res.success) {
           this.categories = res.data;
+          this.updateCategoriesView();
+
+          if (selectCategoryName) {
+            const newlyCreated = this.categories.find(c => c.name.toLowerCase() === selectCategoryName.toLowerCase());
+            if (newlyCreated) {
+              this.selectCategory(newlyCreated);
+            }
+          }
         }
         this.isLoadingCategories = false;
       },
@@ -76,6 +93,7 @@ export class DashboardCategoriesComponent implements OnInit {
       next: (res) => {
         if (res.success) {
           this.subcategories = res.data;
+          this.updateSubcategoriesView();
         }
         this.isLoadingSubcategories = false;
       },
@@ -87,14 +105,69 @@ export class DashboardCategoriesComponent implements OnInit {
     });
   }
 
-  addCategory(): void {
-    if (!this.newCategoryName.trim()) return;
+  // --- Métodos para Filtros y Agrupación ---
 
-    this.categoriesService.createCategory({ name: this.newCategoryName }).subscribe({
+  updateCategoriesView(): void {
+    let filtered = [...this.categories];
+    
+    // 1. Filtrar
+    if (this.searchCategory.trim()) {
+      const term = this.searchCategory.toLowerCase().trim();
+      filtered = filtered.filter(c => c.name.toLowerCase().includes(term));
+    }
+
+    // 2. Ordenar alfabéticamente
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+    // 3. Agrupar por primera letra
+    const groups: { [key: string]: Category[] } = {};
+    for (const cat of filtered) {
+      const letter = cat.name.charAt(0).toUpperCase();
+      if (!groups[letter]) {
+        groups[letter] = [];
+      }
+      groups[letter].push(cat);
+    }
+
+    // 4. Convertir a arreglo y ordenar por letra
+    this.groupedCategories = Object.keys(groups).sort().map(letter => ({
+      letter,
+      categories: groups[letter]
+    }));
+  }
+
+  updateSubcategoriesView(): void {
+    let filtered = [...this.subcategories];
+    
+    // 1. Filtrar
+    if (this.searchSubcategory.trim()) {
+      const term = this.searchSubcategory.toLowerCase().trim();
+      filtered = filtered.filter(s => s.name.toLowerCase().includes(term));
+    }
+
+    // 2. Ordenar alfabéticamente
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    
+    this.filteredSubcategories = filtered;
+  }
+
+  addCategory(): void {
+    const trimmedName = this.newCategoryName.trim();
+    if (!trimmedName) return;
+
+    // Validación de duplicados
+    const exists = this.categories.some(c => c.name.toLowerCase() === trimmedName.toLowerCase());
+    if (exists) {
+      this.validationMessage = `Ya existe una categoría principal con el nombre "${trimmedName}". No puedes crear duplicados.`;
+      this.showValidationModal = true;
+      return;
+    }
+
+    this.categoriesService.createCategory({ name: trimmedName }).subscribe({
       next: (res) => {
         if (res.success) {
           this.newCategoryName = '';
-          this.loadCategories();
+          this.loadCategories(trimmedName);
           this.toastService.success('Categoría creada satisfactoriamente.');
         }
       },
@@ -160,11 +233,21 @@ export class DashboardCategoriesComponent implements OnInit {
 
   addSubcategory(): void {
     if (!this.selectedCategory || !this.selectedCategory.id) return;
-    if (!this.newSubcategoryName.trim()) return;
+    
+    const trimmedName = this.newSubcategoryName.trim();
+    if (!trimmedName) return;
+
+    // Validación de duplicados
+    const exists = this.subcategories.some(s => s.name.toLowerCase() === trimmedName.toLowerCase());
+    if (exists) {
+      this.validationMessage = `Ya existe la subcategoría "${trimmedName}" dentro de ${this.selectedCategory.name}.`;
+      this.showValidationModal = true;
+      return;
+    }
 
     this.categoriesService.createSubcategory({ 
       category_id: this.selectedCategory.id, 
-      name: this.newSubcategoryName 
+      name: trimmedName 
     }).subscribe({
       next: (res: any) => {
         if (res.success) {
@@ -208,9 +291,26 @@ export class DashboardCategoriesComponent implements OnInit {
     }
 
     // Si no cambió el nombre, no hacer nada
-    if (this.editTargetNewName.trim() === this.editTargetOldName.trim()) {
+    if (this.editTargetNewName.trim().toLowerCase() === this.editTargetOldName.trim().toLowerCase()) {
       this.cancelEditModal();
       return;
+    }
+
+    // Validación de duplicados en la edición
+    if (this.editTargetType === 'category') {
+      const exists = this.categories.some(c => c.name.toLowerCase() === this.editTargetNewName.trim().toLowerCase() && c.id !== this.editTargetId);
+      if (exists) {
+        this.validationMessage = `Ya existe una categoría principal con el nombre "${this.editTargetNewName.trim()}".`;
+        this.showValidationModal = true;
+        return;
+      }
+    } else {
+      const exists = this.subcategories.some(s => s.name.toLowerCase() === this.editTargetNewName.trim().toLowerCase() && s.id !== this.editTargetId);
+      if (exists) {
+        this.validationMessage = `Ya existe la subcategoría "${this.editTargetNewName.trim()}" en esta categoría.`;
+        this.showValidationModal = true;
+        return;
+      }
     }
 
     if (this.editTargetType === 'category') {
