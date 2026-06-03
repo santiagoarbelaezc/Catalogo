@@ -28,6 +28,12 @@ export class DashboardCategoriesComponent implements OnInit {
   deleteTargetType: 'category' | 'subcategory' = 'category';
   deleteTargetName: string = '';
 
+  showEditModal = false;
+  editTargetId: number | null = null;
+  editTargetType: 'category' | 'subcategory' = 'category';
+  editTargetOldName: string = '';
+  editTargetNewName: string = '';
+
   constructor(
     private categoriesService: CategoriesService,
     private toastService: ToastService,
@@ -150,20 +156,7 @@ export class DashboardCategoriesComponent implements OnInit {
     }
   }
 
-  editCategory(category: Category, event: Event): void {
-    event.stopPropagation();
-    const result = prompt('Editar Categoría', category.name);
-    if (result !== null && result.trim() !== '') {
-      this.categoriesService.updateCategory(category.id!, { name: result }).subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            this.loadCategories();
-            this.toastService.success('Categoría actualizada exitosamente.');
-          }
-        }
-      });
-    }
-  }
+  // El modal de edición ahora maneja esto (confirmEdit y executeEdit)
 
   addSubcategory(): void {
     if (!this.selectedCategory || !this.selectedCategory.id) return;
@@ -188,18 +181,64 @@ export class DashboardCategoriesComponent implements OnInit {
 
   // Eliminar subcategoría ahora pasa por el mismo modal (confirmDelete)
 
-  editSubcategory(subcategory: Subcategory): void {
-    const result = prompt('Editar Subcategoría', subcategory.name);
-    if (result !== null && result.trim() !== '') {
-      this.categoriesService.updateSubcategory(subcategory.id!, { name: result }).subscribe({
+  // El modal de edición ahora maneja esto (confirmEdit)
+
+  // --- Lógica del Modal de Edición ---
+  confirmEdit(type: 'category' | 'subcategory', id: number, name: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.editTargetType = type;
+    this.editTargetId = id;
+    this.editTargetOldName = name;
+    this.editTargetNewName = name; // Pre-fill with current name
+    this.showEditModal = true;
+  }
+
+  cancelEditModal(): void {
+    this.showEditModal = false;
+    this.editTargetId = null;
+    this.editTargetOldName = '';
+    this.editTargetNewName = '';
+  }
+
+  executeEdit(): void {
+    if (this.editTargetId === null) return;
+    if (!this.editTargetNewName.trim()) {
+      this.toastService.warning('El nombre no puede estar vacío.');
+      return;
+    }
+
+    // Si no cambió el nombre, no hacer nada
+    if (this.editTargetNewName.trim() === this.editTargetOldName.trim()) {
+      this.cancelEditModal();
+      return;
+    }
+
+    if (this.editTargetType === 'category') {
+      this.categoriesService.updateCategory(this.editTargetId, { name: this.editTargetNewName.trim() }).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.loadCategories();
+            this.toastService.success('Categoría actualizada exitosamente.');
+            this.cancelEditModal();
+          }
+        },
+        error: (err: any) => {
+          this.toastService.error('Error al actualizar la categoría.');
+          this.cancelEditModal();
+        }
+      });
+    } else {
+      this.categoriesService.updateSubcategory(this.editTargetId, { name: this.editTargetNewName.trim() }).subscribe({
         next: (res: any) => {
           if (res.success) {
             this.loadSubcategories(this.selectedCategory!.id!);
             this.toastService.success('Subcategoría actualizada exitosamente.');
+            this.cancelEditModal();
           }
         },
         error: (err: any) => {
           this.toastService.error('Error al actualizar la subcategoría.');
+          this.cancelEditModal();
         }
       });
     }
