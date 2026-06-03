@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Evitar la indexación de posibles rutas privadas
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://plaxtilineas.com/sitemap.xml
+Sitemap: https://plaxtilineas.com/sitemap-productos.xml

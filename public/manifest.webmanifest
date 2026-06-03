@@ -1,0 +1,16 @@
+{
+  "name": "Catálogo Plaxtilineas",
+  "short_name": "Plaxtilineas",
+  "description": "Catálogo digital de plásticos, espumas y empaques en Armenia.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/assets/icons/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
