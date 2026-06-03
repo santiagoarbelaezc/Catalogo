@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriesService, Category, Subcategory } from '../../../services/categories.service';
+import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -24,6 +25,7 @@ export class DashboardCategoriesComponent implements OnInit {
 
   constructor(
     private categoriesService: CategoriesService,
+    private toastService: ToastService,
     private router: Router
   ) {}
 
@@ -32,7 +34,7 @@ export class DashboardCategoriesComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/dashboard/inicio']);
+    this.router.navigate(['/dashboard']);
   }
 
   loadCategories(): void {
@@ -47,7 +49,7 @@ export class DashboardCategoriesComponent implements OnInit {
       error: (err: any) => {
         console.error(err);
         this.isLoadingCategories = false;
-        alert('No se pudieron cargar las categorías');
+        this.toastService.error('No se pudieron cargar las categorías');
       }
     });
   }
@@ -68,8 +70,8 @@ export class DashboardCategoriesComponent implements OnInit {
       },
       error: (err: any) => {
         console.error(err);
-        this.isLoadingCategories = false;
-        alert('No se pudieron cargar las subcategorías');
+        this.isLoadingSubcategories = false;
+        this.toastService.error('No se pudieron cargar las subcategorías');
       }
     });
   }
@@ -82,11 +84,11 @@ export class DashboardCategoriesComponent implements OnInit {
         if (res.success) {
           this.newCategoryName = '';
           this.loadCategories();
-          alert('Categoría creada');
+          this.toastService.success('Categoría creada satisfactoriamente.');
         }
       },
       error: (err: any) => {
-        alert(err.error?.message || 'Error al crear');
+        this.toastService.error(err.error?.message || 'Error al crear la categoría.');
       }
     });
   }
@@ -98,6 +100,7 @@ export class DashboardCategoriesComponent implements OnInit {
         next: (res: any) => {
           if (res.success) {
             this.loadCategories();
+            this.toastService.success('Categoría eliminada correctamente.');
             if (this.selectedCategory?.id === id) {
               this.selectedCategory = null;
               this.subcategories = [];
@@ -105,7 +108,7 @@ export class DashboardCategoriesComponent implements OnInit {
           }
         },
         error: (err: any) => {
-          alert('No se pudo eliminar');
+          this.toastService.error('No se pudo eliminar la categoría.');
         }
       });
     }
@@ -119,6 +122,7 @@ export class DashboardCategoriesComponent implements OnInit {
         next: (res: any) => {
           if (res.success) {
             this.loadCategories();
+            this.toastService.success('Categoría actualizada exitosamente.');
           }
         }
       });
@@ -137,11 +141,11 @@ export class DashboardCategoriesComponent implements OnInit {
         if (res.success) {
           this.newSubcategoryName = '';
           this.loadSubcategories(this.selectedCategory!.id!);
-          alert('Subcategoría creada');
+          this.toastService.success('Subcategoría creada satisfactoriamente.');
         }
       },
       error: (err: any) => {
-        alert(err.error?.message || 'Error al crear');
+        this.toastService.error(err.error?.message || 'Error al crear la subcategoría.');
       }
     });
   }
@@ -152,7 +156,11 @@ export class DashboardCategoriesComponent implements OnInit {
         next: (res: any) => {
           if (res.success) {
             this.loadSubcategories(this.selectedCategory!.id!);
+            this.toastService.success('Subcategoría eliminada correctamente.');
           }
+        },
+        error: (err: any) => {
+          this.toastService.error('No se pudo eliminar la subcategoría.');
         }
       });
     }
@@ -165,7 +173,11 @@ export class DashboardCategoriesComponent implements OnInit {
         next: (res: any) => {
           if (res.success) {
             this.loadSubcategories(this.selectedCategory!.id!);
+            this.toastService.success('Subcategoría actualizada exitosamente.');
           }
+        },
+        error: (err: any) => {
+          this.toastService.error('Error al actualizar la subcategoría.');
         }
       });
     }
