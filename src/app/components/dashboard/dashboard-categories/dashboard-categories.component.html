@@ -1,0 +1,133 @@
+<!-- dashboard-categories.component.html -->
+<div class="min-h-screen bg-slate-50 p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="flex items-center justify-between pb-6 border-b border-slate-200">
+      <div class="flex items-center gap-4">
+        <button (click)="goBack()" 
+          class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+          <span class="material-symbols-rounded" style="font-size: 1.2rem;">arrow_back</span>
+        </button>
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Categorías Plaxtilineas</h1>
+          <p class="text-sm text-slate-500 mt-1">Gestiona las categorías y subcategorías del catálogo</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Panel Izquierdo: Categorías -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
+        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-rounded text-slate-400">category</span>
+            Categorías Principales
+          </h2>
+        </div>
+        
+        <!-- Crear Categoría -->
+        <div class="p-4 border-b border-slate-100">
+          <div class="flex gap-2">
+            <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..."
+              class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
+            <button (click)="addCategory()" [disabled]="!newCategoryName.trim()"
+              class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
+              Añadir
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Categorías -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+          <div *ngIf="isLoadingCategories" class="text-center py-8 text-slate-400">
+            Cargando categorías...
+          </div>
+          
+          <div *ngIf="!isLoadingCategories && categories.length === 0" class="text-center py-8 text-slate-400 text-sm">
+            No hay categorías registradas.
+          </div>
+
+          <div *ngFor="let cat of categories" 
+               (click)="selectCategory(cat)"
+               [class.ring-2]="selectedCategory?.id === cat.id"
+               [class.ring-slate-800]="selectedCategory?.id === cat.id"
+               [class.bg-slate-50]="selectedCategory?.id === cat.id"
+               class="group flex items-center justify-between p-4 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer transition-all">
+            <span class="font-medium text-slate-700">{{ cat.name }}</span>
+            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button (click)="editCategory(cat, $event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+              </button>
+              <button (click)="deleteCategory(cat.id!, $event)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+              </button>
+              <span class="material-symbols-rounded text-slate-300 ml-2">chevron_right</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Derecho: Subcategorías -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
+        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-rounded text-slate-400">list_alt</span>
+            Subcategorías
+            <span *ngIf="selectedCategory" class="text-sm font-normal text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200 ml-2">
+              de {{ selectedCategory.name }}
+            </span>
+          </h2>
+        </div>
+
+        <div *ngIf="!selectedCategory" class="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+          <span class="material-symbols-rounded text-6xl mb-4 text-slate-200">touch_app</span>
+          <p>Selecciona una categoría en el panel izquierdo <br> para gestionar sus subcategorías.</p>
+        </div>
+
+        <ng-container *ngIf="selectedCategory">
+          <!-- Crear Subcategoría -->
+          <div class="p-4 border-b border-slate-100">
+            <div class="flex gap-2">
+              <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..."
+                class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
+              <button (click)="addSubcategory()" [disabled]="!newSubcategoryName.trim()"
+                class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+          <!-- Lista de Subcategorías -->
+          <div class="flex-1 overflow-y-auto p-4 space-y-2">
+            <div *ngIf="isLoadingSubcategories" class="text-center py-8 text-slate-400">
+              Cargando subcategorías...
+            </div>
+            
+            <div *ngIf="!isLoadingSubcategories && subcategories.length === 0" class="text-center py-8 text-slate-400 text-sm">
+              No hay subcategorías registradas en {{ selectedCategory.name }}.
+            </div>
+
+            <div *ngFor="let sub of subcategories" 
+                 class="group flex items-center justify-between p-4 rounded-xl border border-slate-100 hover:border-slate-300 transition-all">
+              <div class="flex items-center gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                <span class="font-medium text-slate-700">{{ sub.name }}</span>
+              </div>
+              <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button (click)="editSubcategory(sub)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                  <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+                </button>
+                <button (click)="deleteSubcategory(sub.id!)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                  <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>

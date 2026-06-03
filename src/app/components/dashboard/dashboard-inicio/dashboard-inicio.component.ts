@@ -89,6 +89,10 @@ export class DashboardInicioComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard/productos']);
   }
 
+  navigateToCategories() {
+    this.router.navigate(['/dashboard/categorias']);
+  }
+
   navigateTo(route: string) {
     this.router.navigate([route]);
   }

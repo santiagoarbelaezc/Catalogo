@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { ToastService } from '../../../services/toast.service';
+import { CategoriesService, Category, Subcategory } from '../../../services/categories.service';
 import { Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
@@ -41,7 +42,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   showForm = false;
   editingProduct: any = null;
   selectedFiles: File[] = [];
-  categories = ['Plaxtilineas', 'Districol', 'Espumas'];
+  categories: Category[] = [];
+  subcategories: Subcategory[] = [];
   loadingError = false;
 
   // === Filters ===
@@ -61,6 +63,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private productsService: ProductsService,
+    private categoriesService: CategoriesService,
     private toastService: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -85,6 +88,38 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.subscriptions.push(searchSub);
 
     this.loadProducts();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.categoriesService.getCategories().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.categories = res.data;
+          this.cdr.markForCheck();
+        }
+      }
+    });
+  }
+
+  onCategorySelectChange(event: any) {
+    const categoryId = parseInt(event.target.value, 10);
+    this.loadSubcategories(categoryId);
+  }
+
+  loadSubcategories(categoryId: number) {
+    this.subcategories = [];
+    this.productForm.get('subcategory_id')?.setValue('');
+    if (!categoryId) return;
+    
+    this.categoriesService.getSubcategoriesByCategory(categoryId).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.subcategories = res.data;
+          this.cdr.markForCheck();
+        }
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -252,7 +287,9 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(3)]],
       material: [''],
-      category: ['Plaxtilineas', [Validators.required]],
+      category: [''], // Text name for backward compatibility
+      category_id: ['', [Validators.required]],
+      subcategory_id: [''],
       options: [''],
       isNew: [true],
       isFeatured: [false],
@@ -345,10 +382,13 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   showCreateForm() {
     this.editingProduct = null;
     this.productForm.reset({
-      category: 'Plaxtilineas',
+      category: '',
+      category_id: '',
+      subcategory_id: '',
       isNew: true,
       isFeatured: false
     });
+    this.subcategories = [];
     this.colorsArray.clear();
     this.variantsArray.clear();
     this.imagesArray.clear();
@@ -367,6 +407,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       description: product.description,
       material: product.material,
       category: product.category,
+      category_id: product.category_id || '',
+      subcategory_id: product.subcategory_id || '',
       options: product.options || '',
       isNew: product.isNew === 1 || product.isNew === true,
       isFeatured: product.isFeatured === 1 || product.isFeatured === true,
@@ -374,6 +416,18 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       gramaje: product.gramaje || '',
       brandIconUrl: product.brandIconUrl || ''
     });
+
+    if (product.category_id) {
+      this.categoriesService.getSubcategoriesByCategory(product.category_id).subscribe(res => {
+        if (res.success) {
+          this.subcategories = res.data;
+          this.productForm.patchValue({ subcategory_id: product.subcategory_id || '' });
+          this.cdr.markForCheck();
+        }
+      });
+    } else {
+      this.subcategories = [];
+    }
 
     this.colorsArray.clear();
     if (product.colors && product.colors.length > 0) {
@@ -421,8 +475,13 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       this.isSubmitting = true;
 
       const formValue = this.productForm.value;
+      
+      // Find category name to keep backward compatibility
+      const selectedCat = this.categories.find(c => c.id == formValue.category_id);
+      
       const productData = {
         ...formValue,
+        category: selectedCat ? selectedCat.name : '',
         colors: formValue.colors.filter((c: string) => c.trim()),
         variants: formValue.variants.filter((v: any) => v.name.trim()),
         images: formValue.images.filter((img: any) => img.url && img.url.trim())
