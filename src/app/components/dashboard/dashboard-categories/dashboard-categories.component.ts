@@ -23,6 +23,11 @@ export class DashboardCategoriesComponent implements OnInit {
   newCategoryName = '';
   newSubcategoryName = '';
 
+  showDeleteModal = false;
+  deleteTargetId: number | null = null;
+  deleteTargetType: 'category' | 'subcategory' = 'category';
+  deleteTargetName: string = '';
+
   constructor(
     private categoriesService: CategoriesService,
     private toastService: ToastService,
@@ -93,22 +98,53 @@ export class DashboardCategoriesComponent implements OnInit {
     });
   }
 
-  deleteCategory(id: number, event: Event): void {
-    event.stopPropagation();
-    if (confirm('¿Eliminar categoría? Se eliminarán también sus subcategorías. Esta acción no se puede deshacer.')) {
-      this.categoriesService.deleteCategory(id).subscribe({
+  confirmDelete(type: 'category' | 'subcategory', id: number, name: string, event?: Event): void {
+    if (event) event.stopPropagation();
+    this.deleteTargetType = type;
+    this.deleteTargetId = id;
+    this.deleteTargetName = name;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.deleteTargetId = null;
+    this.deleteTargetName = '';
+  }
+
+  executeDelete(): void {
+    if (this.deleteTargetId === null) return;
+    
+    if (this.deleteTargetType === 'category') {
+      this.categoriesService.deleteCategory(this.deleteTargetId).subscribe({
         next: (res: any) => {
           if (res.success) {
             this.loadCategories();
             this.toastService.success('Categoría eliminada correctamente.');
-            if (this.selectedCategory?.id === id) {
+            if (this.selectedCategory?.id === this.deleteTargetId) {
               this.selectedCategory = null;
               this.subcategories = [];
             }
+            this.cancelDelete();
           }
         },
         error: (err: any) => {
           this.toastService.error('No se pudo eliminar la categoría.');
+          this.cancelDelete();
+        }
+      });
+    } else {
+      this.categoriesService.deleteSubcategory(this.deleteTargetId).subscribe({
+        next: (res: any) => {
+          if (res.success) {
+            this.loadSubcategories(this.selectedCategory!.id!);
+            this.toastService.success('Subcategoría eliminada correctamente.');
+            this.cancelDelete();
+          }
+        },
+        error: (err: any) => {
+          this.toastService.error('No se pudo eliminar la subcategoría.');
+          this.cancelDelete();
         }
       });
     }
@@ -150,21 +186,7 @@ export class DashboardCategoriesComponent implements OnInit {
     });
   }
 
-  deleteSubcategory(id: number): void {
-    if (confirm('¿Eliminar subcategoría?')) {
-      this.categoriesService.deleteSubcategory(id).subscribe({
-        next: (res: any) => {
-          if (res.success) {
-            this.loadSubcategories(this.selectedCategory!.id!);
-            this.toastService.success('Subcategoría eliminada correctamente.');
-          }
-        },
-        error: (err: any) => {
-          this.toastService.error('No se pudo eliminar la subcategoría.');
-        }
-      });
-    }
-  }
+  // Eliminar subcategoría ahora pasa por el mismo modal (confirmDelete)
 
   editSubcategory(subcategory: Subcategory): void {
     const result = prompt('Editar Subcategoría', subcategory.name);
