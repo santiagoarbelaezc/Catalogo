@@ -103,6 +103,8 @@ export class ProductsService {
     formData.append('material', product.material);
 
     if (product.category !== undefined && product.category !== null) formData.append('category', product.category);
+    if (product.category_id !== undefined && product.category_id !== null) formData.append('category_id', product.category_id.toString());
+    if (product.subcategory_id !== undefined && product.subcategory_id !== null) formData.append('subcategory_id', product.subcategory_id.toString());
     if (product.options !== undefined && product.options !== null) formData.append('options', product.options);
     if (product.isNew !== undefined && product.isNew !== null) formData.append('isNew', product.isNew.toString());
     if (product.isFeatured !== undefined && product.isFeatured !== null) formData.append('isFeatured', product.isFeatured.toString());

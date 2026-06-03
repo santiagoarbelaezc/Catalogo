@@ -48,6 +48,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   subcategories: Subcategory[] = [];
   loadingError = false;
+  savedScrollPosition = 0;
 
   isGeneratingDescription = false;
   isSuggestingCategory = false;
@@ -735,7 +736,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.showForm = true;
 
     if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.savedScrollPosition = window.scrollY;
     }
   }
 
@@ -798,7 +799,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.showForm = true;
 
     if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.savedScrollPosition = window.scrollY;
     }
   }
 
@@ -807,6 +808,11 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.editingProduct = null;
     this.productForm.reset();
     this.selectedFiles = [];
+    if (typeof window !== 'undefined') {
+      setTimeout(() => {
+        window.scrollTo({ top: this.savedScrollPosition, behavior: 'auto' });
+      }, 50);
+    }
   }
 
   onSubmit() {
