@@ -21,6 +21,12 @@ export class PlaxtilineasComponent implements OnInit {
   products: CatalogProduct[] = [];
   filteredProducts: CatalogProduct[] = [];
   
+  // Filtros de categorías
+  selectedCategoryId: number | null = null;
+  selectedSubcategoryId: number | null = null;
+  categoriesList: any[] = [];
+  showCategoriesMenu = false;
+
   currentFilters: CatalogFilters = {
     minPrice: null,
     maxPrice: null,
@@ -71,6 +77,14 @@ export class PlaxtilineasComponent implements OnInit {
       result = result.filter(p => this.getProductMinPrice(p) <= (filters.maxPrice ?? Infinity));
     }
 
+    // Filtrar por categorías y subcategorías (Sidebar)
+    if (this.selectedCategoryId !== null) {
+      result = result.filter((p: any) => parseInt(p.category_id, 10) === this.selectedCategoryId);
+    }
+    if (this.selectedSubcategoryId !== null) {
+      result = result.filter((p: any) => parseInt(p.subcategory_id, 10) === this.selectedSubcategoryId);
+    }
+
     result.sort((a, b) => {
       switch (filters.sortBy) {
         case 'name-asc': return a.name.localeCompare(b.name);
@@ -82,6 +96,78 @@ export class PlaxtilineasComponent implements OnInit {
     });
 
     this.filteredProducts = result;
+  }
+
+  buildCategoryMenu() {
+    const catMap = new Map<number, { id: number, name: string, subcategories: Map<number, { id: number, name: string }> }>();
+    
+    this.products.forEach((p: any) => {
+      if (p.category_id) {
+        const catId = parseInt(p.category_id, 10);
+        const catName = p.category_name || 'Sin Categoría';
+        
+        if (!catMap.has(catId)) {
+          catMap.set(catId, {
+            id: catId,
+            name: catName,
+            subcategories: new Map<number, { id: number, name: string }>()
+          });
+        }
+        
+        const catData = catMap.get(catId)!;
+        
+        if (p.subcategory_id) {
+          const subId = parseInt(p.subcategory_id, 10);
+          const subName = p.subcategory_name || 'General';
+          if (!catData.subcategories.has(subId)) {
+            catData.subcategories.set(subId, {
+              id: subId,
+              name: subName
+            });
+          }
+        }
+      }
+    });
+    
+    this.categoriesList = Array.from(catMap.values()).map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      subcategories: Array.from(cat.subcategories.values()).sort((a, b) => a.name.localeCompare(b.name))
+    })).sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  selectCategory(categoryId: number | null) {
+    this.selectedCategoryId = categoryId;
+    this.selectedSubcategoryId = null;
+    this.currentPage = 1;
+    this.applyFilters(this.currentFilters);
+  }
+
+  selectSubcategory(subcategoryId: number | null) {
+    this.selectedSubcategoryId = subcategoryId;
+    this.currentPage = 1;
+    this.applyFilters(this.currentFilters);
+  }
+
+  getProductCount(categoryId: number): number {
+    return this.products.filter((p: any) => parseInt(p.category_id, 10) === categoryId).length;
+  }
+
+  getSubproductCount(categoryId: number, subcategoryId: number): number {
+    return this.products.filter((p: any) => 
+      parseInt(p.category_id, 10) === categoryId && 
+      parseInt(p.subcategory_id, 10) === subcategoryId
+    ).length;
+  }
+
+  getActiveCategorySubcategories(): any[] {
+    if (this.selectedCategoryId === null) return [];
+    const activeCat = this.categoriesList.find(c => c.id === this.selectedCategoryId);
+    return activeCat ? activeCat.subcategories : [];
+  }
+
+  toggleCategoriesMenu() {
+    this.showCategoriesMenu = !this.showCategoriesMenu;
   }
 
   get pagesList(): number[] {
@@ -114,6 +200,7 @@ export class PlaxtilineasComponent implements OnInit {
           this.products = products
             .filter((product: any) => product.category === 'Plaxtilineas')
             .sort((a, b) => a.name.localeCompare(b.name));
+          this.buildCategoryMenu();
           this.applyFilters(this.currentFilters);
         }
       },

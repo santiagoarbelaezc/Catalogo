@@ -117,31 +117,99 @@
       (filtersChanged)="applyFilters($event)">
     </app-catalog-filter-bar>
 
-    <app-catalog-item
-      *ngFor="let product of paginatedProducts; let i = index"
-      [product]="product"
-      [reverseLayout]="i % 2 === 1">
-    </app-catalog-item>
-
-    <!-- ===== PAGINATION ===== -->
-    <div class="pagination-container" *ngIf="totalPages > 1">
-      <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
-        <span class="material-symbols-rounded">chevron_left</span>
-      </button>
-
-      <div class="page-numbers">
+    <!-- Menú de Categorías & Subcategorías Horizontal -->
+    <div class="plax-horizontal-menu">
+      
+      <!-- Fila de Categorías -->
+      <div class="categories-row">
+        <!-- Siempre visible: Ver todas -->
         <button 
-          *ngFor="let page of pagesList" 
-          class="page-btn num-btn" 
-          [class.active]="page === currentPage"
-          (click)="changePage(page)">
-          {{ page }}
+          (click)="selectCategory(null)" 
+          class="category-pill"
+          [class.active]="selectedCategoryId === null">
+          Ver todas
+        </button>
+
+        <!-- Siempre visible: Botón Toggle para Buscar por categoría -->
+        <button 
+          (click)="toggleCategoriesMenu()" 
+          class="category-pill toggle-menu-btn"
+          [class.active]="showCategoriesMenu">
+          <span class="material-symbols-rounded text-slate-500" style="font-size:1.1rem; margin-right:0.25rem">menu</span>
+          Buscar por categoría
+          <span class="material-symbols-rounded text-slate-400" style="font-size:1.1rem; margin-left:0.25rem">
+            {{ showCategoriesMenu ? 'expand_less' : 'expand_more' }}
+          </span>
+        </button>
+
+        <!-- Visibles condicionalmente cuando showCategoriesMenu es true -->
+        <ng-container *ngIf="showCategoriesMenu">
+          <button 
+            *ngFor="let cat of categoriesList"
+            (click)="selectCategory(cat.id)" 
+            class="category-pill"
+            [class.active]="selectedCategoryId === cat.id">
+            {{ cat.name }}
+            <span class="count-badge">({{ getProductCount(cat.id) }})</span>
+          </button>
+        </ng-container>
+      </div>
+      
+      <!-- Fila de Subcategorías (Solo visible si la categoría seleccionada tiene subcategorías) -->
+      <div *ngIf="selectedCategoryId !== null && getActiveCategorySubcategories().length > 0" class="subcategories-row animate-fade-in">
+        <button 
+          (click)="selectSubcategory(null)"
+          class="subcategory-pill"
+          [class.active]="selectedSubcategoryId === null">
+          Toda la categoría
+        </button>
+        <button 
+          *ngFor="let sub of getActiveCategorySubcategories()"
+          (click)="selectSubcategory(sub.id)"
+          class="subcategory-pill"
+          [class.active]="selectedSubcategoryId === sub.id">
+          {{ sub.name }}
+          <span class="count-badge">({{ getSubproductCount(selectedCategoryId, sub.id) }})</span>
         </button>
       </div>
 
-      <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
-        <span class="material-symbols-rounded">chevron_right</span>
-      </button>
+    </div>
+
+    <!-- Products Content -->
+    <div class="products-content-grid">
+      <div class="products-list-container">
+        <app-catalog-item
+          *ngFor="let product of paginatedProducts; let i = index"
+          [product]="product"
+          [reverseLayout]="i % 2 === 1">
+        </app-catalog-item>
+        
+        <div *ngIf="filteredProducts.length === 0" class="empty-products-state">
+          <span class="material-symbols-rounded">inventory_2</span>
+          <p>No se encontraron productos en esta categoría o filtro.</p>
+        </div>
+      </div>
+
+      <!-- ===== PAGINATION ===== -->
+      <div class="pagination-container" *ngIf="totalPages > 1">
+        <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pagesList" 
+            class="page-btn num-btn" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+            {{ page }}
+          </button>
+        </div>
+
+        <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+          <span class="material-symbols-rounded">chevron_right</span>
+        </button>
+      </div>
     </div>
   </section>
 
