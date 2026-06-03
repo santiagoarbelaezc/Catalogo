@@ -6,8 +6,11 @@ import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { ToastService } from '../../../services/toast.service';
 import { CategoriesService, Category, Subcategory } from '../../../services/categories.service';
+import { AiService } from '../../../services/ai.service';
 import { Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 interface Product {
   id?: number;
@@ -29,7 +32,7 @@ interface Product {
 @Component({
   selector: 'app-dashboard-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, BaseChartDirective],
   templateUrl: './dashboard-product.component.html',
   styleUrl: './dashboard-product.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,16 +49,53 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   subcategories: Subcategory[] = [];
   loadingError = false;
 
+  isGeneratingDescription = false;
+  isSuggestingCategory = false;
+
   // === Filters ===
   searchTerm = '';
   filterCategory = '';
   filterStatus = ''; // 'new', 'featured', ''
+  filterBrand = ''; // '', 'Plaxtilineas', 'Espumas', 'Districol'
   sortOrder = 'newest'; // 'newest', 'oldest', 'price_asc', 'price_desc', 'az', 'za'
   private searchSubject = new Subject<string>();
 
   // === Pagination ===
   currentPage = 1;
   itemsPerPage = 12;
+
+  activeActionFilter: string | null = null;
+  showReports = false;
+
+  statsData = {
+    missingDescription: 0,
+    missingImages: 0,
+    missingPrice: 0,
+    missingVariants: 0
+  };
+
+  public lineChartOptions: any = {
+    responsive: true,
+    plugins: { legend: { position: 'right' } },
+    cutout: '70%'
+  };
+  public lineChartType: ChartType = 'doughnut';
+  public lineChartData: ChartData<'doughnut'> = {
+    labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
+    datasets: [ { data: [0, 0, 0, 0], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0 } ]
+  };
+
+  public categoryChartOptions: any = {
+    responsive: true,
+    indexAxis: 'y', // Horizontal bar
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true } }
+  };
+  public categoryChartType: ChartType = 'bar';
+  public categoryChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [ { data: [], backgroundColor: '#6366f1', borderRadius: 4, barThickness: 15 } ]
+  };
 
   private subscriptions: Subscription[] = [];
 
@@ -64,6 +104,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private productsService: ProductsService,
     private categoriesService: CategoriesService,
+    private aiService: AiService,
     private toastService: ToastService,
     private router: Router,
     private cdr: ChangeDetectorRef
@@ -127,11 +168,97 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.searchSubject.complete();
   }
 
+  // === AI Assistant Methods ===
+
+  generateAiDescription() {
+    const name = this.productForm.get('name')?.value;
+    if (!name || name.trim() === '') {
+      this.toastService.warning('Por favor, ingresa primero el nombre del producto.');
+      return;
+    }
+
+    this.isGeneratingDescription = true;
+    this.cdr.markForCheck();
+
+    this.aiService.generateDescription(name).subscribe({
+      next: (res) => {
+        if (res.success && res.description) {
+          this.productForm.patchValue({ description: res.description });
+          this.toastService.success('Descripción generada por IA exitosamente.');
+        } else {
+          this.toastService.error(res.message || 'Error al generar la descripción.');
+        }
+        this.isGeneratingDescription = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.toastService.error('Error de red al conectar con el Asistente IA.');
+        this.isGeneratingDescription = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  suggestAiCategory() {
+    const name = this.productForm.get('name')?.value;
+    const description = this.productForm.get('description')?.value || '';
+
+    if (!name || name.trim() === '') {
+      this.toastService.warning('Por favor, ingresa el nombre del producto primero.');
+      return;
+    }
+
+    if (this.categories.length === 0) {
+      this.toastService.warning('No hay categorías cargadas para analizar.');
+      return;
+    }
+
+    this.isSuggestingCategory = true;
+    this.cdr.markForCheck();
+
+    this.aiService.suggestCategory(name, description, this.categories).subscribe({
+      next: (res) => {
+        if (res.success && res.subcategory_id) {
+          
+          let foundCategoryId: number | null = null;
+          
+          if ((res as any).category_id) {
+             this.productForm.patchValue({ category_id: (res as any).category_id });
+             this.loadSubcategories((res as any).category_id);
+             setTimeout(() => {
+                this.productForm.patchValue({ subcategory_id: res.subcategory_id });
+                this.cdr.markForCheck();
+             }, 300);
+          } else {
+             this.productForm.patchValue({ subcategory_id: res.subcategory_id });
+          }
+
+          this.toastService.success('Clasificación IA completada.');
+        } else {
+          this.toastService.warning('La IA no encontró una categoría adecuada.');
+        }
+        this.isSuggestingCategory = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.toastService.error('Error al solicitar sugerencia de categoría.');
+        this.isSuggestingCategory = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
   // === Filter & Pagination Computed Properties ===
 
   onSearchInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.searchSubject.next(value);
+  }
+
+  onBrandChange(brand: string) {
+    this.filterBrand = brand;
+    this.currentPage = 1;
+    this.cdr.markForCheck();
   }
 
   onCategoryChange() {
@@ -153,17 +280,113 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.searchTerm = '';
     this.filterCategory = '';
     this.filterStatus = '';
+    this.filterBrand = '';
     this.sortOrder = 'newest';
     this.currentPage = 1;
     this.cdr.markForCheck();
   }
 
   get hasActiveFilters(): boolean {
-    return this.searchTerm.length > 0 || this.filterCategory.length > 0 || this.filterStatus.length > 0 || this.sortOrder !== 'newest';
+    return this.searchTerm.length > 0 || this.filterCategory.length > 0 || this.filterStatus.length > 0 || this.filterBrand.length > 0 || this.sortOrder !== 'newest';
   }
+
+  get headerColorClass(): string {
+    switch (this.filterBrand.toLowerCase()) {
+      case 'plaxtilineas':
+        return 'bg-emerald-700 shadow-emerald-700/20';
+      case 'espumas':
+        return 'bg-blue-700 shadow-blue-700/20';
+      case 'districol':
+        return 'bg-amber-800 shadow-amber-800/20';
+      default:
+        return 'bg-slate-900 shadow-slate-900/10';
+    }
+  }
+
+  // --- REPORTS & STATS LOGIC ---
+  toggleReports() {
+    this.showReports = !this.showReports;
+  }
+
+  calculateStats() {
+    let missingDesc = 0;
+    let missingImg = 0;
+    let missingPrice = 0;
+    let missingVars = 0;
+
+    let plaxti = 0, espumas = 0, distri = 0, otros = 0;
+    const catCounts: { [key: string]: number } = {};
+
+    this.products.forEach(p => {
+      // Actionable Stats
+      if (!p.description || p.description.trim() === '') missingDesc++;
+      if (!p.images || p.images.length === 0) missingImg++;
+      if (!p.variants || p.variants.length === 0) missingVars++;
+      else {
+        const hasMissingPrice = p.variants.some((v: any) => !v.price || v.price <= 0);
+        if (hasMissingPrice) missingPrice++;
+      }
+
+      // Line Chart
+      const cat = p.category ? p.category.trim() : '';
+      if (cat === 'Plaxtilineas') plaxti++;
+      else if (cat === 'Espumas') espumas++;
+      else if (cat === 'Districol') distri++;
+      else otros++;
+
+      // Category Chart
+      const catName = p.category_name || 'Sin Categoría';
+      catCounts[catName] = (catCounts[catName] || 0) + 1;
+    });
+
+    this.statsData = {
+      missingDescription: missingDesc,
+      missingImages: missingImg,
+      missingPrice: missingPrice,
+      missingVariants: missingVars
+    };
+
+    this.lineChartData = {
+      labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
+      datasets: [ { data: [plaxti, espumas, distri, otros], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0 } ]
+    };
+
+    // Top 5 Categories
+    const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    this.categoryChartData = {
+      labels: sortedCats.map(c => c[0]),
+      datasets: [ { data: sortedCats.map(c => c[1]), backgroundColor: '#6366f1', borderRadius: 4, barPercentage: 0.5 } ]
+    };
+  }
+
+  filterActionable(type: 'description' | 'images' | 'variants' | 'price' | null) {
+    this.activeActionFilter = type;
+    this.filterBrand = ''; // Clear brand filter
+    this.searchTerm = '';
+    this.currentPage = 1;
+    if (this.showReports) this.showReports = false; // Close reports to see table
+    this.cdr.markForCheck();
+  }
+  // -----------------------------
 
   get filteredProducts(): any[] {
     let result = [...this.products];
+
+    if (this.activeActionFilter) {
+      const type = this.activeActionFilter;
+      result = result.filter(p => {
+        if (type === 'description') return !p.description || p.description.trim() === '';
+        if (type === 'images') return !p.images || p.images.length === 0;
+        if (type === 'variants') return !p.variants || p.variants.length === 0;
+        if (type === 'price') return p.variants && p.variants.length > 0 && p.variants.some((v: any) => !v.price || v.price <= 0);
+        return true;
+      });
+    }
+
+    if (this.filterBrand && !this.activeActionFilter) {
+      const bTerm = this.filterBrand.toLowerCase();
+      result = result.filter(p => p.category?.toLowerCase().includes(bTerm));
+    }
 
     // Search by name
     if (this.searchTerm.trim()) {
@@ -176,9 +399,9 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       );
     }
 
-    // Filter by category
+    // Filter by category (dropdown)
     if (this.filterCategory) {
-      result = result.filter(p => p.category === this.filterCategory);
+      result = result.filter(p => p.category_name === this.filterCategory || p.category_id === this.filterCategory);
     }
 
     // Filter by status
@@ -287,7 +510,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: ['', [Validators.required, Validators.minLength(3)]],
       material: [''],
-      category: [''], // Text name for backward compatibility
+      category: ['', [Validators.required]], // Línea de negocio
       category_id: ['', [Validators.required]],
       subcategory_id: [''],
       options: [''],
@@ -312,6 +535,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
         // Fallback or exact
         const data = response.data !== undefined ? response.data : response;
         this.products = data || [];
+        this.calculateStats(); // CALCULAR ESTADÍSTICAS AQUÍ
         this.isLoading = false;
         this.cdr.markForCheck();
       },
@@ -481,7 +705,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       
       const productData = {
         ...formValue,
-        category: selectedCat ? selectedCat.name : '',
         colors: formValue.colors.filter((c: string) => c.trim()),
         variants: formValue.variants.filter((v: any) => v.name.trim()),
         images: formValue.images.filter((img: any) => img.url && img.url.trim())
