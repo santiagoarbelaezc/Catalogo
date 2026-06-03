@@ -30,7 +30,7 @@
         <!-- Crear Categoría -->
         <div class="p-4 border-b border-slate-100">
           <div class="flex gap-2">
-            <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..."
+            <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..." (keyup.enter)="addCategory()"
               class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
             <button (click)="addCategory()" [disabled]="!newCategoryName.trim()"
               class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
@@ -90,7 +90,7 @@
           <!-- Crear Subcategoría -->
           <div class="p-4 border-b border-slate-100">
             <div class="flex gap-2">
-              <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..."
+              <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..." (keyup.enter)="addSubcategory()"
                 class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
               <button (click)="addSubcategory()" [disabled]="!newSubcategoryName.trim()"
                 class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
