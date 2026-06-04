@@ -278,3 +278,139 @@
     font-size: 1.8rem;
   }
 }
+
+/* ===== VARIANTES SELECCIONABLES ===== */
+.chip-select-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-select-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  color: #111;
+  border-color: #d1d5db;
+}
+
+.chip-select-btn.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.chip-select-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* ===== CALCULADORA DE PRECIOS ===== */
+.calculator-block {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 1.25rem 1.5rem;
+  margin: 0.5rem 0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.01);
+}
+
+.calculator-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.calc-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #6b7280;
+}
+
+.calc-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 38px;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 100%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.qty-btn:hover {
+  background: #f3f4f6;
+}
+
+.qty-input {
+  width: 50px;
+  height: 100%;
+  border: none;
+  border-left: 1px solid #e5e7eb;
+  border-right: 1px solid #e5e7eb;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #111;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.calc-math {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+  flex-wrap: wrap;
+}
+
+.math-operator {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.unit-price {
+  color: #4b5563;
+  font-weight: 600;
+}
+
+.total-price {
+  font-size: 1.3rem;
+  color: #000;
+  font-weight: 900;
+  border-bottom: 2px solid #111;
+  padding-bottom: 2px;
+}

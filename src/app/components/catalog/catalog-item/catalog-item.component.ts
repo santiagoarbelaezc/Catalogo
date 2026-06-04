@@ -1,19 +1,32 @@
-import { Component, Input } from '@angular/core';
-
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CatalogProduct } from '../../../models/product.model';
 
 @Component({
   selector: 'app-catalog-item',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './catalog-item.component.html',
   styleUrls: ['./catalog-item.component.css']
 })
-export class CatalogItemComponent {
+export class CatalogItemComponent implements OnInit {
   @Input() product!: CatalogProduct;
   @Input() backgroundGradient: string = 'var(--primary-bg),var(--primary-bg)'; // Degradado por defecto (color sólido)
   @Input() reverseLayout: boolean = false; // Para invertir el orden de las secciones
+
+  selectedVariant: any = null;
+  quantity: number = 1;
+
+  ngOnInit() {
+    const variants = this.product.references || this.product.variants || [];
+    const availableVariants = variants.filter(v => v.available);
+    if (availableVariants.length > 0) {
+      this.selectedVariant = availableVariants[0];
+    } else if (variants.length > 0) {
+      this.selectedVariant = variants[0];
+    }
+  }
 
   get priceDisplay(): string | null {
     const variants = this.product.references || this.product.variants || [];
@@ -24,16 +37,33 @@ export class CatalogItemComponent {
     if (prices.length === 0) return null;
 
     const min = Math.min(...prices);
-    const max = Math.max(...prices);
-
-    if (min === max) {
-      return this.formatPrice(min);
-    } else {
-      return `Desde ${this.formatPrice(min)}`;
-    }
+    return this.formatPrice(min);
   }
 
-  private formatPrice(price: number): string {
+  get selectedPrice(): number {
+    if (this.selectedVariant) {
+      return parseFloat(this.selectedVariant.price) || 0;
+    }
+    const variants = this.product.references || this.product.variants || [];
+    const prices = variants
+      .map(v => parseFloat(v.price) || 0)
+      .filter(p => p > 0);
+    return prices.length > 0 ? Math.min(...prices) : 0;
+  }
+
+  get calculatedTotalPrice(): number {
+    return this.selectedPrice * (this.quantity > 0 ? this.quantity : 1);
+  }
+
+  get calculatedTotalPriceDisplay(): string {
+    return this.formatPrice(this.calculatedTotalPrice);
+  }
+
+  selectVariant(variant: any) {
+    this.selectedVariant = variant;
+  }
+
+  formatPrice(price: number): string {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
       currency: 'COP',

@@ -17,9 +17,13 @@
     </div>
 
     <div class="content-col" [class.order-last]="reverseLayout" [class.order-first]="!reverseLayout">
+      <!-- Categoria & Subcategoria Badge -->
       <div class="cat-badge">
         <span class="material-symbols-rounded" style="font-size:0.8rem">category</span>
-        {{ product.category }}
+        {{ product.category_name ? product.category_name : product.category }}
+        <ng-container *ngIf="product.subcategory_name">
+          · {{ product.subcategory_name }}
+        </ng-container>
       </div>
 
       <h2 class="product-name">{{ product.name }}</h2>
@@ -42,16 +46,40 @@
           </div>
         </div>
 
+        <!-- Variantes Seleccionables para la Calculadora -->
         <div class="spec-row" *ngIf="product.variants && product.variants.length > 0">
           <span class="spec-label">Variantes</span>
           <div class="chips-row">
-            <span
+            <button
+              type="button"
               *ngFor="let variant of product.variants"
-              class="chip"
-              [class.chip-available]="variant.available"
-              [class.chip-unavailable]="!variant.available">
-              {{ variant.name }}
-            </span>
+              (click)="selectVariant(variant)"
+              [disabled]="!variant.available"
+              class="chip-select-btn"
+              [class.active]="selectedVariant === variant"
+              [class.unavailable]="!variant.available">
+              {{ variant.name }} - {{ formatPrice(variant.price) }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calculadora de Precio por Cantidad -->
+      <div class="calculator-block" *ngIf="selectedPrice > 0">
+        <div class="calculator-inner">
+          <div class="calc-label">Calcular precio por cantidad:</div>
+          <div class="calc-row">
+            <div class="qty-control">
+              <button type="button" class="qty-btn" (click)="quantity = (quantity > 1 ? quantity - 1 : 1)">-</button>
+              <input type="number" [(ngModel)]="quantity" min="1" class="qty-input">
+              <button type="button" class="qty-btn" (click)="quantity = quantity + 1">+</button>
+            </div>
+            <div class="calc-math">
+              <span class="math-operator">×</span>
+              <span class="unit-price">{{ formatPrice(selectedPrice) }}</span>
+              <span class="math-operator">=</span>
+              <span class="total-price">{{ calculatedTotalPriceDisplay }}</span>
+            </div>
           </div>
         </div>
       </div>

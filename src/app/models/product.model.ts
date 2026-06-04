@@ -35,4 +35,10 @@ export interface CatalogProduct {
   marca?: string;             // Marca del producto
   gramaje?: string;           // Gramaje del producto
   brandIconUrl?: string;      // URL del icono de la marca
+
+  // Categoria y subcategoria real (relaciones base de datos)
+  category_name?: string;
+  subcategory_name?: string;
+  category_id?: number;
+  subcategory_id?: number;
 }
