@@ -42,11 +42,11 @@ export class CatalogItemComponent implements OnInit {
 
   get selectedPrice(): number {
     if (this.selectedVariant) {
-      return parseFloat(this.selectedVariant.price) || 0;
+      return Number(this.selectedVariant.price) || 0;
     }
     const variants = this.product.references || this.product.variants || [];
     const prices = variants
-      .map(v => parseFloat(v.price) || 0)
+      .map(v => Number(v.price) || 0)
       .filter(p => p > 0);
     return prices.length > 0 ? Math.min(...prices) : 0;
   }

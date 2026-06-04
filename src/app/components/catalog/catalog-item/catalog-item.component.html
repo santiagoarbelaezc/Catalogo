@@ -58,7 +58,7 @@
               class="chip-select-btn"
               [class.active]="selectedVariant === variant"
               [class.unavailable]="!variant.available">
-              {{ variant.name }} - {{ formatPrice(variant.price) }}
+              {{ variant.name }} - {{ formatPrice(variant.price || 0) }}
             </button>
           </div>
         </div>
