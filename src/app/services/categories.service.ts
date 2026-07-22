@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export interface Category {
   id?: number;
   name: string;
+  brand?: string;
 }
 
 export interface Subcategory {
@@ -24,15 +25,18 @@ export class CategoriesService {
 
   // --- Categories ---
 
-  getCategories(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/categorias`);
+  getCategories(brand?: string): Observable<any> {
+    const url = brand 
+      ? `${this.apiUrl}/categorias?brand=${encodeURIComponent(brand)}` 
+      : `${this.apiUrl}/categorias`;
+    return this.http.get(url);
   }
 
-  createCategory(data: { name: string }): Observable<any> {
+  createCategory(data: { name: string, brand?: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/categorias`, data);
   }
 
-  updateCategory(id: number, data: { name: string }): Observable<any> {
+  updateCategory(id: number, data: { name: string, brand?: string }): Observable<any> {
     return this.http.put(`${this.apiUrl}/categorias/${id}`, data);
   }
 

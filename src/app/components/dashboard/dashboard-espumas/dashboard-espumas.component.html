@@ -1,0 +1,228 @@
+<!-- dashboard-espumas.component.html -->
+<div class="min-h-screen bg-slate-50 p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="flex items-center justify-between pb-6 border-b border-slate-200">
+      <div class="flex items-center gap-4">
+        <button (click)="goBack()" 
+          class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors">
+          <span class="material-symbols-rounded" style="font-size: 1.2rem;">arrow_back</span>
+        </button>
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Categorías Espumas y Plásticos</h1>
+          <p class="text-sm text-slate-500 mt-1">Gestiona las categorías y subcategorías de la línea de Espumas y Plásticos</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <!-- Panel Izquierdo: Categorías -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
+        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-rounded text-slate-400">category</span>
+            Categorías Principales
+          </h2>
+        </div>
+        
+        <!-- Crear Categoría -->
+        <div class="p-4 border-b border-slate-100 bg-white">
+          <div class="flex gap-2">
+            <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..." (keyup.enter)="addCategory()"
+              class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
+            <button (click)="addCategory()" [disabled]="!newCategoryName.trim()"
+              class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
+              Añadir
+            </button>
+          </div>
+        </div>
+
+        <!-- Buscador Categorías -->
+        <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
+            <input type="text" [(ngModel)]="searchCategory" (ngModelChange)="updateCategoriesView()" placeholder="Buscar categoría..."
+              class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+          </div>
+        </div>
+
+        <!-- Lista de Categorías -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+          <div *ngIf="isLoadingCategories" class="text-center py-8 text-slate-400">
+            Cargando categorías...
+          </div>
+          
+          <div *ngIf="!isLoadingCategories && groupedCategories.length === 0 && searchCategory" class="text-center py-8 text-slate-400 text-sm">
+            No se encontraron categorías.
+          </div>
+
+          <div *ngFor="let group of groupedCategories" class="mb-4 animate-fade-in">
+            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">{{ group.letter }}</h3>
+            <div class="space-y-1">
+              <div *ngFor="let cat of group.categories" 
+                   (click)="selectCategory(cat)"
+                   [class.ring-2]="selectedCategory?.id === cat.id"
+                   [class.ring-slate-800]="selectedCategory?.id === cat.id"
+                   [class.bg-slate-50]="selectedCategory?.id === cat.id"
+                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer transition-all bg-white">
+                <span class="font-medium text-slate-700 text-sm">{{ cat.name }}</span>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button (click)="confirmEdit('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+                  </button>
+                  <button (click)="confirmDelete('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+                  </button>
+                  <span class="material-symbols-rounded text-slate-300 ml-1" style="font-size: 1.1rem;">chevron_right</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Derecho: Subcategorías -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
+        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <span class="material-symbols-rounded text-slate-400">list_alt</span>
+            Subcategorías
+            <span *ngIf="selectedCategory" class="text-sm font-normal text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200 ml-2">
+              de {{ selectedCategory.name }}
+            </span>
+          </h2>
+        </div>
+
+        <div *ngIf="!selectedCategory" class="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
+          <span class="material-symbols-rounded text-6xl mb-4 text-slate-200">touch_app</span>
+          <p>Selecciona una categoría en el panel izquierdo <br> para gestionar sus subcategorías.</p>
+        </div>
+
+        <ng-container *ngIf="selectedCategory">
+          <!-- Crear Subcategoría -->
+          <div class="p-4 border-b border-slate-100 bg-white">
+            <div class="flex gap-2">
+              <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..." (keyup.enter)="addSubcategory()"
+                class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
+              <button (click)="addSubcategory()" [disabled]="!newSubcategoryName.trim()"
+                class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
+                Añadir
+              </button>
+            </div>
+          </div>
+
+          <!-- Buscador Subcategorías -->
+          <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
+            <div class="relative">
+              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
+              <input type="text" [(ngModel)]="searchSubcategory" (ngModelChange)="updateSubcategoriesView()" placeholder="Buscar subcategoría..."
+                class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+            </div>
+          </div>
+
+          <!-- Lista de Subcategorías -->
+          <div class="flex-1 overflow-y-auto p-4 space-y-2">
+            <div *ngIf="isLoadingSubcategories" class="text-center py-8 text-slate-400">
+              Cargando subcategorías...
+            </div>
+            
+            <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && searchSubcategory" class="text-center py-8 text-slate-400 text-sm">
+              No se encontraron subcategorías.
+            </div>
+
+            <div class="space-y-1">
+              <div *ngFor="let sub of filteredSubcategories" 
+                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-slate-300 transition-all bg-white">
+                <div class="flex items-center gap-3">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                  <span class="font-medium text-slate-700 text-sm">{{ sub.name }}</span>
+                </div>
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button (click)="confirmEdit('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
+                  </button>
+                  <button (click)="confirmDelete('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
+                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <div *ngIf="showDeleteModal" class="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
+      <div class="p-6 md:p-8 flex flex-col items-center text-center space-y-4">
+        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
+          <span class="material-symbols-rounded text-red-500 text-3xl">warning</span>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">¿Eliminar {{ deleteTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}?</h2>
+        <p class="text-sm text-slate-500 font-medium">
+          Estás a punto de eliminar <span class="text-slate-800 font-bold">"{{ deleteTargetName }}"</span>.
+          <span *ngIf="deleteTargetType === 'category'" class="block mt-1">¡También se eliminarán todas sus subcategorías!</span>
+          Esta acción no se puede deshacer.
+        </p>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-center gap-3 w-full">
+        <button (click)="cancelDelete()" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-100 active:scale-95 transition-all w-full sm:w-auto">
+          Cancelar
+        </button>
+        <button (click)="executeDelete()" class="px-6 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 active:scale-95 transition-all shadow-sm w-full sm:w-auto">
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Edición -->
+  <div *ngIf="showEditModal" class="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
+      <div class="p-6 md:p-8 flex flex-col items-center space-y-4">
+        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
+          <span class="material-symbols-rounded text-blue-500 text-3xl">edit_square</span>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900 text-center">Editar {{ editTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}</h2>
+        
+        <div class="w-full mt-4">
+          <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Nombre</label>
+          <input type="text" [(ngModel)]="editTargetNewName" (keyup.enter)="executeEdit()"
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
+            placeholder="Escribe el nuevo nombre...">
+        </div>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-end gap-3 w-full">
+        <button (click)="cancelEditModal()" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-100 active:scale-95 transition-all w-full sm:w-auto">
+          Cancelar
+        </button>
+        <button (click)="executeEdit()" [disabled]="!editTargetNewName.trim() || editTargetNewName.trim() === editTargetOldName.trim()" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 disabled:opacity-50 transition-all shadow-sm w-full sm:w-auto">
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Validación de Duplicados -->
+  <div *ngIf="showValidationModal" class="fixed inset-0 z-[60] flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
+    <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
+      <div class="p-6 md:p-8 flex flex-col items-center text-center space-y-4">
+        <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center">
+          <span class="material-symbols-rounded text-amber-500 text-3xl">error</span>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">Acción no permitida</h2>
+        <p class="text-sm text-slate-500 font-medium">{{ validationMessage }}</p>
+      </div>
+      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-center w-full">
+        <button (click)="showValidationModal = false" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 transition-all shadow-sm w-full">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

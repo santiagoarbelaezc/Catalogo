@@ -124,14 +124,22 @@ export class ProductsService {
     formData.append('variants', JSON.stringify(product.variants ?? []));
 
     // Agregar imágenes de URL
-    // Siempre se envía (array vacío si se borraron todas las imágenes)
-    formData.append('images', JSON.stringify(product.images ?? []));
+    // Asegurar que is_primary o isPrimary viaje correctamente
+    const formattedImages = (product.images ?? []).map((img: any) => ({
+      url: typeof img === 'string' ? img : img.url,
+      description: img.description || '',
+      is_primary: img.isPrimary || img.is_primary ? 1 : 0
+    }));
+    formData.append('images', JSON.stringify(formattedImages));
 
-    // Agregar archivos de imágenes con el campo 'imagenes'
-    // Usar Array.from() para convertir FileList a Array
+    if (product.primaryFileIndex !== undefined && product.primaryFileIndex !== null) {
+      formData.append('primaryFileIndex', product.primaryFileIndex.toString());
+    }
+
+    // Agregar archivos de imágenes con el campo 'imagenes[]'
     if (files && files.length > 0) {
       Array.from(files).forEach((file) => {
-        formData.append('imagenes', file);
+        formData.append('imagenes[]', file);
       });
     }
 

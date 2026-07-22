@@ -762,7 +762,7 @@
                   <label class="text-xs font-semibold text-slate-600 block px-1">Línea de Negocio *</label>
                 </div>
                 <div class="relative">
-                  <select formControlName="category"
+                  <select formControlName="category" (change)="onLineChange($event)"
                     [class.border-red-500]="productForm.get('category')?.invalid && productForm.get('category')?.touched"
                     class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
                     <option value="">Selecciona línea</option>
@@ -963,33 +963,63 @@
 
           <!-- Multimedia -->
           <div class="space-y-6">
-            <div class="flex items-center justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
                   <span class="material-symbols-rounded text-slate-600" style="font-size: 1rem;">photo_library</span>
                 </div>
-                <h3 class="text-sm font-bold text-slate-800">Archivos Multimedia</h3>
+                <div>
+                  <h3 class="text-sm font-bold text-slate-800">Galería de Imágenes</h3>
+                  <p class="text-[11px] font-medium text-slate-500">Carga varias imágenes y selecciona cuál será la Portada Principal</p>
+                </div>
               </div>
               <button type="button" (click)="addImage()"
-                class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors">
-                + Agregar URL
+                class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-xl transition-colors self-start sm:self-auto">
+                + Agregar por URL
               </button>
             </div>
 
-            <!-- URL Array -->
-            <div formArrayName="images" class="space-y-3">
+            <!-- URL Array Items -->
+            <div formArrayName="images" class="space-y-3" *ngIf="imagesArray.length > 0">
+              <p class="text-xs font-semibold text-slate-700">Imágenes registradas por URL:</p>
               <div *ngFor="let ig of imagesArray.controls; let i = index" [formGroupName]="i"
-                class="flex gap-3 animate-fade-in">
+                class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-3 rounded-2xl border transition-all animate-fade-in"
+                [ngClass]="ig.get('isPrimary')?.value ? 'border-slate-900 bg-slate-900/[0.02] ring-2 ring-slate-900/10 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'">
+                
+                <!-- Thumbnail Preview -->
+                <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative group">
+                  <img *ngIf="ig.get('url')?.value" [src]="ig.get('url')?.value" class="w-full h-full object-cover" alt="Preview"
+                    (error)="onImgError($event)">
+                  <div *ngIf="!ig.get('url')?.value" class="w-full h-full flex items-center justify-center text-slate-400">
+                    <span class="material-symbols-rounded">image</span>
+                  </div>
+                </div>
+
+                <!-- Input Field -->
                 <div class="flex-1 relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-rounded text-slate-400"
                     style="font-size: 1.1rem;">link</span>
                   <input type="text" formControlName="url" placeholder="https://..."
-                    class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all">
+                    class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-sm outline-none focus:border-slate-400 transition-all font-medium text-slate-800">
                 </div>
-                <button type="button" (click)="removeImage(i)" title="Eliminar URL"
-                  class="w-10 h-10 bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all flex items-center justify-center shrink-0">
-                  <span class="material-symbols-rounded" style="font-size:1.1rem">delete</span>
-                </button>
+
+                <!-- Primary Selector & Actions -->
+                <div class="flex items-center gap-2 justify-end">
+                  <button type="button" (click)="setPrimaryImage(i)" title="Establecer como portada principal"
+                    class="px-3.5 py-1.5 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all"
+                    [ngClass]="ig.get('isPrimary')?.value ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'">
+                    <span class="material-symbols-rounded" [ngClass]="ig.get('isPrimary')?.value ? 'text-emerald-400' : 'text-slate-400'" style="font-size:1rem">
+                      {{ ig.get('isPrimary')?.value ? 'check_circle' : 'radio_button_unchecked' }}
+                    </span>
+                    {{ ig.get('isPrimary')?.value ? 'Portada Principal' : 'Definir Portada' }}
+                  </button>
+
+                  <button type="button" (click)="removeImage(i)" title="Eliminar URL"
+                    class="w-9 h-9 bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all flex items-center justify-center shrink-0">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem">delete</span>
+                  </button>
+                </div>
+
               </div>
             </div>
 
@@ -998,27 +1028,60 @@
               <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
                 class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
               <div
-                class="border-2 border-slate-200 border-dashed rounded-2xl p-8 text-center bg-slate-50 group-hover:bg-slate-100 group-hover:border-slate-300 transition-all flex flex-col items-center gap-3">
+                class="border-2 border-slate-200 border-dashed rounded-2xl p-6 text-center bg-slate-50 group-hover:bg-slate-100 group-hover:border-slate-300 transition-all flex flex-col items-center gap-2">
                 <div
-                  class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-500 group-hover:scale-110 transition-transform">
+                  class="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-500 group-hover:scale-110 transition-transform">
                   <span class="material-symbols-rounded">cloud_upload</span>
                 </div>
                 <div>
-                  <p class="text-sm font-semibold text-slate-700 mb-1">Arrastra tus fotos o haz clic aquí</p>
-                  <p class="text-xs text-slate-400">JPG, PNG, WEBP (Máx. 5MB por archivo)</p>
+                  <p class="text-sm font-semibold text-slate-700">Selecciona o arrastra varias imágenes</p>
+                  <p class="text-xs text-slate-400">JPG, PNG, WEBP (Se subirán todas las fotos seleccionadas)</p>
                 </div>
               </div>
             </div>
 
-            <div *ngIf="selectedFiles.length > 0"
-              class="flex items-center justify-between p-3 bg-slate-100 rounded-xl text-sm font-medium text-slate-700">
-              <div class="flex items-center gap-2">
-                <span class="material-symbols-rounded text-green-600" style="font-size:1.1rem">check_circle</span>
-                <span>{{ selectedFiles.length }} archivo(s) listos para subir</span>
+            <!-- Selected Files Preview Grid -->
+            <div *ngIf="selectedFiles.length > 0" class="space-y-3 pt-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-slate-700">Nuevas imágenes a subir ({{ selectedFiles.length }}):</span>
+                <button type="button" (click)="clearFilesAndPreviews()" class="text-xs text-red-500 font-semibold hover:underline">Quitar todas</button>
               </div>
-              <button type="button" (click)="selectedFiles = []"
-                class="text-slate-500 hover:text-red-600">Cancelar</button>
+
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                <div *ngFor="let file of selectedFiles; let idx = index" 
+                  class="relative group rounded-2xl border p-2 bg-white flex flex-col items-center gap-2 transition-all animate-fade-in"
+                  [ngClass]="primaryFileIndex === idx ? 'border-slate-900 bg-slate-900/[0.02] ring-2 ring-slate-900/10' : 'border-slate-200'">
+                  
+                  <!-- Thumbnail Image -->
+                  <div class="w-full h-24 rounded-xl bg-slate-100 overflow-hidden relative border border-slate-100">
+                    <img [src]="filePreviews[idx]" class="w-full h-full object-cover" [alt]="file.name">
+                    <span *ngIf="primaryFileIndex === idx" 
+                      class="absolute top-1.5 left-1.5 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                      <span class="material-symbols-rounded text-emerald-400" style="font-size:10px">check_circle</span> Portada
+                    </span>
+                  </div>
+
+                  <!-- File Details & Action -->
+                  <div class="w-full flex items-center justify-between text-[11px] gap-1 px-1">
+                    <span class="truncate font-medium text-slate-700" [title]="file.name">{{ file.name }}</span>
+                    <button type="button" (click)="removeFile(idx)" class="text-slate-400 hover:text-red-500">
+                      <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+                    </button>
+                  </div>
+
+                  <!-- Primary Button -->
+                  <button type="button" (click)="setPrimaryFile(idx)"
+                    class="w-full py-1.5 text-[11px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all"
+                    [ngClass]="primaryFileIndex === idx ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'">
+                    <span class="material-symbols-rounded" [ngClass]="primaryFileIndex === idx ? 'text-emerald-400' : 'text-slate-400'" style="font-size:12px">
+                      {{ primaryFileIndex === idx ? 'check_circle' : 'radio_button_unchecked' }}
+                    </span>
+                    {{ primaryFileIndex === idx ? 'Es Portada' : 'Definir Portada' }}
+                  </button>
+                </div>
+              </div>
             </div>
+
           </div>
 
         </form>
@@ -1036,6 +1099,64 @@
           <div *ngIf="isSubmitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin">
           </div>
           {{ isSubmitting ? 'Guardando...' : (editingProduct ? 'Guardar Cambios' : 'Confirmar Registro') }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL: CONFIRMAR ELIMINACIÓN DE PRODUCTO
+       ========================================================================= -->
+  <div *ngIf="showDeleteModal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
+    <div
+      class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative overflow-hidden text-center space-y-6 animate-scale-up">
+      
+      <!-- Close button -->
+      <button (click)="cancelDelete()"
+        class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-all">
+        <span class="material-symbols-rounded" style="font-size: 1.2rem;">close</span>
+      </button>
+
+      <!-- Warning Icon Header -->
+      <div class="mx-auto w-16 h-16 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 shadow-inner">
+        <span class="material-symbols-rounded" style="font-size: 2.2rem;">delete_forever</span>
+      </div>
+
+      <!-- Title & Message -->
+      <div class="space-y-2">
+        <h3 class="text-xl font-bold text-slate-900 tracking-tight">¿Eliminar producto?</h3>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Estás a punto de eliminar el producto <span class="font-bold text-slate-800">"{{ productToDelete?.name }}"</span>. Esta acción removerá el ítem de la vista del catálogo.
+        </p>
+      </div>
+
+      <!-- Product Card Preview inside Modal -->
+      <div *ngIf="productToDelete" class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center gap-3 text-left">
+        <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+          <img *ngIf="productToDelete.images && productToDelete.images.length > 0; else defaultModalImg"
+            [src]="productToDelete.images[0].url" [alt]="productToDelete.name" class="w-full h-full object-cover">
+          <ng-template #defaultModalImg>
+            <span class="material-symbols-rounded text-slate-300">image</span>
+          </ng-template>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h4 class="text-xs font-bold text-slate-900 truncate">{{ productToDelete.name }}</h4>
+          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">{{ productToDelete.category || 'Sin Línea' }}</p>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex items-center gap-3 pt-2">
+        <button type="button" (click)="cancelDelete()"
+          class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all">
+          Cancelar
+        </button>
+        <button type="button" (click)="confirmDelete()" [disabled]="isDeleting"
+          class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-red-600/20 flex items-center justify-center gap-2 disabled:opacity-50">
+          <div *ngIf="isDeleting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <span>{{ isDeleting ? 'Eliminando...' : 'Sí, Eliminar' }}</span>
         </button>
       </div>
 

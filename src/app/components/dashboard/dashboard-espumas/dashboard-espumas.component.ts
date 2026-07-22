@@ -6,13 +6,13 @@ import { ToastService } from '../../../services/toast.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard-categories',
+  selector: 'app-dashboard-espumas',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './dashboard-categories.component.html',
-  styleUrl: './dashboard-categories.component.css'
+  templateUrl: './dashboard-espumas.component.html',
+  styleUrl: './dashboard-espumas.component.css'
 })
-export class DashboardCategoriesComponent implements OnInit {
+export class DashboardEspumasComponent implements OnInit {
   categories: Category[] = [];
   subcategories: Subcategory[] = [];
   selectedCategory: Category | null = null;
@@ -59,7 +59,7 @@ export class DashboardCategoriesComponent implements OnInit {
 
   loadCategories(selectCategoryName?: string): void {
     this.isLoadingCategories = true;
-    this.categoriesService.getCategories('Plaxtilineas').subscribe({
+    this.categoriesService.getCategories('Espumas').subscribe({
       next: (res) => {
         if (res.success) {
           this.categories = res.data;
@@ -163,7 +163,7 @@ export class DashboardCategoriesComponent implements OnInit {
       return;
     }
 
-    this.categoriesService.createCategory({ name: trimmedName, brand: 'Plaxtilineas' }).subscribe({
+    this.categoriesService.createCategory({ name: trimmedName, brand: 'Espumas' }).subscribe({
       next: (res) => {
         if (res.success) {
           this.newCategoryName = '';
@@ -229,8 +229,6 @@ export class DashboardCategoriesComponent implements OnInit {
     }
   }
 
-  // El modal de edición ahora maneja esto (confirmEdit y executeEdit)
-
   addSubcategory(): void {
     if (!this.selectedCategory || !this.selectedCategory.id) return;
     
@@ -262,17 +260,13 @@ export class DashboardCategoriesComponent implements OnInit {
     });
   }
 
-  // Eliminar subcategoría ahora pasa por el mismo modal (confirmDelete)
-
-  // El modal de edición ahora maneja esto (confirmEdit)
-
   // --- Lógica del Modal de Edición ---
   confirmEdit(type: 'category' | 'subcategory', id: number, name: string, event?: Event): void {
     if (event) event.stopPropagation();
     this.editTargetType = type;
     this.editTargetId = id;
     this.editTargetOldName = name;
-    this.editTargetNewName = name; // Pre-fill with current name
+    this.editTargetNewName = name;
     this.showEditModal = true;
   }
 
@@ -290,13 +284,11 @@ export class DashboardCategoriesComponent implements OnInit {
       return;
     }
 
-    // Si no cambió el nombre, no hacer nada
     if (this.editTargetNewName.trim().toLowerCase() === this.editTargetOldName.trim().toLowerCase()) {
       this.cancelEditModal();
       return;
     }
 
-    // Validación de duplicados en la edición
     if (this.editTargetType === 'category') {
       const exists = this.categories.some(c => c.name.toLowerCase() === this.editTargetNewName.trim().toLowerCase() && c.id !== this.editTargetId);
       if (exists) {

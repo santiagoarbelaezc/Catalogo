@@ -8,6 +8,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { DashboardInicioComponent } from './components/dashboard/dashboard-inicio/dashboard-inicio.component';
 import { DashboardProductComponent } from './components/dashboard/dashboard-product/dashboard-product.component';
 import { DashboardCategoriesComponent } from './components/dashboard/dashboard-categories/dashboard-categories.component';
+import { DashboardEspumasComponent } from './components/dashboard/dashboard-espumas/dashboard-espumas.component';
 import { authGuard } from './guards/auth.guard';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
@@ -18,6 +19,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardInicioComponent, canActivate: [authGuard] },
   { path: 'dashboard/productos', component: DashboardProductComponent, canActivate: [authGuard] },
   { path: 'dashboard/categorias', component: DashboardCategoriesComponent, canActivate: [authGuard] },
+  { path: 'dashboard/espumas', component: DashboardEspumasComponent, canActivate: [authGuard] },
   { path: 'catalogo', component: CatalogoHomeComponent },
   { path: 'catalogo-home', redirectTo: '/catalogo', pathMatch: 'full' },
   { path: 'districol', component: DistricolComponent },

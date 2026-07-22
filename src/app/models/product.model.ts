@@ -3,6 +3,8 @@ import { ProductVariant } from './variant.model';
 export interface ProductImage {
   url: string;
   description: string;
+  isPrimary?: boolean;
+  is_primary?: boolean;
 }
 
 export interface CatalogProduct {

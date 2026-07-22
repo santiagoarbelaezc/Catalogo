@@ -196,15 +196,43 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.loadCategories();
   }
 
+  allCategories: Category[] = [];
+
   loadCategories() {
     this.categoriesService.getCategories().subscribe({
       next: (res) => {
         if (res.success) {
-          this.categories = res.data;
+          this.allCategories = res.data;
+          this.filterCategoriesByLine();
           this.cdr.markForCheck();
         }
       }
     });
+  }
+
+  onLineChange(event: any) {
+    this.filterCategoriesByLine();
+  }
+
+  filterCategoriesByLine() {
+    const selectedLine = this.productForm.get('category')?.value || '';
+    if (!selectedLine) {
+      this.categories = [...this.allCategories];
+    } else {
+      const normLine = selectedLine.toLowerCase();
+      this.categories = this.allCategories.filter(cat => {
+        if (!cat.brand) return true;
+        const catBrand = cat.brand.toLowerCase();
+        return catBrand.includes(normLine) || normLine.includes(catBrand);
+      });
+    }
+
+    const currentCatId = this.productForm.get('category_id')?.value;
+    if (currentCatId && !this.categories.some(c => c.id == currentCatId)) {
+      this.productForm.patchValue({ category_id: '', subcategory_id: '' });
+      this.subcategories = [];
+    }
+    this.cdr.markForCheck();
   }
 
   onCategorySelectChange(event: any) {
@@ -698,25 +726,95 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.variantsArray.removeAt(index);
   }
 
-  addImage(url: string = '', description: string = '') {
+  filePreviews: string[] = [];
+  primaryFileIndex = -1;
+
+  onImgError(event: Event) {
+    const target = event.target as HTMLElement;
+    if (target) {
+      target.style.display = 'none';
+    }
+  }
+
+  addImage(url: string = '', description: string = '', isPrimary: boolean = false) {
+    const isFirst = this.imagesArray.length === 0 && this.selectedFiles.length === 0 && this.primaryFileIndex === -1;
     const imageGroup = this.fb.group({
       url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
-      description: [description]
+      description: [description],
+      isPrimary: [isPrimary || isFirst]
     });
     this.imagesArray.push(imageGroup);
   }
 
+  setPrimaryImage(index: number) {
+    this.imagesArray.controls.forEach((ctrl, i) => {
+      ctrl.get('isPrimary')?.setValue(i === index);
+    });
+    this.primaryFileIndex = -1;
+    this.cdr.markForCheck();
+  }
+
+  setPrimaryFile(index: number) {
+    this.primaryFileIndex = index;
+    this.imagesArray.controls.forEach(ctrl => {
+      ctrl.get('isPrimary')?.setValue(false);
+    });
+    this.cdr.markForCheck();
+  }
+
   removeImage(index: number) {
+    const wasPrimary = this.imagesArray.at(index)?.get('isPrimary')?.value;
     this.imagesArray.removeAt(index);
+    if (wasPrimary) {
+      if (this.imagesArray.length > 0) {
+        this.setPrimaryImage(0);
+      } else if (this.selectedFiles.length > 0) {
+        this.primaryFileIndex = 0;
+      }
+    }
+    this.cdr.markForCheck();
   }
 
   onFileSelected(event: any) {
-    const files = Array.from(event.target.files) as File[];
-    this.selectedFiles = files;
+    const newFiles = Array.from(event.target.files) as File[];
+    if (!newFiles || newFiles.length === 0) return;
+    newFiles.forEach(file => {
+      this.selectedFiles.push(file);
+      this.filePreviews.push(URL.createObjectURL(file));
+    });
+    const hasUrlPrimary = this.imagesArray.controls.some(ctrl => ctrl.get('isPrimary')?.value);
+    if (!hasUrlPrimary && this.primaryFileIndex === -1 && this.selectedFiles.length > 0) {
+      this.primaryFileIndex = 0;
+    }
+    this.cdr.markForCheck();
   }
 
   removeFile(index: number) {
+    if (this.filePreviews[index]) {
+      URL.revokeObjectURL(this.filePreviews[index]);
+    }
     this.selectedFiles.splice(index, 1);
+    this.filePreviews.splice(index, 1);
+    if (this.primaryFileIndex === index) {
+      if (this.selectedFiles.length > 0) {
+        this.primaryFileIndex = 0;
+      } else {
+        this.primaryFileIndex = -1;
+        if (this.imagesArray.length > 0) {
+          this.setPrimaryImage(0);
+        }
+      }
+    } else if (this.primaryFileIndex > index) {
+      this.primaryFileIndex--;
+    }
+    this.cdr.markForCheck();
+  }
+
+  clearFilesAndPreviews() {
+    this.filePreviews.forEach(url => URL.revokeObjectURL(url));
+    this.selectedFiles = [];
+    this.filePreviews = [];
+    this.primaryFileIndex = -1;
   }
 
   showCreateForm() {
@@ -732,7 +830,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.colorsArray.clear();
     this.variantsArray.clear();
     this.imagesArray.clear();
-    this.selectedFiles = [];
+    this.clearFilesAndPreviews();
+    this.filterCategoriesByLine();
     this.showForm = true;
 
     if (typeof window !== 'undefined') {
@@ -756,6 +855,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       gramaje: product.gramaje || '',
       brandIconUrl: product.brandIconUrl || ''
     });
+    this.filterCategoriesByLine();
 
     if (product.category_id) {
       this.categoriesService.getSubcategoriesByCategory(product.category_id).subscribe(res => {
@@ -788,14 +888,16 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       });
     }
 
+    this.clearFilesAndPreviews();
     this.imagesArray.clear();
     if (product.images && product.images.length > 0) {
-      product.images.forEach((image: any) => {
-        this.addImage(image.url, image.description);
+      const hasPrimary = product.images.some((img: any) => img.is_primary || img.isPrimary);
+      product.images.forEach((image: any, idx: number) => {
+        const isPri = image.is_primary === true || image.is_primary === 1 || image.isPrimary === true || (!hasPrimary && idx === 0);
+        this.addImage(image.url, image.description, isPri);
       });
     }
 
-    this.selectedFiles = [];
     this.showForm = true;
 
     if (typeof window !== 'undefined') {
@@ -807,7 +909,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.showForm = false;
     this.editingProduct = null;
     this.productForm.reset();
-    this.selectedFiles = [];
+    this.clearFilesAndPreviews();
     if (typeof window !== 'undefined') {
       setTimeout(() => {
         window.scrollTo({ top: this.savedScrollPosition, behavior: 'auto' });
@@ -845,6 +947,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   private createProduct(productData: any) {
     const normalizedData = {
       ...productData,
+      primaryFileIndex: this.primaryFileIndex,
       isNew: productData.isNew === 1 || productData.isNew === true,
       isFeatured: productData.isFeatured === 1 || productData.isFeatured === true,
       variants: productData.variants.map((v: any) => ({
@@ -878,6 +981,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   private updateProduct(id: number, productData: any) {
     const normalizedData = {
       ...productData,
+      primaryFileIndex: this.primaryFileIndex,
       isNew: productData.isNew === 1 || productData.isNew === true,
       isFeatured: productData.isFeatured === 1 || productData.isFeatured === true,
       variants: productData.variants.map((v: any) => ({
@@ -908,21 +1012,46 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.subscriptions.push(updateSub);
   }
 
+  showDeleteModal = false;
+  productToDelete: any = null;
+  isDeleting = false;
+
+  openDeleteModal(product: any) {
+    this.productToDelete = product;
+    this.showDeleteModal = true;
+    this.cdr.markForCheck();
+  }
+
+  cancelDelete() {
+    this.showDeleteModal = false;
+    this.productToDelete = null;
+    this.isDeleting = false;
+    this.cdr.markForCheck();
+  }
+
   deleteProduct(product: any) {
-    if (confirm(`¿Estás seguro de que quieres eliminar "${product.name}"?`)) {
-      const deleteSub = this.productsService.deleteProduct(product.id).subscribe({
-        next: (response) => {
-          if (response.success !== false) {
-            this.toastService.success('Producto eliminado correctamente.');
-            this.loadProducts();
-          }
-        },
-        error: (error) => {
-          // El interceptor ya maneja el error toast
+    this.openDeleteModal(product);
+  }
+
+  confirmDelete() {
+    if (!this.productToDelete) return;
+    this.isDeleting = true;
+    this.cdr.markForCheck();
+
+    const deleteSub = this.productsService.deleteProduct(this.productToDelete.id).subscribe({
+      next: (response) => {
+        if (response.success !== false) {
+          this.toastService.success('Producto eliminado correctamente.');
+          this.loadProducts();
         }
-      });
-      this.subscriptions.push(deleteSub);
-    }
+        this.cancelDelete();
+      },
+      error: (error) => {
+        this.isDeleting = false;
+        this.cdr.markForCheck();
+      }
+    });
+    this.subscriptions.push(deleteSub);
   }
 
   private markFormGroupTouched() {
