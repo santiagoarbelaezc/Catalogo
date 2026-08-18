@@ -97,6 +97,10 @@ export class DashboardInicioComponent implements OnInit, OnDestroy {
     this.router.navigate(['/dashboard/espumas']);
   }
 
+  navigateToDistricol() {
+    this.router.navigate(['/dashboard/districol']);
+  }
+
   navigateTo(route: string) {
     this.router.navigate([route]);
   }
