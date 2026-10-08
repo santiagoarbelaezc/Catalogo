@@ -23,12 +23,12 @@ body, html {
   font-family: 'Inter Tight', sans-serif !important;
 }
 
-/* Ensure no translucent cards or dark backgrounds */
-.min-h-screen {
+/* Ensure no translucent cards on non-dashboard pages */
+.min-h-screen:not(.dash-shell) {
   background-color: #ffffff !important;
 }
 
-section, main, header, div {
+section:not(.dash-main section), main:not(.dash-main), header:not(.dash-header) {
   background-color: transparent;
 }
 

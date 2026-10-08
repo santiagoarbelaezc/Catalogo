@@ -1,571 +1,665 @@
-<!-- Elegant Monochrome Inventory Management -->
-<div class="min-h-screen bg-slate-50 font-sans selection:bg-slate-800 selection:text-white pb-20">
+<!-- Dashboard — Sidebar + Full Width Layout -->
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
 
-  <!-- Elegant Sticky Header -->
-  <header
-    class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 shadow-[0_4px_20px_rgb(0,0,0,0.02)]">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
 
-      <div class="flex items-center gap-4 w-full md:w-auto">
-        <button (click)="goBack()"
-          class="w-10 h-10 border border-slate-200 rounded-full flex items-center justify-center shrink-0 hover:bg-slate-100 hover:text-slate-900 active:scale-95 transition-all duration-200 text-slate-500">
-          <span class="material-symbols-rounded" style="font-size:1.2rem">arrow_back</span>
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      </div>
+      <span class="sidebar-brand-text">Plaxtilineas</span>
+    </div>
+
+    <!-- Toggle button flotante en el borde -->
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <!-- Inicio -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard')"
+        title="Inicio"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+      </button>
+
+      <!-- Inventario (Activo) -->
+      <button
+        class="sidebar-nav-item sidebar-nav-item--active"
+        (click)="navigateToProducts()"
+        title="Inventario de Productos"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+        <span class="sidebar-nav-active-dot"></span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <!-- Menú Desplegable: Secciones -->
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger"
+          [class.sidebar-dropdown-trigger--open]="sectionsDropdownOpen"
+          (click)="toggleSectionsDropdown()"
+          [title]="sectionsDropdownOpen ? 'Cerrar secciones' : 'Abrir secciones'"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">3</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
         </button>
-        <div class="min-w-0 flex-1">
-          <h1 class="text-xl font-bold text-slate-900 tracking-tight">Gestión Inventario</h1>
-          <p class="text-xs font-medium text-slate-500 mt-0.5">Catálogo Plaxtilineas</p>
+
+        <!-- Subitems desplegables -->
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCategories()"
+            title="Categorías Plaxtilineas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToEspumas()"
+            title="Espumas y Plásticos"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToDistricol()"
+            title="Categorías Districol"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
         </div>
       </div>
 
-      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-        <button (click)="loadProducts()" title="Recargar"
-          class="w-10 h-10 flex items-center justify-center text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-full hover:rotate-180 transition-all duration-500">
-          <span class="material-symbols-rounded" style="font-size:1.2rem">sync</span>
-        </button>
-        <button (click)="toggleReports()" [class.bg-violet-100]="showReports" [class.text-violet-700]="showReports"
-          [class.bg-white]="!showReports" [class.text-slate-700]="!showReports"
-          class="flex items-center gap-2 border border-slate-200 px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-slate-50 active:scale-95 transition-all shadow-sm focus:outline-none">
-          <span class="material-symbols-rounded" style="font-size:1.1rem">analytics</span>
-          {{ showReports ? 'Ocultar Reporte' : 'Reporte Analítico' }}
-        </button>
-        <button (click)="showCreateForm()" [disabled]="showForm"
-          class="flex items-center gap-2 bg-slate-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-slate-800 active:scale-95 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed">
-          <span class="material-symbols-rounded" style="font-size:1.1rem">add</span>
-          Nuevo Producto
-        </button>
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <!-- Ver Catálogo Público -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/')"
+        title="Ver Tienda / Catálogo"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
+      </button>
+
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar-spacer"></div>
+
+    <!-- User card at bottom -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-avatar">MM</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-username">Mateo Moreno</span>
+        <span class="sidebar-role">Administrador</span>
       </div>
-
-    </div>
-  </header>
-
-  <!-- Main Scrollable Area -->
-  <main class="max-w-[1600px] mx-auto px-4 md:px-6 py-8">
-
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-32 gap-6">
-      <div class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      <p class="text-sm font-semibold text-slate-500 tracking-wide uppercase">Sincronizando Base de Datos...</p>
     </div>
 
-    <!-- Error State -->
-    <div *ngIf="!isLoading && loadingError"
-      class="max-w-md mx-auto py-20 text-center animate-fade-in bg-white border border-slate-200 rounded-3xl p-10 shadow-sm">
-      <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-6 mx-auto">
-        <span class="material-symbols-rounded text-slate-400" style="font-size:2rem">priority_high</span>
-      </div>
-      <h3 class="text-xl font-bold text-slate-900 mb-2">Error de Conexión</h3>
-      <p class="text-slate-500 text-sm mb-8 leading-relaxed">{{ loadingError }}</p>
-      <button (click)="loadProducts()"
-        class="w-full bg-slate-100 text-slate-700 font-semibold py-3 rounded-xl hover:bg-slate-200 transition-colors">Reintentar
-        Conexión</button>
-    </div>
+    <!-- Logout -->
+    <button (click)="logout()" class="sidebar-logout">
+      <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      <span class="sidebar-nav-label-text">Cerrar sesión</span>
+    </button>
 
-    <!-- Content Area -->
-    @if (!isLoading && !loadingError) {
-    <div class="space-y-8 animate-fade-in">
+  </aside>
 
-      <!-- Brand Filter Tabs -->
-      <div class="flex flex-wrap items-center gap-3">
-        <button (click)="onBrandChange('')" [class.bg-slate-900]="filterBrand === ''"
-          [class.text-white]="filterBrand === ''" [class.bg-white]="filterBrand !== ''"
-          [class.text-slate-600]="filterBrand !== ''"
-          class="px-6 py-2.5 rounded-full text-sm font-bold border border-slate-200 hover:shadow-md transition-all">
-          Todos los Productos
-        </button>
-        <button (click)="onBrandChange('Plaxtilineas')" [class.bg-emerald-600]="filterBrand === 'Plaxtilineas'"
-          [class.text-white]="filterBrand === 'Plaxtilineas'" [class.bg-white]="filterBrand !== 'Plaxtilineas'"
-          [class.text-slate-600]="filterBrand !== 'Plaxtilineas'"
-          class="px-6 py-2.5 rounded-full text-sm font-bold border border-slate-200 hover:shadow-md transition-all">
-          Plaxtilineas
-        </button>
-        <button (click)="onBrandChange('Espumas')" [class.bg-blue-600]="filterBrand === 'Espumas'"
-          [class.text-white]="filterBrand === 'Espumas'" [class.bg-white]="filterBrand !== 'Espumas'"
-          [class.text-slate-600]="filterBrand !== 'Espumas'"
-          class="px-6 py-2.5 rounded-full text-sm font-bold border border-slate-200 hover:shadow-md transition-all">
-          Espumas
-        </button>
-        <button (click)="onBrandChange('Districol')" [class.bg-amber-700]="filterBrand === 'Districol'"
-          [class.text-white]="filterBrand === 'Districol'" [class.bg-white]="filterBrand !== 'Districol'"
-          [class.text-slate-600]="filterBrand !== 'Districol'"
-          class="px-6 py-2.5 rounded-full text-sm font-bold border border-slate-200 hover:shadow-md transition-all">
-          Districol
-        </button>
-      </div>
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
 
-      <!-- Stats Bar -->
-      <section [ngClass]="headerColorClass"
-        class="text-white p-8 md:p-10 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl transition-colors duration-500">
-        <div class="space-y-1 text-center md:text-left w-full md:w-auto">
-          <p class="text-xs font-semibold uppercase tracking-widest text-slate-400">Resumen de Inventario</p>
-          <h2 class="text-4xl lg:text-5xl font-bold tracking-tight">{{ totalFilteredProducts }} <span
-              class="font-medium text-slate-500 text-3xl">Filtrados</span></h2>
+    <!-- ── TOP HEADER ── -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <button
+          class="header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
+        </button>
+        <div>
+          <span class="dash-brand">Panel de Administración</span>
         </div>
-        <div class="flex flex-row gap-4 w-full md:w-auto">
-          <div class="flex-1 bg-white/5 p-5 rounded-2xl border border-white/10 min-w-[140px]">
-            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Total en Catálogo</p>
-            <p class="text-2xl font-bold">{{ products.length }}</p>
+      </div>
+
+      <div class="dash-header-right">
+        <div class="dash-status-pill">
+          <span class="dash-status-dot"></span>
+          <span>Sistema Activo</span>
+        </div>
+        <div class="dash-user-chip">
+          <div class="dash-avatar-mini">MM</div>
+          <span>Mateo Moreno</span>
+        </div>
+        <button (click)="logout()" class="dash-logout-btn">
+          <span class="material-symbols-rounded" style="font-size:1.05rem">logout</span>
+          Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- ── MAIN BODY ── -->
+    <main class="prod-main animate-fade-in">
+
+      <!-- ── PAGE HEADER ── -->
+      <section class="page-top-bar">
+        <div class="page-top-left">
+          <div class="page-title-icon">
+            <span class="material-symbols-rounded">inventory_2</span>
           </div>
-          <div class="flex-1 bg-white/5 p-5 rounded-2xl border border-white/10 min-w-[140px]">
-            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Páginas</p>
-            <p class="text-2xl font-bold">{{ totalPages }}</p>
+          <div>
+            <div class="page-breadcrumb">
+              <span (click)="navigateTo('/dashboard')" class="breadcrumb-link">Dashboard</span>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Inventario de Productos</span>
+            </div>
+            <h1 class="page-title">Gestión de Inventario</h1>
           </div>
+        </div>
+
+        <div class="page-top-actions">
+          <button (click)="loadProducts()" class="btn-action-icon" title="Recargar inventario">
+            <span class="material-symbols-rounded">sync</span>
+          </button>
+          
+          <button (click)="toggleReports()" 
+            class="btn-action-outline"
+            [class.btn-action-outline--active]="showReports">
+            <span class="material-symbols-rounded">analytics</span>
+            <span>{{ showReports ? 'Ocultar Reporte' : 'Reporte Analítico' }}</span>
+          </button>
+
+          <button (click)="showCreateForm()" [disabled]="showForm" class="btn-action-primary">
+            <span class="material-symbols-rounded">add</span>
+            <span>Nuevo Producto</span>
+          </button>
         </div>
       </section>
 
-      <!-- ===================== REPORTE ANALÍTICO INLINE ===================== -->
-      <div *ngIf="showReports"
-        class="bg-white rounded-3xl w-full flex flex-col overflow-hidden border border-slate-200/80 shadow-sm transition-all duration-300 mb-8 animate-fade-in">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="prod-loading-state">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Sincronizando Base de Datos...</p>
+      </div>
 
-        <!-- Header -->
-        <div class="flex items-center justify-between px-7 py-4 border-b border-slate-100 shrink-0 bg-white">
-          <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center">
-              <span class="material-symbols-rounded text-slate-600" style="font-size:1.1rem">analytics</span>
-            </div>
-            <div>
-              <h2 class="text-base font-bold text-slate-900 tracking-tight">Reporte Analítico de Inventario</h2>
-              <p class="text-xs font-medium text-slate-400">{{ products.length }} productos · Actualizado ahora</p>
-            </div>
-          </div>
-          <button (click)="toggleReports()"
-            class="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
-            title="Ocultar reporte">
-            <span class="material-symbols-rounded" style="font-size:1.2rem">close</span>
-          </button>
+      <!-- Error State -->
+      <div *ngIf="!isLoading && loadingError" class="prod-error-card">
+        <div class="error-icon-wrap">
+          <span class="material-symbols-rounded">priority_high</span>
         </div>
+        <h3 class="error-title">Error de Conexión</h3>
+        <p class="error-desc">{{ loadingError }}</p>
+        <button (click)="loadProducts()" class="error-retry-btn">Reintentar Conexión</button>
+      </div>
 
-        <!-- Layout: Sidebar + Content -->
-        <div class="flex flex-1 overflow-hidden">
+      <!-- Main Content Block -->
+      @if (!isLoading && !loadingError) {
+      <div class="prod-body-stack">
 
-          <!-- Sidebar Navigation -->
-          <div class="w-48 shrink-0 flex flex-col border-r border-slate-100 py-4 px-2.5 gap-0.5 bg-slate-50">
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-2">Secciones</p>
-            <button (click)="reportTab=0"
-              class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
-              [ngClass]="reportTab===0 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
-              <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                [ngClass]="reportTab===0 ? 'bg-slate-100' : 'bg-transparent'">
-                <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">bar_chart</span>
-              </span>
-              Resumen
-            </button>
-            <button (click)="reportTab=1"
-              class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
-              [ngClass]="reportTab===1 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
-              <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                [ngClass]="reportTab===1 ? 'bg-slate-100' : 'bg-transparent'">
-                <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">warning</span>
-              </span>
-              <span class="flex-1">Calidad</span>
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-slate-200 text-slate-600">
-                {{ statsGlobal.missingDescription + statsGlobal.missingImages + statsGlobal.missingVariants +
-                statsGlobal.missingPrice }}
-              </span>
-            </button>
-            <button (click)="reportTab=2"
-              class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-left"
-              [ngClass]="reportTab===2 ? 'bg-white text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:bg-white/70 hover:text-slate-800'">
-              <span class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                [ngClass]="reportTab===2 ? 'bg-slate-100' : 'bg-transparent'">
-                <span class="material-symbols-rounded text-slate-600" style="font-size:0.95rem">category</span>
-              </span>
-              Por Categoría
-            </button>
-
-            <!-- Mini stats -->
-            <div class="mt-auto pt-4 border-t border-slate-200 space-y-2 px-1">
-              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Líneas</p>
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span
-                    class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Plaxtilineas</span>
-                <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.plaxtilineas }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span
-                    class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>Espumas</span>
-                <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.espumas }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-[11px] text-slate-500 flex items-center gap-1.5"><span
-                    class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>Districol</span>
-                <span class="text-[11px] font-bold text-slate-800">{{ statsGlobal.districol }}</span>
+        <!-- ── STATS CARDS ROW ── -->
+        <section class="prod-stats-grid">
+          <div class="prod-stat-card prod-stat-card--total">
+            <div class="prod-stat-top">
+              <span class="prod-stat-label">Total Catálogo</span>
+              <div class="prod-stat-icon prod-stat-icon--slate">
+                <span class="material-symbols-rounded">inventory_2</span>
               </div>
             </div>
+            <p class="prod-stat-num">{{ products.length }}</p>
+            <p class="prod-stat-sub">{{ totalFilteredProducts }} mostrados según filtros</p>
           </div>
 
-          <!-- Content -->
-          <div class="flex-1">
+          <div class="prod-stat-card prod-stat-card--plax" (click)="onBrandChange('Plaxtilineas')" style="cursor: pointer;">
+            <div class="prod-stat-top">
+              <span class="prod-stat-label">Plaxtilineas</span>
+              <div class="prod-stat-icon prod-stat-icon--emerald">
+                <span class="material-symbols-rounded">category</span>
+              </div>
+            </div>
+            <p class="prod-stat-num">{{ statsGlobal.plaxtilineas }}</p>
+            <p class="prod-stat-sub">{{ statsGlobal.total > 0 ? (statsGlobal.plaxtilineas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+          </div>
 
-            <!-- ===== PESTAÑA 0: RESUMEN GENERAL ===== -->
-            <div *ngIf="reportTab===0" class="p-7 space-y-6">
+          <div class="prod-stat-card prod-stat-card--espumas" (click)="onBrandChange('Espumas')" style="cursor: pointer;">
+            <div class="prod-stat-top">
+              <span class="prod-stat-label">Espumas y Plásticos</span>
+              <div class="prod-stat-icon prod-stat-icon--blue">
+                <span class="material-symbols-rounded">layers</span>
+              </div>
+            </div>
+            <p class="prod-stat-num">{{ statsGlobal.espumas }}</p>
+            <p class="prod-stat-sub">{{ statsGlobal.total > 0 ? (statsGlobal.espumas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+          </div>
 
-              <!-- KPI Strip -->
-              <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <div class="col-span-2 md:col-span-1 bg-slate-900 rounded-2xl p-5 text-white flex flex-col gap-1">
-                  <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-400">Total</p>
-                  <p class="text-3xl font-bold">{{ statsGlobal.total }}</p>
-                  <p class="text-xs text-slate-400">productos</p>
+          <div class="prod-stat-card prod-stat-card--districol" (click)="onBrandChange('Districol')" style="cursor: pointer;">
+            <div class="prod-stat-top">
+              <span class="prod-stat-label">Districol</span>
+              <div class="prod-stat-icon prod-stat-icon--amber">
+                <span class="material-symbols-rounded">storefront</span>
+              </div>
+            </div>
+            <p class="prod-stat-num">{{ statsGlobal.districol }}</p>
+            <p class="prod-stat-sub">{{ statsGlobal.total > 0 ? (statsGlobal.districol / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+          </div>
+        </section>
+
+        <!-- ===================== REPORTE ANALÍTICO INLINE ===================== -->
+        <div *ngIf="showReports" class="prod-report-panel animate-fade-in">
+
+          <!-- Header del Reporte -->
+          <div class="report-panel-header">
+            <div class="report-panel-title-group">
+              <div class="report-panel-icon">
+                <span class="material-symbols-rounded">analytics</span>
+              </div>
+              <div>
+                <h2 class="report-panel-title">Reporte Analítico de Inventario</h2>
+                <p class="report-panel-subtitle">{{ products.length }} productos en inventario · Datos en tiempo real</p>
+              </div>
+            </div>
+            <button (click)="toggleReports()" class="report-close-btn" title="Cerrar reporte">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </div>
+
+          <!-- Layout: Sidebar + Contenido del reporte -->
+          <div class="report-layout">
+
+            <!-- Sidebar Navigation del Reporte -->
+            <div class="report-sidebar">
+              <p class="report-nav-header">Vistas del Reporte</p>
+              <button (click)="reportTab=0"
+                class="report-tab-btn"
+                [class.report-tab-btn--active]="reportTab===0">
+                <span class="material-symbols-rounded">bar_chart</span>
+                <span>Resumen</span>
+              </button>
+              <button (click)="reportTab=1"
+                class="report-tab-btn"
+                [class.report-tab-btn--active]="reportTab===1">
+                <span class="material-symbols-rounded">warning</span>
+                <span class="flex-1">Calidad</span>
+                <span class="report-tab-counter">
+                  {{ statsGlobal.missingDescription + statsGlobal.missingImages + statsGlobal.missingVariants + statsGlobal.missingPrice }}
+                </span>
+              </button>
+              <button (click)="reportTab=2"
+                class="report-tab-btn"
+                [class.report-tab-btn--active]="reportTab===2">
+                <span class="material-symbols-rounded">category</span>
+                <span>Por Categoría</span>
+              </button>
+
+              <!-- Mini stats de líneas en el reporte -->
+              <div class="report-lines-mini">
+                <p class="report-nav-header">Distribución</p>
+                <div class="report-line-row">
+                  <span class="report-line-label"><span class="line-dot line-dot--emerald"></span>Plaxtilineas</span>
+                  <span class="report-line-val">{{ statsGlobal.plaxtilineas }}</span>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
-                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Plaxtilineas</p>
-                  </div>
-                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.plaxtilineas }}</p>
-                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.plaxtilineas /
-                    statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                <div class="report-line-row">
+                  <span class="report-line-label"><span class="line-dot line-dot--blue"></span>Espumas</span>
+                  <span class="report-line-val">{{ statsGlobal.espumas }}</span>
                 </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
-                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Espumas</p>
-                  </div>
-                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.espumas }}</p>
-                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.espumas / statsGlobal.total
-                    * 100 | number:'1.0-0') : 0 }}%</p>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
-                  <div class="flex items-center gap-1.5 mb-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span>
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Districol</p>
-                  </div>
-                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.districol }}</p>
-                  <p class="text-xs text-slate-400">{{ statsGlobal.total > 0 ? (statsGlobal.districol /
-                    statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-1">
-                  <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500 mb-1">Completos</p>
-                  <p class="text-2xl font-bold text-slate-900">{{ statsGlobal.completePct }}%</p>
-                  <p class="text-xs text-slate-400">{{ statsGlobal.complete }} prods.</p>
+                <div class="report-line-row">
+                  <span class="report-line-label"><span class="line-dot line-dot--amber"></span>Districol</span>
+                  <span class="report-line-val">{{ statsGlobal.districol }}</span>
                 </div>
               </div>
+            </div>
 
-              <!-- Progress bar completeness -->
-              <div class="bg-slate-50 rounded-2xl p-5 border border-slate-100">
-                <div class="flex items-center justify-between mb-3">
-                  <p class="text-sm font-bold text-slate-700">Completitud del Catálogo</p>
-                  <p class="text-sm font-bold text-violet-600">{{ statsGlobal.completePct }}%</p>
-                </div>
-                <div class="w-full bg-slate-200 rounded-full h-3">
-                  <div
-                    class="h-3 rounded-full bg-gradient-to-r from-violet-500 to-indigo-600 transition-all duration-700"
-                    [style.width.%]="statsGlobal.completePct"></div>
-                </div>
-                <p class="text-xs text-slate-400 mt-2">{{ statsGlobal.complete }} de {{ statsGlobal.total }} productos
-                  tienen descripción, imagen, variantes y precio completos.</p>
-              </div>
+            <!-- Contenido del Reporte -->
+            <div class="report-content-body">
 
-              <!-- Charts Row -->
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
-                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Distribución por Línea de
-                    Negocio</h4>
-                  <div style="height:280px; position:relative;">
-                    <canvas baseChart [data]="lineChartData" [options]="lineChartOptions"
-                      [type]="lineChartType"></canvas>
+              <!-- ===== PESTAÑA 0: RESUMEN GENERAL ===== -->
+              <div *ngIf="reportTab===0" class="report-tab-pane">
+
+                <!-- KPI Strip -->
+                <div class="report-kpi-grid">
+                  <div class="kpi-card kpi-card--dark">
+                    <p class="kpi-label">Total</p>
+                    <p class="kpi-value">{{ statsGlobal.total }}</p>
+                    <p class="kpi-sub">productos</p>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-header"><span class="line-dot line-dot--emerald"></span><p class="kpi-label">Plaxtilineas</p></div>
+                    <p class="kpi-value text-slate-900">{{ statsGlobal.plaxtilineas }}</p>
+                    <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.plaxtilineas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-header"><span class="line-dot line-dot--blue"></span><p class="kpi-label">Espumas</p></div>
+                    <p class="kpi-value text-slate-900">{{ statsGlobal.espumas }}</p>
+                    <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.espumas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                  </div>
+                  <div class="kpi-card">
+                    <div class="kpi-header"><span class="line-dot line-dot--amber"></span><p class="kpi-label">Districol</p></div>
+                    <p class="kpi-value text-slate-900">{{ statsGlobal.districol }}</p>
+                    <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.districol / statsGlobal.total * 100 | number:'1.0-0') : 0 }}%</p>
+                  </div>
+                  <div class="kpi-card">
+                    <p class="kpi-label mb-1">Completitud</p>
+                    <p class="kpi-value text-slate-900">{{ statsGlobal.completePct }}%</p>
+                    <p class="kpi-sub">{{ statsGlobal.complete }} prods.</p>
                   </div>
                 </div>
-                <div class="bg-slate-50 border border-slate-100 rounded-2xl p-6">
-                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Top 10 Categorías con más
-                    Productos</h4>
-                  <div style="height:280px; position:relative;">
-                    <canvas baseChart [data]="categoryChartData" [options]="categoryChartOptions"
-                      [type]="categoryChartType"></canvas>
+
+                <!-- Progress bar completeness -->
+                <div class="completeness-banner">
+                  <div class="completeness-header">
+                    <span class="completeness-title">Salud del Catálogo</span>
+                    <span class="completeness-pct">{{ statsGlobal.completePct }}%</span>
+                  </div>
+                  <div class="completeness-track">
+                    <div class="completeness-bar" [style.width.%]="statsGlobal.completePct"></div>
+                  </div>
+                  <p class="completeness-note">{{ statsGlobal.complete }} de {{ statsGlobal.total }} productos tienen descripción, imagen, variantes y precio completos.</p>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="report-charts-grid">
+                  <div class="chart-container-card">
+                    <h4 class="chart-card-title">Distribución por Línea de Negocio</h4>
+                    <div style="height:260px; position:relative;">
+                      <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+                    </div>
+                  </div>
+                  <div class="chart-container-card">
+                    <h4 class="chart-card-title">Top 10 Categorías con más Productos</h4>
+                    <div style="height:260px; position:relative;">
+                      <canvas baseChart [data]="categoryChartData" [options]="categoryChartOptions" [type]="categoryChartType"></canvas>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-            </div><!-- /Pestaña 0 -->
+              </div><!-- /Pestaña 0 -->
 
-            <!-- ===== PESTAÑA 1: CALIDAD DEL CATÁLOGO ===== -->
-            <div *ngIf="reportTab===1" class="p-8 space-y-6">
+              <!-- ===== PESTAÑA 1: CALIDAD DEL CATÁLOGO ===== -->
+              <div *ngIf="reportTab===1" class="report-tab-pane">
 
-              <!-- Line Filter -->
-              <div class="flex items-center gap-3 flex-wrap">
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Ver por Línea:</p>
-                <button (click)="reportLineFilter=''; onReportLineFilterChange()"
-                  class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
-                  [ngClass]="reportLineFilter==='' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400'">Todas</button>
-                <button (click)="reportLineFilter='Plaxtilineas'; onReportLineFilterChange()"
-                  class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
-                  [ngClass]="reportLineFilter==='Plaxtilineas' ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300'">Plaxtilineas</button>
-                <button (click)="reportLineFilter='Espumas'; onReportLineFilterChange()"
-                  class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
-                  [ngClass]="reportLineFilter==='Espumas' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:border-blue-300'">Espumas</button>
-                <button (click)="reportLineFilter='Districol'; onReportLineFilterChange()"
-                  class="px-4 py-1.5 rounded-full text-xs font-bold border transition-all"
-                  [ngClass]="reportLineFilter==='Districol' ? 'bg-amber-700 text-white border-amber-700' : 'bg-white text-slate-600 border-slate-200 hover:border-amber-300'">Districol</button>
-                <span class="ml-auto text-xs text-slate-400 font-medium">{{ filteredLineStats.total }} productos</span>
-              </div>
+                <!-- Line Filter -->
+                <div class="quality-filter-bar">
+                  <span class="quality-filter-title">Línea:</span>
+                  <button (click)="reportLineFilter=''; onReportLineFilterChange()"
+                    class="quality-pill-btn" [class.is-selected]="reportLineFilter===''">Todas</button>
+                  <button (click)="reportLineFilter='Plaxtilineas'; onReportLineFilterChange()"
+                    class="quality-pill-btn quality-pill-btn--plax" [class.is-selected]="reportLineFilter==='Plaxtilineas'">Plaxtilineas</button>
+                  <button (click)="reportLineFilter='Espumas'; onReportLineFilterChange()"
+                    class="quality-pill-btn quality-pill-btn--espumas" [class.is-selected]="reportLineFilter==='Espumas'">Espumas</button>
+                  <button (click)="reportLineFilter='Districol'; onReportLineFilterChange()"
+                    class="quality-pill-btn quality-pill-btn--districol" [class.is-selected]="reportLineFilter==='Districol'">Districol</button>
+                  <span class="ml-auto text-xs text-slate-400 font-semibold">{{ filteredLineStats.total }} productos</span>
+                </div>
 
-              <!-- Action Cards -->
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <!-- Sin Descripción -->
-                <button (click)="selectActionCard('description')"
-                  class="group text-left p-5 rounded-2xl border-2 transition-all"
-                  [ngClass]="activeActionCard==='description' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
-                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center"
-                    [ngClass]="activeActionCard==='description' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
-                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">description</span>
-                  </div>
-                  <div class="text-3xl font-black mb-1"
-                    [ngClass]="filteredLineStats.missingDesc > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                    {{ filteredLineStats.missingDesc }}
-                  </div>
-                  <div class="text-xs font-bold text-slate-700">Sin Descripción</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Requieren texto descriptivo</div>
-                </button>
+                <!-- Action Cards -->
+                <div class="action-cards-grid">
+                  <!-- Sin Descripción -->
+                  <button (click)="selectActionCard('description')"
+                    class="action-card"
+                    [class.action-card--active]="activeActionCard==='description'">
+                    <div class="action-card-icon action-card-icon--rose">
+                      <span class="material-symbols-rounded">description</span>
+                    </div>
+                    <div class="action-card-val text-rose-500">{{ filteredLineStats.missingDesc }}</div>
+                    <div class="action-card-name">Sin Descripción</div>
+                    <div class="action-card-hint">Requieren texto descriptivo</div>
+                  </button>
 
-                <!-- Sin Imágenes -->
-                <button (click)="selectActionCard('images')"
-                  class="group text-left p-5 rounded-2xl border-2 transition-all"
-                  [ngClass]="activeActionCard==='images' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
-                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center"
-                    [ngClass]="activeActionCard==='images' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
-                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">image</span>
-                  </div>
-                  <div class="text-3xl font-black mb-1"
-                    [ngClass]="filteredLineStats.missingImg > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                    {{ filteredLineStats.missingImg }}
-                  </div>
-                  <div class="text-xs font-bold text-slate-700">Sin Imágenes</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Requieren foto del producto</div>
-                </button>
+                  <!-- Sin Imágenes -->
+                  <button (click)="selectActionCard('images')"
+                    class="action-card"
+                    [class.action-card--active]="activeActionCard==='images'">
+                    <div class="action-card-icon action-card-icon--rose">
+                      <span class="material-symbols-rounded">image</span>
+                    </div>
+                    <div class="action-card-val text-rose-500">{{ filteredLineStats.missingImg }}</div>
+                    <div class="action-card-name">Sin Imágenes</div>
+                    <div class="action-card-hint">Requieren fotografía</div>
+                  </button>
 
-                <!-- Sin Variantes -->
-                <button (click)="selectActionCard('variants')"
-                  class="group text-left p-5 rounded-2xl border-2 transition-all"
-                  [ngClass]="activeActionCard==='variants' ? 'border-amber-500 bg-amber-50 shadow-lg shadow-amber-100' : 'border-slate-200 bg-white hover:border-amber-300 hover:shadow-md'">
-                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center"
-                    [ngClass]="activeActionCard==='variants' ? 'bg-amber-100' : 'bg-slate-100 group-hover:bg-amber-50'">
-                    <span class="material-symbols-rounded text-amber-500" style="font-size:1.2rem">inventory_2</span>
-                  </div>
-                  <div class="text-3xl font-black mb-1"
-                    [ngClass]="filteredLineStats.missingVars > 0 ? 'text-amber-500' : 'text-emerald-500'">
-                    {{ filteredLineStats.missingVars }}
-                  </div>
-                  <div class="text-xs font-bold text-slate-700">Sin Variantes</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Sin tallas, colores o unidades</div>
-                </button>
+                  <!-- Sin Variantes -->
+                  <button (click)="selectActionCard('variants')"
+                    class="action-card"
+                    [class.action-card--active]="activeActionCard==='variants'">
+                    <div class="action-card-icon action-card-icon--amber">
+                      <span class="material-symbols-rounded">inventory_2</span>
+                    </div>
+                    <div class="action-card-val text-amber-500">{{ filteredLineStats.missingVars }}</div>
+                    <div class="action-card-name">Sin Variantes</div>
+                    <div class="action-card-hint">Sin tallas o medidas</div>
+                  </button>
 
-                <!-- Sin Precio -->
-                <button (click)="selectActionCard('price')"
-                  class="group text-left p-5 rounded-2xl border-2 transition-all"
-                  [ngClass]="activeActionCard==='price' ? 'border-rose-500 bg-rose-50 shadow-lg shadow-rose-100' : 'border-slate-200 bg-white hover:border-rose-300 hover:shadow-md'">
-                  <div class="w-10 h-10 rounded-xl mb-3 flex items-center justify-center"
-                    [ngClass]="activeActionCard==='price' ? 'bg-rose-100' : 'bg-slate-100 group-hover:bg-rose-50'">
-                    <span class="material-symbols-rounded text-rose-500" style="font-size:1.2rem">sell</span>
-                  </div>
-                  <div class="text-3xl font-black mb-1"
-                    [ngClass]="filteredLineStats.missingPrice > 0 ? 'text-rose-500' : 'text-emerald-500'">
-                    {{ filteredLineStats.missingPrice }}
-                  </div>
-                  <div class="text-xs font-bold text-slate-700">Sin Precio</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">Variantes con precio en 0</div>
-                </button>
-              </div>
-
-              <!-- Problem Products Table (shown when a card is active) -->
-              <div *ngIf="activeActionCard && problemProducts.length > 0"
-                class="border border-slate-200 rounded-2xl overflow-hidden">
-                <div class="flex items-center justify-between px-5 py-3 bg-slate-50 border-b border-slate-100">
-                  <p class="text-xs font-bold text-slate-700 uppercase tracking-wider">{{ problemProducts.length }}
-                    productos que requieren atención</p>
-                  <button (click)="applyActionFilter()"
-                    class="flex items-center gap-1.5 text-xs font-bold text-violet-600 hover:text-violet-800 transition-colors px-3 py-1.5 bg-violet-50 hover:bg-violet-100 rounded-full">
-                    <span class="material-symbols-rounded" style="font-size:0.9rem">filter_list</span>
-                    Ver en inventario
+                  <!-- Sin Precio -->
+                  <button (click)="selectActionCard('price')"
+                    class="action-card"
+                    [class.action-card--active]="activeActionCard==='price'">
+                    <div class="action-card-icon action-card-icon--rose">
+                      <span class="material-symbols-rounded">sell</span>
+                    </div>
+                    <div class="action-card-val text-rose-500">{{ filteredLineStats.missingPrice }}</div>
+                    <div class="action-card-name">Sin Precio</div>
+                    <div class="action-card-hint">Variantes con precio en 0</div>
                   </button>
                 </div>
-                <div class="divide-y divide-slate-100 max-h-64 overflow-y-auto">
-                  <div *ngFor="let p of problemProducts; trackBy: trackByProductId"
-                    class="flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors">
-                    <div class="flex items-center gap-3">
-                      <div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
-                        <span class="material-symbols-rounded text-slate-400" style="font-size:1rem">inventory_2</span>
+
+                <!-- Problem Products Table -->
+                <div *ngIf="activeActionCard && problemProducts.length > 0" class="problem-table-container">
+                  <div class="problem-table-header">
+                    <p class="problem-table-title">{{ problemProducts.length }} productos que requieren atención</p>
+                    <button (click)="applyActionFilter()" class="problem-filter-apply-btn">
+                      <span class="material-symbols-rounded" style="font-size:0.9rem">filter_list</span>
+                      Ver en inventario
+                    </button>
+                  </div>
+                  <div class="problem-table-list">
+                    <div *ngFor="let p of problemProducts; trackBy: trackByProductId" class="problem-item-row">
+                      <div class="problem-item-info">
+                        <div class="problem-item-icon">
+                          <span class="material-symbols-rounded">inventory_2</span>
+                        </div>
+                        <div>
+                          <p class="problem-item-name">{{ p.name }}</p>
+                          <p class="problem-item-sub">{{ p.category_name || 'Sin categoría' }} · {{ p.category || '—' }}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p class="text-sm font-semibold text-slate-800">{{ p.name }}</p>
-                        <p class="text-[10px] text-slate-400">{{ p.category_name || 'Sin categoría' }} · {{ p.category
-                          || '—' }}</p>
-                      </div>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                      <span class="text-[10px] px-2 py-1 rounded-full font-bold"
-                        [ngClass]="p.category === 'Plaxtilineas' ? 'bg-emerald-100 text-emerald-700' : p.category === 'Espumas' ? 'bg-blue-100 text-blue-700' : p.category === 'Districol' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'">
+                      <span class="brand-tag-mini"
+                        [ngClass]="p.category === 'Plaxtilineas' ? 'brand-tag-mini--plax' : p.category === 'Espumas' ? 'brand-tag-mini--espumas' : p.category === 'Districol' ? 'brand-tag-mini--districol' : ''">
                         {{ p.category || 'Sin línea' }}
                       </span>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div *ngIf="activeActionCard && problemProducts.length === 0" class="text-center py-12">
-                <span class="material-symbols-rounded text-emerald-400 text-5xl">check_circle</span>
-                <p class="text-emerald-600 font-bold mt-2">¡Perfecto! No hay productos con este problema</p>
-              </div>
-
-            </div><!-- /Pestaña 1 -->
-
-            <!-- ===== PESTAÑA 2: ANÁLISIS POR CATEGORÍA ===== -->
-            <div *ngIf="reportTab===2" class="p-8 space-y-6">
-
-              <!-- Category Selector -->
-              <div class="flex items-center gap-4 flex-wrap">
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider shrink-0">Selecciona una
-                  categoría:</p>
-                <div class="relative">
-                  <select [(ngModel)]="reportCategoryFilter"
-                    class="appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 pr-10 outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-100 transition-all cursor-pointer">
-                    <option value="">— Elige una categoría —</option>
-                    <option *ngFor="let name of uniqueCategoryNames" [value]="name">{{ name }}</option>
-                  </select>
-                  <span
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                    style="font-size:1.1rem">expand_more</span>
+                <div *ngIf="activeActionCard && problemProducts.length === 0" class="empty-problems-banner">
+                  <span class="material-symbols-rounded text-emerald-400 text-5xl">check_circle</span>
+                  <p class="text-emerald-600 font-bold mt-2">¡Excelente! No hay productos con esta observación</p>
                 </div>
-              </div>
 
-              <!-- Category KPIs -->
-              <div *ngIf="reportCategoryFilter && categoryAnalysisProducts.length > 0" class="space-y-6">
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                  <div class="bg-indigo-600 text-white rounded-2xl p-5">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-indigo-200">Total</p>
-                    <p class="text-3xl font-bold mt-1">{{ categoryAnalysisProducts.length }}</p>
-                    <p class="text-xs text-indigo-200 mt-1">en {{ reportCategoryFilter }}</p>
-                  </div>
-                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Imagen</p>
-                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('images') }}</p>
-                    <p class="text-xs text-emerald-400 mt-1">productos</p>
-                  </div>
-                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Descripción</p>
-                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('description') }}</p>
-                    <p class="text-xs text-emerald-400 mt-1">productos</p>
-                  </div>
-                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Variantes</p>
-                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('variants') }}</p>
-                    <p class="text-xs text-emerald-400 mt-1">productos</p>
-                  </div>
-                  <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-5">
-                    <p class="text-[10px] font-semibold uppercase tracking-widest text-emerald-500">Con Precio</p>
-                    <p class="text-3xl font-bold text-emerald-700 mt-1">{{ getCategoryCount('price') }}</p>
-                    <p class="text-xs text-emerald-400 mt-1">productos</p>
+              </div><!-- /Pestaña 1 -->
+
+              <!-- ===== PESTAÑA 2: ANÁLISIS POR CATEGORÍA ===== -->
+              <div *ngIf="reportTab===2" class="report-tab-pane">
+
+                <!-- Selector -->
+                <div class="category-filter-select-row">
+                  <p class="select-label">Selecciona una categoría:</p>
+                  <div class="select-wrapper" style="max-width: 320px;">
+                    <select [(ngModel)]="reportCategoryFilter" class="filter-select">
+                      <option value="">— Elige una categoría —</option>
+                      <option *ngFor="let name of uniqueCategoryNames" [value]="name">{{ name }}</option>
+                    </select>
+                    <span class="material-symbols-rounded select-arrow">expand_more</span>
                   </div>
                 </div>
 
-                <!-- Products Health Table -->
-                <div class="border border-slate-200 rounded-2xl overflow-hidden">
-                  <div class="px-5 py-3 bg-slate-50 border-b border-slate-100">
-                    <p class="text-xs font-bold text-slate-600 uppercase tracking-wider">Productos de esta categoría</p>
+                <!-- KPIs de Categoría -->
+                <div *ngIf="reportCategoryFilter && categoryAnalysisProducts.length > 0" class="category-analysis-stack">
+                  <div class="category-analysis-kpis">
+                    <div class="cat-kpi cat-kpi--primary">
+                      <p class="cat-kpi-label">Total</p>
+                      <p class="cat-kpi-val">{{ categoryAnalysisProducts.length }}</p>
+                      <p class="cat-kpi-sub">en {{ reportCategoryFilter }}</p>
+                    </div>
+                    <div class="cat-kpi">
+                      <p class="cat-kpi-label">Con Imagen</p>
+                      <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('images') }}</p>
+                      <p class="cat-kpi-sub">productos</p>
+                    </div>
+                    <div class="cat-kpi">
+                      <p class="cat-kpi-label">Con Descripción</p>
+                      <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('description') }}</p>
+                      <p class="cat-kpi-sub">productos</p>
+                    </div>
+                    <div class="cat-kpi">
+                      <p class="cat-kpi-label">Con Variantes</p>
+                      <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('variants') }}</p>
+                      <p class="cat-kpi-sub">productos</p>
+                    </div>
+                    <div class="cat-kpi">
+                      <p class="cat-kpi-label">Con Precio</p>
+                      <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('price') }}</p>
+                      <p class="cat-kpi-sub">productos</p>
+                    </div>
                   </div>
-                  <div class="divide-y divide-slate-100 max-h-80 overflow-y-auto">
-                    <div *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId"
-                      class="flex items-center justify-between px-5 py-3 hover:bg-slate-50 transition-colors">
-                      <div>
-                        <p class="text-sm font-semibold text-slate-800">{{ p.name }}</p>
-                        <p class="text-[10px] text-slate-400">{{ p.category || '—' }}</p>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <!-- Health indicators -->
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
-                          [ngClass]="p.description && p.description.trim() ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
-                          title="Descripción">
-                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.description &&
-                            p.description.trim() ? 'check' : 'close' }}</span>
-                        </span>
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
-                          [ngClass]="p.images && p.images.length > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
-                          title="Imagen">
-                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.images &&
-                            p.images.length > 0 ? 'check' : 'close' }}</span>
-                        </span>
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
-                          [ngClass]="p.variants && p.variants.length > 0 ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'"
-                          title="Variantes">
-                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.variants &&
-                            p.variants.length > 0 ? 'check' : 'close' }}</span>
-                        </span>
-                        <span class="w-6 h-6 rounded-full flex items-center justify-center"
-                          [ngClass]="hasValidPrice(p) ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'"
-                          title="Precio">
-                          <span class="material-symbols-rounded" style="font-size:0.85rem">{{ hasValidPrice(p) ? 'check'
-                            : 'close' }}</span>
-                        </span>
-                        <span class="text-[9px] text-slate-400 hidden md:flex gap-0.5 ml-1">
-                          <span title="Desc">D</span><span title="Img">I</span><span title="Var">V</span><span
-                            title="Prc">P</span>
-                        </span>
+
+                  <!-- Lista detallada -->
+                  <div class="problem-table-container">
+                    <div class="problem-table-header">
+                      <p class="problem-table-title">Productos de esta categoría</p>
+                    </div>
+                    <div class="problem-table-list" style="max-height: 320px;">
+                      <div *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId" class="problem-item-row">
+                        <div>
+                          <p class="problem-item-name">{{ p.name }}</p>
+                          <p class="problem-item-sub">{{ p.category || '—' }}</p>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                          <span class="health-chip" [class.health-chip--ok]="p.description && p.description.trim()" title="Descripción">
+                            <span class="material-symbols-rounded">{{ p.description && p.description.trim() ? 'check' : 'close' }}</span>
+                          </span>
+                          <span class="health-chip" [class.health-chip--ok]="p.images && p.images.length > 0" title="Imagen">
+                            <span class="material-symbols-rounded">{{ p.images && p.images.length > 0 ? 'check' : 'close' }}</span>
+                          </span>
+                          <span class="health-chip" [class.health-chip--ok]="p.variants && p.variants.length > 0" title="Variantes">
+                            <span class="material-symbols-rounded">{{ p.variants && p.variants.length > 0 ? 'check' : 'close' }}</span>
+                          </span>
+                          <span class="health-chip" [class.health-chip--ok]="hasValidPrice(p)" title="Precio">
+                            <span class="material-symbols-rounded">{{ hasValidPrice(p) ? 'check' : 'close' }}</span>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div *ngIf="!reportCategoryFilter" class="flex flex-col items-center justify-center py-24 text-center">
-                <span class="material-symbols-rounded text-slate-200 text-8xl mb-4">category</span>
-                <p class="text-slate-400 font-semibold">Selecciona una categoría para ver su análisis detallado</p>
-              </div>
+                <div *ngIf="!reportCategoryFilter" class="empty-problems-banner" style="padding: 60px 20px;">
+                  <span class="material-symbols-rounded text-slate-300 text-6xl mb-2">category</span>
+                  <p class="text-slate-500 font-semibold">Selecciona una categoría para ver su análisis detallado</p>
+                </div>
 
-            </div><!-- /Pestaña 2 -->
+              </div><!-- /Pestaña 2 -->
 
-          </div><!-- /Scrollable Content -->
+            </div><!-- /report-content-body -->
 
-        </div><!-- /Sidebar + Content flex -->
+          </div><!-- /report-layout -->
 
-      </div><!-- /Reporte Analítico Inline -->
+        </div><!-- /Reporte Analítico Inline -->
 
+        <!-- ── CONTROLS CARD: TABS DE MARCA + FILTROS ── -->
+        <section class="prod-controls-card">
 
-
-      <!-- Search and Filters Section -->
-      <section class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
-        <div class="flex flex-col lg:flex-row items-end gap-6">
-          <div class="flex-1 space-y-2 w-full">
-            <label class="text-xs font-semibold text-slate-600 block px-1">Buscar Producto</label>
-            <div class="relative group">
-              <span
-                class="absolute left-4 inset-y-0 flex items-center text-slate-400 group-focus-within:text-slate-700 transition-colors">
-                <span class="material-symbols-rounded">search</span>
-              </span>
-              <input type="text" [value]="searchTerm" (input)="onSearchInput($event)"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-12 pr-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-                placeholder="Nombre, material o marca...">
-            </div>
+          <!-- Brand Tabs Strip -->
+          <div class="brand-tabs-strip">
+            <button (click)="onBrandChange('')" class="brand-tab-pill" [class.is-active]="filterBrand === ''">
+              <span>Todos los Productos</span>
+              <span class="tab-badge">{{ products.length }}</span>
+            </button>
+            <button (click)="onBrandChange('Plaxtilineas')" class="brand-tab-pill brand-tab-pill--plax" [class.is-active]="filterBrand === 'Plaxtilineas'">
+              <span class="brand-dot dot--plax"></span>
+              <span>Plaxtilineas</span>
+              <span class="tab-badge">{{ statsGlobal.plaxtilineas }}</span>
+            </button>
+            <button (click)="onBrandChange('Espumas')" class="brand-tab-pill brand-tab-pill--espumas" [class.is-active]="filterBrand === 'Espumas'">
+              <span class="brand-dot dot--espumas"></span>
+              <span>Espumas</span>
+              <span class="tab-badge">{{ statsGlobal.espumas }}</span>
+            </button>
+            <button (click)="onBrandChange('Districol')" class="brand-tab-pill brand-tab-pill--districol" [class.is-active]="filterBrand === 'Districol'">
+              <span class="brand-dot dot--districol"></span>
+              <span>Districol</span>
+              <span class="tab-badge">{{ statsGlobal.districol }}</span>
+            </button>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:w-auto">
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-600 block px-1">Categoría</label>
-              <div class="relative">
-                <select [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()"
-                  class="w-full lg:w-48 xl:w-56 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
-                  <option value="">Todas las líneas</option>
-                  <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat.name">{{ cat.name }}
-                  </option>
-                </select>
-                <span
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                  style="font-size:1.2rem">expand_more</span>
-              </div>
+          <!-- Filtros de búsqueda (1 fila integrada) -->
+          <div class="filter-inputs-row">
+            <div class="search-input-box">
+              <span class="material-symbols-rounded search-icon">search</span>
+              <input type="text" [value]="searchTerm" (input)="onSearchInput($event)"
+                placeholder="Buscar por nombre, material o marca..."
+                class="search-field">
             </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-600 block px-1">Estado</label>
-              <div class="relative">
-                <select [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()"
-                  class="w-full lg:w-48 xl:w-56 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
+
+            <div class="filter-dropdown-group">
+              <div class="select-wrapper">
+                <select [(ngModel)]="filterCategory" (ngModelChange)="onCategoryChange()" class="filter-select">
+                  <option value="">Todas las líneas</option>
+                  <option *ngFor="let cat of categories; trackBy: trackByIndex" [value]="cat.name">{{ cat.name }}</option>
+                </select>
+                <span class="material-symbols-rounded select-arrow">expand_more</span>
+              </div>
+
+              <div class="select-wrapper">
+                <select [(ngModel)]="filterStatus" (ngModelChange)="onStatusChange()" class="filter-select">
                   <option value="">Cualquier estado</option>
                   <option value="new">Nuevo Lanzamiento</option>
                   <option value="featured">Destacado Premium</option>
                 </select>
-                <span
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                  style="font-size:1.2rem">expand_more</span>
+                <span class="material-symbols-rounded select-arrow">expand_more</span>
               </div>
-            </div>
-            <div class="space-y-2">
-              <label class="text-xs font-semibold text-slate-600 block px-1">Ordenar por</label>
-              <div class="relative">
-                <select [(ngModel)]="sortOrder" (ngModelChange)="onSortChange()"
-                  class="w-full lg:w-48 xl:w-56 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
+
+              <div class="select-wrapper">
+                <select [(ngModel)]="sortOrder" (ngModelChange)="onSortChange()" class="filter-select">
                   <option value="newest">Más recientes</option>
                   <option value="oldest">Más antiguos</option>
                   <option value="price_asc">Precio: Menor a Mayor</option>
@@ -573,513 +667,528 @@
                   <option value="az">Alfabético (A-Z)</option>
                   <option value="za">Alfabético (Z-A)</option>
                 </select>
-                <span
-                  class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                  style="font-size:1.2rem">expand_more</span>
+                <span class="material-symbols-rounded select-arrow">expand_more</span>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Elegant Inventory List Container -->
-      <section class="space-y-4">
+        </section>
 
-        <!-- List Header (Desktop Only) -->
-        <div
-          class="hidden md:flex items-center px-8 py-4 bg-white border border-slate-200 rounded-2xl shadow-sm text-xs font-bold text-slate-400 uppercase tracking-widest gap-6">
-          <div class="w-16">Media</div>
-          <div class="flex-1">Producto / Info</div>
-          <div class="w-48 text-center">Detalles</div>
-          <div class="w-32 text-right">Marca</div>
-          <div class="w-32 text-center">Acciones</div>
-        </div>
+        <!-- ── TABLA / LISTADO DE PRODUCTOS ── -->
+        <section class="prod-table-section">
 
-        <!-- Scrollable List of Cards -->
-        <div class="space-y-3">
+          <!-- Table Header Desktop -->
+          <div class="prod-table-head">
+            <div class="col-media">Imagen</div>
+            <div class="col-main">Producto / Descripción</div>
+            <div class="col-specs">Especificaciones</div>
+            <div class="col-brand">Marca / Línea</div>
+            <div class="col-actions">Acciones</div>
+          </div>
+
           <!-- Empty State -->
-          <div *ngIf="totalFilteredProducts === 0"
-            class="py-24 text-center bg-white border border-slate-200 rounded-[2rem] shadow-sm animate-fade-in">
-            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span class="material-symbols-rounded text-slate-300" style="font-size:2.5rem">inventory_2</span>
+          <div *ngIf="totalFilteredProducts === 0" class="prod-empty-state">
+            <div class="empty-icon-box">
+              <span class="material-symbols-rounded">inventory_2</span>
             </div>
-            <p class="text-sm font-semibold text-slate-600">Sin resultados en inventario</p>
-            <p class="text-xs text-slate-400 mt-1">Prueba con otros filtros o términos de búsqueda.</p>
+            <p class="empty-title">Sin resultados en inventario</p>
+            <p class="empty-sub">Prueba cambiando los filtros o el término de búsqueda.</p>
           </div>
 
-          <!-- Product Card Item -->
-          <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId"
-            class="group bg-white border border-slate-200 rounded-[1.5rem] p-4 md:p-6 flex flex-col md:flex-row items-center gap-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
+          <!-- Rows List -->
+          <div class="prod-rows-list">
+            <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId" class="prod-row-card">
 
-            <!-- Media Block -->
-            <div
-              class="w-20 h-20 md:w-20 md:h-20 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-              <img *ngIf="product.images && product.images.length > 0; else noImg" [src]="product.images[0].url"
-                [alt]="product.name"
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-              <ng-template #noImg>
-                <span class="material-symbols-rounded text-slate-200" style="font-size: 1.8rem;">image</span>
-              </ng-template>
-            </div>
-
-            <!-- Header/Title Block -->
-            <div class="flex-1 min-w-0 text-center md:text-left">
-              <div class="inline-flex items-center gap-2 mb-1">
-                <span class="block text-lg font-bold text-slate-900 truncate tracking-tight">{{ product.name }}</span>
-                <span *ngIf="product.isNew"
-                  class="px-2 py-0.5 bg-slate-900 text-[9px] text-white font-bold rounded-full uppercase">Nuevo</span>
+              <!-- Columna Imagen -->
+              <div class="row-media-box">
+                <img *ngIf="product.images && product.images.length > 0; else noImg" [src]="product.images[0].url"
+                  [alt]="product.name"
+                  class="row-product-img">
+                <ng-template #noImg>
+                  <span class="material-symbols-rounded row-no-img-icon">image</span>
+                </ng-template>
               </div>
-              <div class="flex items-center justify-center md:justify-start gap-3">
-                <p class="text-xs font-semibold text-slate-400 uppercase tracking-widest">{{ product.category }}</p>
-                <span *ngIf="getMinPrice(product) > 0" class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                <p *ngIf="getMinPrice(product) > 0" class="text-sm font-bold text-slate-900">
-                  <span class="text-[10px] text-slate-400 font-medium mr-0.5">Desde</span>
-                  {{ getMinPrice(product) | currency:'USD':'symbol':'1.0-0' }}
-                </p>
+
+              <!-- Columna Producto / Datos -->
+              <div class="row-main-col">
+                <div class="row-title-wrap">
+                  <span class="row-product-title">{{ product.name }}</span>
+                  <span *ngIf="product.isNew" class="badge-new-pill">Nuevo</span>
+                </div>
+                <div class="row-meta-wrap">
+                  <span class="row-category-text">{{ product.category }}</span>
+                  <span *ngIf="getMinPrice(product) > 0" class="meta-dot">·</span>
+                  <span *ngIf="getMinPrice(product) > 0" class="row-price-text">
+                    <span class="price-from">Desde</span>
+                    {{ getMinPrice(product) | currency:'USD':'symbol':'1.0-0' }}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <!-- Details Block -->
-            <div class="w-full md:w-48 flex flex-wrap justify-center gap-2">
-              <span *ngIf="product.material"
-                class="px-3 py-1 bg-slate-50 border border-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-xl">
-                {{ product.material }}
-              </span>
-              <span *ngIf="product.gramaje"
-                class="px-3 py-1 bg-slate-50 border border-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-xl">
-                {{ product.gramaje }}
-              </span>
-              <span *ngIf="!product.material && !product.gramaje" class="text-[10px] text-slate-300 italic">Sin
-                especificaciones</span>
-            </div>
+              <!-- Columna Especificaciones -->
+              <div class="row-specs-col">
+                <span *ngIf="product.material" class="spec-pill">{{ product.material }}</span>
+                <span *ngIf="product.gramaje" class="spec-pill">{{ product.gramaje }}</span>
+                <span *ngIf="!product.material && !product.gramaje" class="spec-empty">—</span>
+              </div>
 
-            <!-- Brand Block -->
-            <div class="w-full md:w-32 text-center md:text-right">
-              <span class="text-xs font-bold text-slate-500 bg-slate-100/50 px-3 py-1 rounded-lg">{{ product.marca ||
-                'Genérico' }}</span>
-            </div>
+              <!-- Columna Marca / Línea -->
+              <div class="row-brand-col">
+                <span class="brand-tag-pill"
+                  [ngClass]="product.category === 'Plaxtilineas' ? 'brand-tag--plax' : product.category === 'Espumas' ? 'brand-tag--espumas' : product.category === 'Districol' ? 'brand-tag--districol' : ''">
+                  {{ product.marca || product.category || 'Genérico' }}
+                </span>
+              </div>
 
-            <!-- Action Block -->
-            <div
-              class="w-full md:w-32 flex items-center justify-center gap-2 pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
-              <button (click)="editProduct(product)" title="Editar"
-                class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-all">
-                <span class="material-symbols-rounded" style="font-size:1.2rem">edit</span>
-              </button>
-              <button (click)="deleteProduct(product)" title="Eliminar"
-                class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all">
-                <span class="material-symbols-rounded" style="font-size:1.2rem">delete</span>
-              </button>
+              <!-- Columna Acciones -->
+              <div class="row-actions-col">
+                <button (click)="editProduct(product)" class="row-action-btn" title="Editar producto">
+                  <span class="material-symbols-rounded">edit</span>
+                </button>
+                <button (click)="deleteProduct(product)" class="row-action-btn row-action-btn--delete" title="Eliminar producto">
+                  <span class="material-symbols-rounded">delete</span>
+                </button>
+              </div>
+
             </div>
           </div>
-        </div>
 
-        <!-- Elegant Pagination -->
-        <div *ngIf="totalPages > 1"
-          class="flex flex-col md:flex-row items-center justify-between gap-6 px-8 py-8 mt-4 bg-white border border-slate-200 rounded-[2rem] shadow-sm">
-          <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">
-            Página {{ currentPage }} <span class="text-slate-200 mx-2">/</span> {{ totalPages }}
-          </div>
+          <!-- Paginación -->
+          <div *ngIf="totalPages > 1" class="prod-pagination-card">
+            <div class="pagination-info">
+              Página {{ currentPage }} <span class="pagination-slash">/</span> {{ totalPages }}
+              <span class="pagination-total-items">({{ totalFilteredProducts }} items)</span>
+            </div>
 
-          <div class="flex items-center gap-2">
-            <button (click)="prevPage()" [disabled]="currentPage === 1"
-              class="w-12 h-12 border border-slate-200 bg-white rounded-2xl flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-20 transition-all">
-              <span class="material-symbols-rounded">chevron_left</span>
-            </button>
+            <div class="pagination-controls">
+              <button (click)="prevPage()" [disabled]="currentPage === 1" class="pagination-step-btn" title="Página anterior">
+                <span class="material-symbols-rounded">chevron_left</span>
+              </button>
 
-            <div class="flex gap-2">
-              <button *ngFor="let page of pageNumbers" (click)="goToPage(page)"
-                [class.bg-slate-900]="page === currentPage" [class.text-white]="page === currentPage"
-                [class.border-slate-900]="page === currentPage"
-                class="w-12 h-12 border border-slate-200 bg-white text-slate-600 rounded-2xl text-xs font-bold transition-all hover:border-slate-400">
-                {{ page }}
+              <div class="pagination-numbers">
+                <button *ngFor="let page of pageNumbers" (click)="goToPage(page)"
+                  class="pagination-num-btn"
+                  [class.is-active]="page === currentPage">
+                  {{ page }}
+                </button>
+              </div>
+
+              <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="pagination-step-btn" title="Página siguiente">
+                <span class="material-symbols-rounded">chevron_right</span>
               </button>
             </div>
 
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages"
-              class="w-12 h-12 border border-slate-200 bg-white rounded-2xl flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:border-slate-300 disabled:opacity-20 transition-all">
-              <span class="material-symbols-rounded">chevron_right</span>
+            <button (click)="loadProducts()" class="pagination-refresh-btn">
+              <span class="material-symbols-rounded">sync</span>
+              <span>Actualizar</span>
             </button>
           </div>
 
-          <button (click)="loadProducts()"
-            class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] hover:text-slate-900 transition-colors">Actualizar
-            Datos</button>
-        </div>
-      </section>
+        </section>
 
-    </div>
-    }
-  </main>
+      </div>
+      }
+
+    </main>
+
+  </div><!-- /dash-content -->
 
   <!-- =========================================================================
-       MODAL: CREAR / EDITAR
+       MODAL: CREAR / EDITAR PRODUCTO (MODERNO & ULTRA RÁPIDO)
        ========================================================================= -->
-  <div *ngIf="showForm"
-    class="fixed inset-0 z-50 flex justify-center items-start md:items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 md:p-8 animate-fade-in">
-    <div class="bg-white rounded-3xl w-full max-w-4xl shadow-2xl relative overflow-hidden flex flex-col"
-      style="max-height: 92vh;">
+  <div *ngIf="showForm" class="prod-modal-overlay modal-fade-fast" (click)="$event.target === $event.currentTarget && cancelEdit()">
+    <div class="prod-modal-shell modal-scale-fast" role="dialog" aria-modal="true">
 
       <!-- Modal Header -->
-      <div class="px-8 py-6 flex items-center justify-between border-b border-slate-100 shrink-0">
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900">{{ editingProduct ? 'Actualizar Producto' : 'Nuevo Producto' }}
-          </h2>
-          <p class="text-xs font-medium text-slate-500 mt-1">Completa los datos del registro en el catálogo</p>
+      <div class="prod-modal-header">
+        <div class="modal-header-left">
+          <div class="modal-header-icon" [ngClass]="editingProduct ? 'modal-header-icon--edit' : 'modal-header-icon--new'">
+            <span class="material-symbols-rounded">
+              {{ editingProduct ? 'edit_note' : 'add_circle' }}
+            </span>
+          </div>
+          <div>
+            <div class="modal-tag-row">
+              <span class="modal-mode-badge" [ngClass]="editingProduct ? 'modal-mode-badge--edit' : 'modal-mode-badge--new'">
+                {{ editingProduct ? 'Modo Edición' : 'Nuevo Registro' }}
+              </span>
+              <span *ngIf="editingProduct && editingProduct.category" class="modal-line-badge"
+                [ngClass]="editingProduct.category === 'Plaxtilineas' ? 'line-badge--plax' : editingProduct.category === 'Espumas' ? 'line-badge--espumas' : 'line-badge--districol'">
+                {{ editingProduct.category }}
+              </span>
+            </div>
+            <h2 class="modal-headline">
+              {{ editingProduct ? (editingProduct.name || 'Editar Producto') : 'Crear Nuevo Producto' }}
+            </h2>
+          </div>
         </div>
-        <button (click)="cancelEdit()"
-          class="w-10 h-10 flex items-center justify-center bg-slate-100 text-slate-500 rounded-full hover:bg-slate-200 transition-colors">
+
+        <button type="button" (click)="cancelEdit()" class="modal-close-icon-btn" title="Cerrar modal">
           <span class="material-symbols-rounded">close</span>
         </button>
       </div>
 
-      <!-- Modal Body -->
-      <div class="overflow-y-auto p-8 flex-1">
-        <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-10">
+      <!-- Segmented Tab Navigation -->
+      <div class="modal-tabs-bar">
+        <button type="button" (click)="setModalTab('general')" class="modal-tab-pill" [class.is-active]="activeModalTab === 'general'">
+          <span class="material-symbols-rounded">tune</span>
+          <span>Ficha Técnica</span>
+        </button>
 
-          <!-- Información General -->
-          <div class="space-y-6">
-            <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                <span class="material-symbols-rounded text-slate-600" style="font-size: 1rem;">info</span>
+        <button type="button" (click)="setModalTab('variants')" class="modal-tab-pill" [class.is-active]="activeModalTab === 'variants'">
+          <span class="material-symbols-rounded">sell</span>
+          <span>Variantes & Precios</span>
+          <span class="tab-count-badge" *ngIf="variantsArray.length > 0">{{ variantsArray.length }}</span>
+        </button>
+
+        <button type="button" (click)="setModalTab('media')" class="modal-tab-pill" [class.is-active]="activeModalTab === 'media'">
+          <span class="material-symbols-rounded">photo_library</span>
+          <span>Fotos & Portada</span>
+          <span class="tab-count-badge" *ngIf="(imagesArray.length + selectedFiles.length) > 0">
+            {{ imagesArray.length + selectedFiles.length }}
+          </span>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="prod-modal-body">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-form-stack" id="productEditForm">
+
+          <!-- ══════════════════════════════════════════════
+               TAB 1: FICHA TÉCNICA & DATOS GENERALES
+               ══════════════════════════════════════════════ -->
+          <div [hidden]="activeModalTab !== 'general'" class="modal-tab-content">
+            
+            <!-- BLOQUE 1: DATOS PRINCIPALES -->
+            <div class="modal-card-group">
+              <div class="modal-group-title">
+                <span class="material-symbols-rounded group-icon">info</span>
+                <span>Ficha Técnica Principal</span>
               </div>
-              <h3 class="text-sm font-bold text-slate-800">Información General</h3>
-            </div>
 
-            <div>
-              <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Nombre Comercial *</label>
-              <input type="text" formControlName="name"
-                [class.border-red-500]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-                placeholder="Ej: Plastilina Pro Negra">
-              <p *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched"
-                class="text-[10px] text-red-500 mt-1 px-1">El nombre es obligatorio (mín. 3 caracteres).</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
-              <div class="flex flex-col justify-end">
-                <div class="mb-2 flex items-center h-[28px]">
-                  <label class="text-xs font-semibold text-slate-600 block px-1">Línea de Negocio *</label>
+              <div class="modal-inputs-grid">
+                <!-- Nombre Comercial (Full width) -->
+                <div class="form-field-span-full">
+                  <label class="modal-field-label">Nombre Comercial <span class="required-star">*</span></label>
+                  <input type="text" formControlName="name"
+                    [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+                    class="modal-input"
+                    placeholder="Ej: Plastilina Profesional Moldeable Negra">
+                  <p *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="field-error-msg">
+                    El nombre es obligatorio (mínimo 3 caracteres).
+                  </p>
                 </div>
-                <div class="relative">
-                  <select formControlName="category" (change)="onLineChange($event)"
-                    [class.border-red-500]="productForm.get('category')?.invalid && productForm.get('category')?.touched"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
-                    <option value="">Selecciona línea</option>
-                    <option value="Plaxtilineas">Plaxtilineas</option>
-                    <option value="Espumas">Espumas</option>
-                    <option value="Districol">Districol</option>
-                  </select>
-                  <p *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched"
-                    class="text-[10px] text-red-500 mt-1 px-1">Selecciona una línea.</p>
-                  <span
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                    style="font-size:1.2rem">expand_more</span>
-                </div>
-              </div>
-              <div class="flex flex-col justify-end">
-                <div class="flex items-center justify-between mb-2 h-[28px]">
-                  <label class="text-xs font-semibold text-slate-600 block px-1">Categoría *</label>
-                  <button type="button" (click)="suggestAiCategory()" [disabled]="isSuggestingCategory"
-                    class="text-[10px] font-bold text-violet-600 hover:text-violet-700 flex items-center gap-1 px-2 py-1 bg-violet-50 hover:bg-violet-100 rounded-lg transition-colors disabled:opacity-50">
-                    <span class="material-symbols-rounded text-[14px]" [class.animate-spin]="isSuggestingCategory">
-                      {{ isSuggestingCategory ? 'refresh' : 'auto_awesome' }}
-                    </span>
-                    {{ isSuggestingCategory ? 'Analizando...' : 'Auto-clasificar' }}
-                  </button>
-                </div>
-                <div class="relative">
-                  <select formControlName="category_id" (change)="onCategorySelectChange($event)"
-                    [class.border-red-500]="productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
-                    <option value="">Selecciona categoría</option>
-                    <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-                  </select>
-                  <p *ngIf="productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched"
-                    class="text-[10px] text-red-500 mt-1 px-1">Selecciona una categoría.</p>
-                  <span
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                    style="font-size:1.2rem">expand_more</span>
-                </div>
-              </div>
-              <div class="flex flex-col justify-end">
-                <div class="mb-2 flex items-center h-[28px]">
-                  <label class="text-xs font-semibold text-slate-600 block px-1">Subcategoría</label>
-                </div>
-                <div class="relative">
-                  <select formControlName="subcategory_id"
-                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-800 outline-none appearance-none cursor-pointer focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all">
-                    <option value="">Selecciona subcategoría</option>
-                    <option *ngFor="let sub of subcategories" [value]="sub.id">{{ sub.name }}</option>
-                  </select>
-                  <span
-                    class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none material-symbols-rounded"
-                    style="font-size:1.2rem">expand_more</span>
-                </div>
-              </div>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Marca / Fabricante</label>
-                <input type="text" formControlName="marca"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-                  placeholder="Ej: Districol">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Material / Composición</label>
-                <input type="text" formControlName="material"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-                  placeholder="Ej: Plástico PP, Espuma">
-              </div>
-              <div>
-                <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Gramaje / Peso</label>
-                <input type="text" formControlName="gramaje"
-                  class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-                  placeholder="Ej: 500g, 20 micron">
-              </div>
-            </div>
-
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-semibold text-slate-600 block px-1">Descripción Técnica *</label>
-                <button type="button" (click)="generateAiDescription()" [disabled]="isGeneratingDescription"
-                  class="text-[10px] font-bold text-violet-600 hover:text-violet-700 flex items-center gap-1 px-2 py-1 bg-violet-50 hover:bg-violet-100 rounded-lg transition-colors disabled:opacity-50">
-                  <span class="material-symbols-rounded text-[14px]" [class.animate-spin]="isGeneratingDescription">
-                    {{ isGeneratingDescription ? 'refresh' : 'auto_awesome' }}
-                  </span>
-                  {{ isGeneratingDescription ? 'Generando...' : 'Generar con IA' }}
-                </button>
-              </div>
-              <textarea formControlName="description" rows="3"
-                [class.border-red-500]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
-                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none placeholder:text-slate-400 focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all resize-none"
-                placeholder="Detalles de composición, uso y características..."></textarea>
-              <p *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched"
-                class="text-[10px] text-red-500 mt-1 px-1">La descripción es obligatoria (mín. 3 caracteres).</p>
-            </div>
-          </div>
-
-          <!-- Etiquetas -->
-          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6">
-            <p class="text-xs font-semibold text-slate-700 mb-4">Etiquetas y Visibilidad</p>
-            <div class="flex flex-wrap gap-6">
-              <label class="flex items-center gap-3 cursor-pointer select-none group">
-                <input type="checkbox" formControlName="isNew"
-                  class="w-5 h-5 border border-slate-300 rounded accent-slate-800 cursor-pointer">
-                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Nuevo
-                  Lanzamiento</span>
-              </label>
-              <label class="flex items-center gap-3 cursor-pointer select-none group">
-                <input type="checkbox" formControlName="isFeatured"
-                  class="w-5 h-5 border border-slate-300 rounded accent-slate-800 cursor-pointer">
-                <span class="text-sm font-medium text-slate-600 group-hover:text-slate-900 transition-colors">Destacar
-                  en Inicio</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Personalización y Color -->
-          <div class="space-y-6">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                  <span class="material-symbols-rounded text-slate-600" style="font-size: 1rem;">palette</span>
-                </div>
-                <h3 class="text-sm font-bold text-slate-800">Colores Disponibles</h3>
-              </div>
-              <button type="button" (click)="addColor()"
-                class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors">
-                + Agregar Color
-              </button>
-            </div>
-
-            <div formArrayName="colors" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div *ngFor="let colorCtrl of colorsArray.controls; let i = index" class="relative group animate-fade-in">
-                <input [formControlName]="i" type="text" placeholder="Ej: Azul"
-                  class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-100 transition-all">
-                <button type="button" (click)="removeColor(i)"
-                  class="absolute -right-2 -top-2 w-6 h-6 bg-white border border-slate-200 text-slate-400 rounded-full hover:text-red-600 hover:border-red-200 flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all">
-                  <span class="material-symbols-rounded" style="font-size:1rem">close</span>
-                </button>
-              </div>
-            </div>
-            <p *ngIf="colorsArray.length === 0" class="text-xs text-slate-400 italic px-1">No se han definido colores
-              para este producto.</p>
-          </div>
-
-          <!-- Variantes y Precios -->
-          <div class="space-y-6">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                  <span class="material-symbols-rounded text-slate-600" style="font-size: 1rem;">sell</span>
-                </div>
-                <h3 class="text-sm font-bold text-slate-800">Variantes y Precios</h3>
-              </div>
-              <button type="button" (click)="addVariant()"
-                class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg transition-colors">
-                + Agregar Variante
-              </button>
-            </div>
-
-            <div formArrayName="variants" class="space-y-3">
-              <div *ngFor="let varGroup of variantsArray.controls; let i = index" [formGroupName]="i"
-                class="grid grid-cols-12 gap-3 items-center animate-fade-in bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                <div class="col-span-12 md:col-span-5">
-                  <input formControlName="name" placeholder="Nombre (Ej: Paquete x12)"
-                    class="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-slate-400 transition-all">
-                </div>
-                <div class="col-span-8 md:col-span-4">
-                  <div class="relative">
-                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
-                    <input formControlName="price" type="number" placeholder="Precio"
-                      class="w-full bg-white border border-slate-200 rounded-xl pl-7 pr-4 py-2 text-sm outline-none focus:border-slate-400 transition-all text-right font-bold text-slate-700">
+                <!-- Línea de Negocio -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Línea de Negocio <span class="required-star">*</span></label>
+                  <div class="modal-select-wrapper">
+                    <select formControlName="category" (change)="onLineChange($event)"
+                      [class.is-invalid]="productForm.get('category')?.invalid && productForm.get('category')?.touched"
+                      class="modal-select">
+                      <option value="">Selecciona línea</option>
+                      <option value="Plaxtilineas">Plaxtilineas</option>
+                      <option value="Espumas">Espumas y Plásticos</option>
+                      <option value="Districol">Districol</option>
+                    </select>
+                    <span class="material-symbols-rounded select-caret">expand_more</span>
                   </div>
-                </div>
-                <div class="col-span-2 md:col-span-1 flex justify-center">
-                  <label class="cursor-pointer group" title="Disponible">
-                    <input type="checkbox" formControlName="available" class="hidden">
-                    <span class="material-symbols-rounded transition-colors"
-                      [ngClass]="varGroup.get('available')?.value ? 'text-green-500' : 'text-slate-300'">
-                      {{ varGroup.get('available')?.value ? 'check_circle' : 'cancel' }}
-                    </span>
-                  </label>
-                </div>
-                <div class="col-span-2 md:col-span-2 flex justify-end">
-                  <button type="button" (click)="removeVariant(i)"
-                    class="w-9 h-9 text-slate-400 hover:text-red-500 hover:bg-white rounded-xl transition-all flex items-center justify-center border border-transparent hover:border-red-100">
-                    <span class="material-symbols-rounded">delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <p *ngIf="variantsArray.length === 0" class="text-xs text-slate-400 italic px-1">Define presentaciones
-              (variantes) y sus precios correspondientes.</p>
-          </div>
-
-          <!-- Multimedia -->
-          <div class="space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
-                  <span class="material-symbols-rounded text-slate-600" style="font-size: 1rem;">photo_library</span>
-                </div>
-                <div>
-                  <h3 class="text-sm font-bold text-slate-800">Galería de Imágenes</h3>
-                  <p class="text-[11px] font-medium text-slate-500">Carga varias imágenes y selecciona cuál será la Portada Principal</p>
-                </div>
-              </div>
-              <button type="button" (click)="addImage()"
-                class="text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-xl transition-colors self-start sm:self-auto">
-                + Agregar por URL
-              </button>
-            </div>
-
-            <!-- URL Array Items -->
-            <div formArrayName="images" class="space-y-3" *ngIf="imagesArray.length > 0">
-              <p class="text-xs font-semibold text-slate-700">Imágenes registradas por URL:</p>
-              <div *ngFor="let ig of imagesArray.controls; let i = index" [formGroupName]="i"
-                class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 p-3 rounded-2xl border transition-all animate-fade-in"
-                [ngClass]="ig.get('isPrimary')?.value ? 'border-slate-900 bg-slate-900/[0.02] ring-2 ring-slate-900/10 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'">
-                
-                <!-- Thumbnail Preview -->
-                <div class="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative group">
-                  <img *ngIf="ig.get('url')?.value" [src]="ig.get('url')?.value" class="w-full h-full object-cover" alt="Preview"
-                    (error)="onImgError($event)">
-                  <div *ngIf="!ig.get('url')?.value" class="w-full h-full flex items-center justify-center text-slate-400">
-                    <span class="material-symbols-rounded">image</span>
-                  </div>
+                  <p *ngIf="productForm.get('category')?.invalid && productForm.get('category')?.touched" class="field-error-msg">
+                    Selecciona una línea de negocio.
+                  </p>
                 </div>
 
-                <!-- Input Field -->
-                <div class="flex-1 relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-rounded text-slate-400"
-                    style="font-size: 1.1rem;">link</span>
-                  <input type="text" formControlName="url" placeholder="https://..."
-                    class="w-full bg-white border border-slate-200 rounded-xl pl-9 pr-4 py-2 text-sm outline-none focus:border-slate-400 transition-all font-medium text-slate-800">
-                </div>
-
-                <!-- Primary Selector & Actions -->
-                <div class="flex items-center gap-2 justify-end">
-                  <button type="button" (click)="setPrimaryImage(i)" title="Establecer como portada principal"
-                    class="px-3.5 py-1.5 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-all"
-                    [ngClass]="ig.get('isPrimary')?.value ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'">
-                    <span class="material-symbols-rounded" [ngClass]="ig.get('isPrimary')?.value ? 'text-emerald-400' : 'text-slate-400'" style="font-size:1rem">
-                      {{ ig.get('isPrimary')?.value ? 'check_circle' : 'radio_button_unchecked' }}
-                    </span>
-                    {{ ig.get('isPrimary')?.value ? 'Portada Principal' : 'Definir Portada' }}
-                  </button>
-
-                  <button type="button" (click)="removeImage(i)" title="Eliminar URL"
-                    class="w-9 h-9 bg-white border border-slate-200 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all flex items-center justify-center shrink-0">
-                    <span class="material-symbols-rounded" style="font-size:1.1rem">delete</span>
-                  </button>
-                </div>
-
-              </div>
-            </div>
-
-            <!-- File Upload Zone -->
-            <div class="relative group mt-2">
-              <input type="file" multiple accept="image/*" (change)="onFileSelected($event)"
-                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-              <div
-                class="border-2 border-slate-200 border-dashed rounded-2xl p-6 text-center bg-slate-50 group-hover:bg-slate-100 group-hover:border-slate-300 transition-all flex flex-col items-center gap-2">
-                <div
-                  class="w-11 h-11 bg-white rounded-full flex items-center justify-center shadow-sm text-slate-500 group-hover:scale-110 transition-transform">
-                  <span class="material-symbols-rounded">cloud_upload</span>
-                </div>
-                <div>
-                  <p class="text-sm font-semibold text-slate-700">Selecciona o arrastra varias imágenes</p>
-                  <p class="text-xs text-slate-400">JPG, PNG, WEBP (Se subirán todas las fotos seleccionadas)</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Selected Files Preview Grid -->
-            <div *ngIf="selectedFiles.length > 0" class="space-y-3 pt-2">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-semibold text-slate-700">Nuevas imágenes a subir ({{ selectedFiles.length }}):</span>
-                <button type="button" (click)="clearFilesAndPreviews()" class="text-xs text-red-500 font-semibold hover:underline">Quitar todas</button>
-              </div>
-
-              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                <div *ngFor="let file of selectedFiles; let idx = index" 
-                  class="relative group rounded-2xl border p-2 bg-white flex flex-col items-center gap-2 transition-all animate-fade-in"
-                  [ngClass]="primaryFileIndex === idx ? 'border-slate-900 bg-slate-900/[0.02] ring-2 ring-slate-900/10' : 'border-slate-200'">
-                  
-                  <!-- Thumbnail Image -->
-                  <div class="w-full h-24 rounded-xl bg-slate-100 overflow-hidden relative border border-slate-100">
-                    <img [src]="filePreviews[idx]" class="w-full h-full object-cover" [alt]="file.name">
-                    <span *ngIf="primaryFileIndex === idx" 
-                      class="absolute top-1.5 left-1.5 bg-slate-900/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1">
-                      <span class="material-symbols-rounded text-emerald-400" style="font-size:10px">check_circle</span> Portada
-                    </span>
-                  </div>
-
-                  <!-- File Details & Action -->
-                  <div class="w-full flex items-center justify-between text-[11px] gap-1 px-1">
-                    <span class="truncate font-medium text-slate-700" [title]="file.name">{{ file.name }}</span>
-                    <button type="button" (click)="removeFile(idx)" class="text-slate-400 hover:text-red-500">
-                      <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+                <!-- Categoría + Botón IA -->
+                <div class="form-field-col">
+                  <div class="field-label-split">
+                    <label class="modal-field-label">Categoría <span class="required-star">*</span></label>
+                    <button type="button" (click)="suggestAiCategory()" [disabled]="isSuggestingCategory" class="btn-ai-pill" title="Clasificar con IA">
+                      <span class="material-symbols-rounded icon-spin" [class.is-spinning]="isSuggestingCategory">
+                        {{ isSuggestingCategory ? 'refresh' : 'auto_awesome' }}
+                      </span>
+                      <span>{{ isSuggestingCategory ? 'Analizando...' : 'Auto IA' }}</span>
                     </button>
                   </div>
+                  <div class="modal-select-wrapper">
+                    <select formControlName="category_id" (change)="onCategorySelectChange($event)"
+                      [class.is-invalid]="productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched"
+                      class="modal-select">
+                      <option value="">Selecciona categoría</option>
+                      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+                    </select>
+                    <span class="material-symbols-rounded select-caret">expand_more</span>
+                  </div>
+                  <p *ngIf="productForm.get('category_id')?.invalid && productForm.get('category_id')?.touched" class="field-error-msg">
+                    Selecciona una categoría.
+                  </p>
+                </div>
 
-                  <!-- Primary Button -->
-                  <button type="button" (click)="setPrimaryFile(idx)"
-                    class="w-full py-1.5 text-[11px] font-bold rounded-xl flex items-center justify-center gap-1 transition-all"
-                    [ngClass]="primaryFileIndex === idx ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'">
-                    <span class="material-symbols-rounded" [ngClass]="primaryFileIndex === idx ? 'text-emerald-400' : 'text-slate-400'" style="font-size:12px">
-                      {{ primaryFileIndex === idx ? 'check_circle' : 'radio_button_unchecked' }}
-                    </span>
-                    {{ primaryFileIndex === idx ? 'Es Portada' : 'Definir Portada' }}
+                <!-- Subcategoría -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Subcategoría</label>
+                  <div class="modal-select-wrapper">
+                    <select formControlName="subcategory_id" class="modal-select">
+                      <option value="">Selecciona subcategoría</option>
+                      <option *ngFor="let sub of subcategories" [value]="sub.id">{{ sub.name }}</option>
+                    </select>
+                    <span class="material-symbols-rounded select-caret">expand_more</span>
+                  </div>
+                </div>
+
+                <!-- Marca / Fabricante -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Marca / Fabricante</label>
+                  <input type="text" formControlName="marca" class="modal-input" placeholder="Ej: Districol, Plaxtilineas...">
+                </div>
+
+                <!-- Material -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Material / Composición</label>
+                  <input type="text" formControlName="material" class="modal-input" placeholder="Ej: Plástico PP, Espuma de PU...">
+                </div>
+
+                <!-- Gramaje -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Gramaje / Calibre</label>
+                  <input type="text" formControlName="gramaje" class="modal-input" placeholder="Ej: 500g, 20 micras, Calibre 2...">
+                </div>
+              </div>
+            </div>
+
+            <!-- BLOQUE 2: DESCRIPCIÓN TÉCNICA CON ASISTENTE IA -->
+            <div class="modal-card-group">
+              <div class="modal-group-title-between">
+                <div class="modal-group-title">
+                  <span class="material-symbols-rounded group-icon">description</span>
+                  <span>Descripción Técnica del Producto <span class="required-star">*</span></span>
+                </div>
+                <button type="button" (click)="generateAiDescription()" [disabled]="isGeneratingDescription" class="btn-ai-pill btn-ai-pill--large">
+                  <span class="material-symbols-rounded icon-spin" [class.is-spinning]="isGeneratingDescription">
+                    {{ isGeneratingDescription ? 'refresh' : 'auto_awesome' }}
+                  </span>
+                  <span>{{ isGeneratingDescription ? 'Redactando con IA...' : 'Generar Descripción con IA' }}</span>
+                </button>
+              </div>
+
+              <div>
+                <textarea formControlName="description" rows="3"
+                  [class.is-invalid]="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+                  class="modal-textarea"
+                  placeholder="Ingresa características técnicas, propiedades de uso, formulación y certificaciones..."></textarea>
+                <p *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="field-error-msg">
+                  La descripción es obligatoria (mínimo 3 caracteres).
+                </p>
+              </div>
+            </div>
+
+            <!-- BLOQUE 3: VISIBILIDAD Y ETIQUETAS -->
+            <div class="modal-card-group">
+              <div class="modal-group-title">
+                <span class="material-symbols-rounded group-icon">label</span>
+                <span>Visibilidad y Estado en Catálogo</span>
+              </div>
+
+              <div class="toggle-cards-row">
+                <label class="toggle-card-item">
+                  <input type="checkbox" formControlName="isNew" class="custom-toggle-input">
+                  <div class="toggle-card-content">
+                    <span class="material-symbols-rounded toggle-icon">verified</span>
+                    <div>
+                      <span class="toggle-card-heading">Nuevo Lanzamiento</span>
+                      <span class="toggle-card-desc">Destacar con badge de 'Nuevo' en tienda</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="toggle-card-item">
+                  <input type="checkbox" formControlName="isFeatured" class="custom-toggle-input">
+                  <div class="toggle-card-content">
+                    <span class="material-symbols-rounded toggle-icon">star</span>
+                    <div>
+                      <span class="toggle-card-heading">Destacar en Inicio</span>
+                      <span class="toggle-card-desc">Mostrar en la vitrina principal del catálogo</span>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ══════════════════════════════════════════════
+               TAB 2: PRESENTACIONES, VARIANTES & COLORES
+               ══════════════════════════════════════════════ -->
+          <div [hidden]="activeModalTab !== 'variants'" class="modal-tab-content">
+            
+            <!-- BLOQUE 4: VARIANTES Y PRECIOS -->
+            <div class="modal-card-group">
+              <div class="modal-group-title-between">
+                <div class="modal-group-title">
+                  <span class="material-symbols-rounded group-icon">sell</span>
+                  <div>
+                    <span>Presentaciones, Variantes y Precios</span>
+                    <p class="modal-group-sub">Define los formatos de venta del producto con sus respectivos precios.</p>
+                  </div>
+                </div>
+                <button type="button" (click)="addVariant()" class="btn-sub-action">
+                  <span class="material-symbols-rounded">add</span>
+                  <span>Agregar Presentación</span>
+                </button>
+              </div>
+
+              <div formArrayName="variants" class="variants-stack">
+                <div *ngFor="let varGroup of variantsArray.controls; let i = index" [formGroupName]="i" class="variant-item-card">
+                  <div class="variant-name-box">
+                    <input formControlName="name" placeholder="Nombre (Ej: Paquete x12 u., Rollo 50m, Caja 500g)" class="modal-input modal-input--sm">
+                  </div>
+                  <div class="variant-price-box">
+                    <span class="price-currency-sign">$</span>
+                    <input formControlName="price" type="number" placeholder="0" class="modal-input modal-input--sm price-field">
+                  </div>
+                  <div class="variant-avail-box">
+                    <label class="avail-switch-btn" [class.is-active]="varGroup.get('available')?.value" title="Disponibilidad">
+                      <input type="checkbox" formControlName="available" class="hidden-native">
+                      <span class="material-symbols-rounded">{{ varGroup.get('available')?.value ? 'check_circle' : 'cancel' }}</span>
+                      <span>{{ varGroup.get('available')?.value ? 'Disponible' : 'Agotado' }}</span>
+                    </label>
+                  </div>
+                  <div class="variant-remove-box">
+                    <button type="button" (click)="removeVariant(i)" class="btn-item-del" title="Eliminar variante">
+                      <span class="material-symbols-rounded">delete</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div *ngIf="variantsArray.length === 0" class="empty-items-placeholder">
+                  <span class="material-symbols-rounded">inventory_2</span>
+                  <p>No se han registrado presentaciones. Añade al menos una variante con su precio.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- BLOQUE 5: COLORES -->
+            <div class="modal-card-group">
+              <div class="modal-group-title-between">
+                <div class="modal-group-title">
+                  <span class="material-symbols-rounded group-icon">palette</span>
+                  <div>
+                    <span>Colores Disponibles</span>
+                    <p class="modal-group-sub">Especifica las tonalidades disponibles para este producto.</p>
+                  </div>
+                </div>
+                <button type="button" (click)="addColor()" class="btn-sub-action">
+                  <span class="material-symbols-rounded">add</span>
+                  <span>Agregar Color</span>
+                </button>
+              </div>
+
+              <div formArrayName="colors" class="colors-wrap-grid">
+                <div *ngFor="let colorCtrl of colorsArray.controls; let i = index" class="color-chip-card">
+                  <input [formControlName]="i" type="text" placeholder="Ej: Azul Rey" class="color-chip-input">
+                  <button type="button" (click)="removeColor(i)" class="color-chip-del" title="Quitar color">
+                    <span class="material-symbols-rounded">close</span>
                   </button>
                 </div>
               </div>
+              <p *ngIf="colorsArray.length === 0" class="empty-items-note">No se han definido colores para este producto.</p>
+            </div>
+
+          </div>
+
+          <!-- ══════════════════════════════════════════════
+               TAB 3: MULTIMEDIA Y FOTOGRAFÍAS
+               ══════════════════════════════════════════════ -->
+          <div [hidden]="activeModalTab !== 'media'" class="modal-tab-content">
+            
+            <div class="modal-card-group">
+              <div class="modal-group-title-between">
+                <div class="modal-group-title">
+                  <span class="material-symbols-rounded group-icon">photo_library</span>
+                  <div>
+                    <span>Galería de Imágenes & Portada</span>
+                    <p class="modal-group-sub">Configura las fotos del producto y selecciona cuál será la Portada Principal.</p>
+                  </div>
+                </div>
+                <button type="button" (click)="addImage()" class="btn-sub-action">
+                  <span class="material-symbols-rounded">add_link</span>
+                  <span>Agregar por URL</span>
+                </button>
+              </div>
+
+              <!-- Lista de URLs -->
+              <div formArrayName="images" class="images-url-stack" *ngIf="imagesArray.length > 0">
+                <div *ngFor="let ig of imagesArray.controls; let i = index" [formGroupName]="i"
+                  class="image-url-card"
+                  [class.is-primary-card]="ig.get('isPrimary')?.value">
+                  
+                  <div class="image-url-thumb">
+                    <img *ngIf="ig.get('url')?.value" [src]="ig.get('url')?.value" class="thumb-img" alt="Foto" (error)="onImgError($event)">
+                    <span *ngIf="!ig.get('url')?.value" class="material-symbols-rounded thumb-placeholder">image</span>
+                  </div>
+
+                  <div class="image-url-input-wrap">
+                    <span class="material-symbols-rounded url-icon">link</span>
+                    <input type="text" formControlName="url" placeholder="https://ejemplo.com/foto.jpg" class="modal-input modal-input--sm pl-8">
+                  </div>
+
+                  <div class="image-url-actions">
+                    <button type="button" (click)="setPrimaryImage(i)"
+                      class="btn-primary-selector"
+                      [class.is-selected]="ig.get('isPrimary')?.value">
+                      <span class="material-symbols-rounded">
+                        {{ ig.get('isPrimary')?.value ? 'stars' : 'radio_button_unchecked' }}
+                      </span>
+                      <span>{{ ig.get('isPrimary')?.value ? 'Es Portada' : 'Definir Portada' }}</span>
+                    </button>
+
+                    <button type="button" (click)="removeImage(i)" class="btn-item-del" title="Eliminar imagen">
+                      <span class="material-symbols-rounded">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dropzone para archivos locales -->
+              <div class="file-dropzone-box">
+                <input type="file" multiple accept="image/*" (change)="onFileSelected($event)" class="dropzone-file-input">
+                <div class="dropzone-content">
+                  <div class="dropzone-icon-circle">
+                    <span class="material-symbols-rounded">cloud_upload</span>
+                  </div>
+                  <p class="dropzone-main-text">Arrastra o haz clic para subir nuevas fotos</p>
+                  <p class="dropzone-sub-text">PNG, JPG, WEBP — Se cargarán en la nube de forma segura</p>
+                </div>
+              </div>
+
+              <!-- Vista previa de archivos nuevos -->
+              <div *ngIf="selectedFiles.length > 0" class="selected-files-block">
+                <div class="selected-files-top">
+                  <span class="selected-files-count">Nuevas fotos a subir ({{ selectedFiles.length }})</span>
+                  <button type="button" (click)="clearFilesAndPreviews()" class="btn-clear-files">Quitar todas</button>
+                </div>
+
+                <div class="files-preview-grid">
+                  <div *ngFor="let file of selectedFiles; let idx = index" class="file-preview-card" [class.is-primary-card]="primaryFileIndex === idx">
+                    <div class="file-preview-thumb">
+                      <img [src]="filePreviews[idx]" class="thumb-img" [alt]="file.name">
+                      <span *ngIf="primaryFileIndex === idx" class="primary-badge-chip">
+                        <span class="material-symbols-rounded">stars</span> Portada
+                      </span>
+                    </div>
+                    <div class="file-preview-meta">
+                      <span class="file-name-text" [title]="file.name">{{ file.name }}</span>
+                      <button type="button" (click)="removeFile(idx)" class="btn-chip-del">
+                        <span class="material-symbols-rounded">close</span>
+                      </button>
+                    </div>
+                    <button type="button" (click)="setPrimaryFile(idx)" class="btn-file-primary" [class.is-selected]="primaryFileIndex === idx">
+                      <span class="material-symbols-rounded">{{ primaryFileIndex === idx ? 'stars' : 'radio_button_unchecked' }}</span>
+                      <span>{{ primaryFileIndex === idx ? 'Es Portada' : 'Definir Portada' }}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -1087,19 +1196,28 @@
         </form>
       </div>
 
-      <!-- Modal Footer -->
-      <div
-        class="px-8 py-5 border-t border-slate-100 bg-slate-50 shrink-0 flex flex-col-reverse sm:flex-row justify-end gap-3 rounded-b-3xl">
-        <button type="button" (click)="cancelEdit()"
-          class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-100 active:scale-95 transition-all">
-          Cancelar
-        </button>
-        <button type="submit" (click)="onSubmit()" [disabled]="isSubmitting || productForm.invalid"
-          class="px-8 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-sm min-w-[160px]">
-          <div *ngIf="isSubmitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin">
-          </div>
-          {{ isSubmitting ? 'Guardando...' : (editingProduct ? 'Guardar Cambios' : 'Confirmar Registro') }}
-        </button>
+      <!-- Modal Sticky Footer -->
+      <div class="prod-modal-footer">
+        <div class="modal-footer-nav">
+          <button type="button" *ngIf="activeModalTab !== 'general'" (click)="setModalTab(activeModalTab === 'media' ? 'variants' : 'general')" class="btn-modal-step">
+            <span class="material-symbols-rounded">arrow_back</span>
+            <span>Anterior</span>
+          </button>
+          <button type="button" *ngIf="activeModalTab !== 'media'" (click)="setModalTab(activeModalTab === 'general' ? 'variants' : 'media')" class="btn-modal-step">
+            <span>Siguiente</span>
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+        </div>
+
+        <div class="modal-footer-actions">
+          <button type="button" (click)="cancelEdit()" class="btn-modal-cancel">
+            Cancelar
+          </button>
+          <button type="submit" form="productEditForm" [disabled]="isSubmitting || productForm.invalid" class="btn-modal-submit">
+            <div *ngIf="isSubmitting" class="loading-spinner-mini"></div>
+            <span>{{ isSubmitting ? 'Guardando...' : (editingProduct ? 'Guardar Cambios' : 'Confirmar Registro') }}</span>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1108,54 +1226,44 @@
   <!-- =========================================================================
        MODAL: CONFIRMAR ELIMINACIÓN DE PRODUCTO
        ========================================================================= -->
-  <div *ngIf="showDeleteModal"
-    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-    <div
-      class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative overflow-hidden text-center space-y-6 animate-scale-up">
+  <div *ngIf="showDeleteModal" class="prod-modal-overlay modal-fade-fast" (click)="$event.target === $event.currentTarget && cancelDelete()">
+    <div class="delete-modal-card modal-scale-fast" role="dialog" aria-modal="true">
       
-      <!-- Close button -->
-      <button (click)="cancelDelete()"
-        class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition-all">
-        <span class="material-symbols-rounded" style="font-size: 1.2rem;">close</span>
+      <button (click)="cancelDelete()" class="modal-close-icon-btn delete-close-pos" title="Cancelar">
+        <span class="material-symbols-rounded">close</span>
       </button>
 
-      <!-- Warning Icon Header -->
-      <div class="mx-auto w-16 h-16 rounded-full bg-red-50 border border-red-100 flex items-center justify-center text-red-600 shadow-inner">
-        <span class="material-symbols-rounded" style="font-size: 2.2rem;">delete_forever</span>
+      <div class="delete-icon-circle">
+        <span class="material-symbols-rounded">delete_forever</span>
       </div>
 
-      <!-- Title & Message -->
-      <div class="space-y-2">
-        <h3 class="text-xl font-bold text-slate-900 tracking-tight">¿Eliminar producto?</h3>
-        <p class="text-xs text-slate-500 leading-relaxed">
-          Estás a punto de eliminar el producto <span class="font-bold text-slate-800">"{{ productToDelete?.name }}"</span>. Esta acción removerá el ítem de la vista del catálogo.
+      <div class="delete-content-text">
+        <h3 class="delete-modal-title">¿Eliminar producto?</h3>
+        <p class="delete-modal-desc">
+          Estás a punto de eliminar el producto <strong class="delete-item-name">"{{ productToDelete?.name }}"</strong>. Esta acción removerá el registro del catálogo.
         </p>
       </div>
 
-      <!-- Product Card Preview inside Modal -->
-      <div *ngIf="productToDelete" class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center gap-3 text-left">
-        <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 overflow-hidden shrink-0 flex items-center justify-center">
+      <div *ngIf="productToDelete" class="delete-preview-item">
+        <div class="delete-item-thumb">
           <img *ngIf="productToDelete.images && productToDelete.images.length > 0; else defaultModalImg"
-            [src]="productToDelete.images[0].url" [alt]="productToDelete.name" class="w-full h-full object-cover">
+            [src]="productToDelete.images[0].url" [alt]="productToDelete.name" class="thumb-img">
           <ng-template #defaultModalImg>
-            <span class="material-symbols-rounded text-slate-300">image</span>
+            <span class="material-symbols-rounded thumb-placeholder">image</span>
           </ng-template>
         </div>
-        <div class="min-w-0 flex-1">
-          <h4 class="text-xs font-bold text-slate-900 truncate">{{ productToDelete.name }}</h4>
-          <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider mt-0.5">{{ productToDelete.category || 'Sin Línea' }}</p>
+        <div class="delete-item-meta">
+          <h4 class="delete-item-title">{{ productToDelete.name }}</h4>
+          <p class="delete-item-category">{{ productToDelete.category || 'Sin Línea' }}</p>
         </div>
       </div>
 
-      <!-- Buttons -->
-      <div class="flex items-center gap-3 pt-2">
-        <button type="button" (click)="cancelDelete()"
-          class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all">
+      <div class="delete-actions-row">
+        <button type="button" (click)="cancelDelete()" class="btn-modal-cancel flex-1">
           Cancelar
         </button>
-        <button type="button" (click)="confirmDelete()" [disabled]="isDeleting"
-          class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold text-sm rounded-xl transition-all shadow-md shadow-red-600/20 flex items-center justify-center gap-2 disabled:opacity-50">
-          <div *ngIf="isDeleting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <button type="button" (click)="confirmDelete()" [disabled]="isDeleting" class="btn-modal-delete-confirm flex-1">
+          <div *ngIf="isDeleting" class="loading-spinner-mini"></div>
           <span>{{ isDeleting ? 'Eliminando...' : 'Sí, Eliminar' }}</span>
         </button>
       </div>

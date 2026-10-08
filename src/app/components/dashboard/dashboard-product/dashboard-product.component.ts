@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { ToastService } from '../../../services/toast.service';
@@ -32,7 +32,7 @@ interface Product {
 @Component({
   selector: 'app-dashboard-product',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, BaseChartDirective],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, BaseChartDirective, RouterModule],
   templateUrl: './dashboard-product.component.html',
   styleUrl: './dashboard-product.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,6 +43,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSubmitting = false;
   showForm = false;
+  activeModalTab: 'general' | 'variants' | 'media' = 'general';
   editingProduct: any = null;
   selectedFiles: File[] = [];
   categories: Category[] = [];
@@ -67,6 +68,56 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   activeActionFilter: string | null = null;
   showReports = false;
+
+  // === SIDEBAR STATE ===
+  sidebarExpanded = true;
+  sectionsDropdownOpen = false;
+  today: Date = new Date();
+
+  toggleSidebar() {
+    this.sidebarExpanded = !this.sidebarExpanded;
+    this.cdr.markForCheck();
+  }
+
+  toggleSectionsDropdown() {
+    if (!this.sidebarExpanded) {
+      this.sidebarExpanded = true;
+      this.sectionsDropdownOpen = true;
+      this.cdr.markForCheck();
+      return;
+    }
+    this.sectionsDropdownOpen = !this.sectionsDropdownOpen;
+    this.cdr.markForCheck();
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
+  }
+
+  navigateToProducts()    { this.router.navigate(['/dashboard/productos']); }
+  navigateToCategories()  { this.router.navigate(['/dashboard/categorias']); }
+  navigateToEspumas()     { this.router.navigate(['/dashboard/espumas']); }
+  navigateToDistricol()   { this.router.navigate(['/dashboard/districol']); }
+
+  get userInitials(): string {
+    return 'MM';
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth < 1024) {
+      this.sidebarExpanded = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  get formattedDate(): string {
+    const weekday = this.today.toLocaleDateString('en-US', { weekday: 'long' });
+    const day = this.today.getDate();
+    const month = this.today.toLocaleDateString('en-US', { month: 'long' });
+    const year = this.today.getFullYear();
+    return `${weekday}, ${day} ${month} ${year}`;
+  }
 
   // === MODAL REPORT STATE ===
   reportTab = 0; // 0=Resumen, 1=Calidad, 2=Por Categoría
@@ -180,6 +231,11 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/login']);
       return;
+    }
+
+    // Colapsar sidebar en pantallas pequeñas al inicio
+    if (window.innerWidth < 1024) {
+      this.sidebarExpanded = false;
     }
 
     // Debounce search input (300ms)
@@ -736,14 +792,19 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  addImage(url: string = '', description: string = '', isPrimary: boolean = false) {
+  setModalTab(tab: 'general' | 'variants' | 'media') {
+    this.activeModalTab = tab;
+    this.cdr.detectChanges();
+  }
+
+  addImage(url: string = '', description: string = '', isPrimary: boolean = false, emitEvent: boolean = true) {
     const isFirst = this.imagesArray.length === 0 && this.selectedFiles.length === 0 && this.primaryFileIndex === -1;
     const imageGroup = this.fb.group({
       url: [url, [Validators.required, Validators.pattern(/^https?:\/\/.+/)]],
       description: [description],
       isPrimary: [isPrimary || isFirst]
     });
-    this.imagesArray.push(imageGroup);
+    this.imagesArray.push(imageGroup, { emitEvent });
   }
 
   setPrimaryImage(index: number) {
@@ -819,20 +880,22 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   showCreateForm() {
     this.editingProduct = null;
+    this.activeModalTab = 'general';
     this.productForm.reset({
       category: '',
       category_id: '',
       subcategory_id: '',
       isNew: true,
       isFeatured: false
-    });
+    }, { emitEvent: false });
     this.subcategories = [];
-    this.colorsArray.clear();
-    this.variantsArray.clear();
-    this.imagesArray.clear();
+    this.colorsArray.clear({ emitEvent: false });
+    this.variantsArray.clear({ emitEvent: false });
+    this.imagesArray.clear({ emitEvent: false });
     this.clearFilesAndPreviews();
     this.filterCategoriesByLine();
     this.showForm = true;
+    this.cdr.detectChanges();
 
     if (typeof window !== 'undefined') {
       this.savedScrollPosition = window.scrollY;
@@ -841,11 +904,14 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   editProduct(product: any) {
     this.editingProduct = product;
+    this.activeModalTab = 'general';
+    
+    // Batch patch form without triggering multiple separate emissions
     this.productForm.patchValue({
-      name: product.name,
-      description: product.description,
-      material: product.material,
-      category: product.category,
+      name: product.name || '',
+      description: product.description || '',
+      material: product.material || '',
+      category: product.category || '',
       category_id: product.category_id || '',
       subcategory_id: product.subcategory_id || '',
       options: product.options || '',
@@ -854,29 +920,19 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       marca: product.marca || '',
       gramaje: product.gramaje || '',
       brandIconUrl: product.brandIconUrl || ''
-    });
+    }, { emitEvent: false });
+
     this.filterCategoriesByLine();
 
-    if (product.category_id) {
-      this.categoriesService.getSubcategoriesByCategory(product.category_id).subscribe(res => {
-        if (res.success) {
-          this.subcategories = res.data;
-          this.productForm.patchValue({ subcategory_id: product.subcategory_id || '' });
-          this.cdr.markForCheck();
-        }
-      });
-    } else {
-      this.subcategories = [];
-    }
-
-    this.colorsArray.clear();
+    // Populate arrays
+    this.colorsArray.clear({ emitEvent: false });
     if (product.colors && product.colors.length > 0) {
       product.colors.forEach((color: string) => {
-        this.colorsArray.push(this.fb.control(color));
+        this.colorsArray.push(this.fb.control(color), { emitEvent: false });
       });
     }
 
-    this.variantsArray.clear();
+    this.variantsArray.clear({ emitEvent: false });
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach((variant: any) => {
         const variantGroup = this.fb.group({
@@ -884,21 +940,42 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
           available: [variant.available === 1 || variant.available === true],
           price: [variant.price ? parseFloat(variant.price) : 0, [Validators.min(0)]]
         });
-        this.variantsArray.push(variantGroup);
+        this.variantsArray.push(variantGroup, { emitEvent: false });
       });
     }
 
     this.clearFilesAndPreviews();
-    this.imagesArray.clear();
+    this.imagesArray.clear({ emitEvent: false });
     if (product.images && product.images.length > 0) {
       const hasPrimary = product.images.some((img: any) => img.is_primary || img.isPrimary);
       product.images.forEach((image: any, idx: number) => {
         const isPri = image.is_primary === true || image.is_primary === 1 || image.isPrimary === true || (!hasPrimary && idx === 0);
-        this.addImage(image.url, image.description, isPri);
+        this.addImage(image.url, image.description, isPri, false);
       });
     }
 
+    // Mostrar modal inmediatamente de manera sincrónica
     this.showForm = true;
+    this.cdr.detectChanges();
+
+    // Cargar subcategorías de forma asíncrona sin bloquear la UI
+    if (product.category_id) {
+      this.categoriesService.getSubcategoriesByCategory(product.category_id).subscribe({
+        next: (res) => {
+          if (res.success) {
+            this.subcategories = res.data;
+            this.productForm.patchValue({ subcategory_id: product.subcategory_id || '' }, { emitEvent: false });
+            this.cdr.detectChanges();
+          }
+        },
+        error: () => {
+          this.subcategories = [];
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.subcategories = [];
+    }
 
     if (typeof window !== 'undefined') {
       this.savedScrollPosition = window.scrollY;
@@ -910,6 +987,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.editingProduct = null;
     this.productForm.reset();
     this.clearFilesAndPreviews();
+    this.cdr.detectChanges();
+
     if (typeof window !== 'undefined') {
       setTimeout(() => {
         window.scrollTo({ top: this.savedScrollPosition, behavior: 'auto' });
@@ -922,9 +1001,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       this.isSubmitting = true;
 
       const formValue = this.productForm.value;
-      
-      // Find category name to keep backward compatibility
-      const selectedCat = this.categories.find(c => c.id == formValue.category_id);
       
       const productData = {
         ...formValue,
@@ -940,6 +1016,14 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       }
     } else {
       this.markFormGroupTouched();
+      // Si falla algún campo obligatorio general, regresar automáticamente al primer tab
+      const nameInv = this.productForm.get('name')?.invalid;
+      const descInv = this.productForm.get('description')?.invalid;
+      const catInv = this.productForm.get('category')?.invalid || this.productForm.get('category_id')?.invalid;
+      if (nameInv || descInv || catInv) {
+        this.activeModalTab = 'general';
+      }
+      this.cdr.detectChanges();
       this.toastService.error('Faltan campos obligatorios. Revisa las áreas en rojo.');
     }
   }

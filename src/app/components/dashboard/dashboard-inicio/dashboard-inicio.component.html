@@ -1,210 +1,384 @@
-<!-- Elegant Monochrome Dashboard -->
-<div class="min-h-screen bg-slate-50 px-4 md:px-8 py-12 font-sans selection:bg-slate-800 selection:text-white">
+<!-- Dashboard — Sidebar + Full Width Layout -->
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
 
-  <!-- Inner Content Wrapper -->
-  <div class="max-w-6xl mx-auto space-y-12 animate-fade-in">
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
 
-    <!-- Header Section -->
-    <header
-      class="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 pb-8 border-b border-slate-200">
-      <div class="flex items-center gap-6">
-        <div class="w-14 h-14 bg-white border border-slate-200 rounded-2xl flex items-center justify-center shadow-sm">
-          <span class="material-symbols-rounded text-slate-800" style="font-size:1.8rem">dashboard</span>
-        </div>
-        <div>
-          <h1 class="text-3xl font-bold text-slate-900 tracking-tight">Catálogo Grupo Plaxtilineas</h1>
-          <p class="text-sm font-medium text-slate-500 mt-1" *ngIf="currentUser">
-            Sesión iniciada: <span class="font-semibold text-slate-700">{{ currentUser.username }}</span>
-          </p>
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      </div>
+      <span class="sidebar-brand-text">Plaxtilineas</span>
+    </div>
+
+    <!-- Toggle button flotante en el borde -->
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <!-- Inicio -->
+      <button
+        class="sidebar-nav-item sidebar-nav-item--active"
+        (click)="navigateTo('/dashboard')"
+        title="Inicio"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+        <span class="sidebar-nav-active-dot"></span>
+      </button>
+
+      <!-- Inventario -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateToProducts()"
+        title="Inventario de Productos"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <!-- Menú Desplegable: Secciones -->
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger"
+          [class.sidebar-dropdown-trigger--open]="sectionsDropdownOpen"
+          (click)="toggleSectionsDropdown()"
+          [title]="sectionsDropdownOpen ? 'Cerrar secciones' : 'Abrir secciones'"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">3</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Subitems desplegables -->
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCategories()"
+            title="Categorías Plaxtilineas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToEspumas()"
+            title="Espumas y Plásticos"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToDistricol()"
+            title="Categorías Districol"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
         </div>
       </div>
 
-      <button (click)="logout()"
-        class="group flex items-center gap-2 px-6 py-2.5 bg-white text-slate-700 text-sm font-semibold rounded-full border border-slate-200 hover:border-slate-300 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-all shadow-sm">
-        <span class="material-symbols-rounded text-slate-400 group-hover:text-slate-700 transition-colors"
-          style="font-size:1.2rem">logout</span>
-        Cerrar Sesión
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <!-- Ver Catálogo Público -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/')"
+        title="Ver Tienda / Catálogo"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
       </button>
+
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar-spacer"></div>
+
+    <!-- User card at bottom -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-avatar">MM</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-username">Mateo Moreno</span>
+        <span class="sidebar-role">Administrador</span>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <button (click)="logout()" class="sidebar-logout">
+      <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      <span class="sidebar-nav-label-text">Cerrar sesión</span>
+    </button>
+
+  </aside>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
+
+    <!-- ── TOP HEADER ── -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <!-- Botón toggle para abrir/cerrar sidebar desde el header -->
+        <button
+          class="header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
+        </button>
+        <div>
+          <span class="dash-brand">Panel de Administración</span>
+        </div>
+      </div>
+
+      <div class="dash-header-right">
+        <div class="dash-status-pill">
+          <span class="dash-status-dot"></span>
+          <span>Sistema Activo</span>
+        </div>
+        <div class="dash-user-chip">
+          <div class="dash-avatar-mini">MM</div>
+          <span>Mateo Moreno</span>
+        </div>
+        <button (click)="logout()" class="dash-logout-btn">
+          <span class="material-symbols-rounded" style="font-size:1.05rem">logout</span>
+          Salir
+        </button>
+      </div>
     </header>
 
-    <!-- Welcome / Summary Section -->
-    <section>
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <!-- Text Block -->
-        <div class="lg:col-span-5 space-y-6">
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm">
-            <span class="w-2 h-2 rounded-full bg-green-500"></span>
-            <span class="text-xs font-semibold text-slate-600 tracking-wide">Sistema Activo</span>
-          </div>
-          <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">Catálogo Global
-            del Grupo</h2>
-          <p class="text-lg font-semibold text-slate-600 tracking-tight">
-            Plastilineas, Espumas y Districol Catálogo
-          </p>
-          <p class="text-base text-slate-500 leading-relaxed max-w-sm">
-            Gestión centralizada de catálogo, inventario y productos.
-          </p>
-          <div class="flex items-center gap-3 pt-4">
-            <span class="material-symbols-rounded text-slate-400" style="font-size:1.2rem">calendar_today</span>
-            <p class="text-sm font-medium text-slate-600">
-              {{ today | date:'EEEE, d MMMM yyyy' }}
-            </p>
-          </div>
-        </div>
+    <!-- ── MAIN ── -->
+    <main class="dash-main animate-fade-in">
 
-        <!-- Metric Cards -->
-        <div class="lg:col-span-7 grid grid-cols-2 gap-6">
-          <!-- Total Products Card -->
-          <div
-            class="bg-white border border-slate-200 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] transition-all duration-300">
-            <div
-              class="absolute -right-6 -top-6 w-24 h-24 bg-slate-50 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out z-0">
-            </div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-              <div class="flex items-center justify-between mb-8">
-                <span class="text-sm font-semibold text-slate-500 uppercase tracking-widest">Productos</span>
-                <span class="material-symbols-rounded text-slate-300" style="font-size:1.5rem">inventory_2</span>
-              </div>
-              <div>
-                <p class="text-5xl font-extrabold text-slate-900 tracking-tight">{{ stats.totalProducts }}</p>
-                <p class="text-xs font-medium text-slate-400 mt-2">Registrados en total</p>
-              </div>
+      <!-- ▸ FILA 1: STAT CARDS -->
+      <section class="dash-stats-row">
+
+        <div class="stat-card stat-card--primary">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Total Productos</span>
+            <div class="stat-icon-wrap">
+              <span class="material-symbols-rounded">inventory_2</span>
             </div>
           </div>
+          <p class="stat-number">{{ stats.totalProducts }}</p>
+          <p class="stat-sub">Registrados en el catálogo</p>
+        </div>
 
-          <!-- Categories Card -->
-          <div
-            class="bg-white border border-slate-200 p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group hover:shadow-[0_15px_40px_rgb(0,0,0,0.08)] transition-all duration-300">
-            <div
-              class="absolute -right-6 -top-6 w-24 h-24 bg-slate-50 rounded-full group-hover:scale-150 transition-transform duration-700 ease-out z-0">
-            </div>
-            <div class="relative z-10 flex flex-col h-full justify-between">
-              <div class="flex items-center justify-between mb-8">
-                <span class="text-sm font-semibold text-slate-500 uppercase tracking-widest">Líneas</span>
-                <span class="material-symbols-rounded text-slate-300" style="font-size:1.5rem">category</span>
-              </div>
-              <div>
-                <p class="text-5xl font-extrabold text-slate-900 tracking-tight">{{ stats.categories }}</p>
-                <p class="text-xs font-medium text-slate-400 mt-2">Categorías activas</p>
-              </div>
+        <div class="stat-card stat-card--categories">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Categorías</span>
+            <div class="stat-icon-wrap stat-icon-wrap--purple">
+              <span class="material-symbols-rounded">category</span>
             </div>
           </div>
+          <p class="stat-number">{{ stats.categories }}</p>
+          <p class="stat-sub">Líneas de producto activas</p>
         </div>
-      </div>
-    </section>
 
-    <!-- Navigation / Modules -->
-    <section class="w-full pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-      <!-- Inventory Module -->
-      <button (click)="navigateToProducts()"
-        class="w-full group relative bg-slate-900 p-8 rounded-3xl text-left text-white overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-slate-300">
-        <div class="relative z-10">
-          <div
-            class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-white/20 transition-colors duration-300">
-            <span class="material-symbols-rounded text-white" style="font-size:1.8rem">inventory_2</span>
+        <div class="stat-card stat-card--modules">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Módulos</span>
+            <div class="stat-icon-wrap stat-icon-wrap--amber">
+              <span class="material-symbols-rounded">widgets</span>
+            </div>
           </div>
-          <h3 class="text-xl font-bold tracking-tight">Gestionar Inventario</h3>
-          <p class="text-slate-300 font-medium mt-3 text-sm leading-relaxed">
-            Control detallado del catálogo, fotos, descripciones técnicas y materiales.
+          <p class="stat-number">4</p>
+          <p class="stat-sub">Secciones del panel</p>
+        </div>
+
+        <div class="stat-card stat-card--status">
+          <div class="stat-card-top">
+            <span class="stat-card-label">Estado</span>
+            <div class="stat-icon-wrap stat-icon-wrap--green">
+              <span class="material-symbols-rounded">check_circle</span>
+            </div>
+          </div>
+          <p class="stat-number stat-number--green">Online</p>
+          <p class="stat-sub">{{ today | date:'d MMM yyyy · HH:mm' }}</p>
+        </div>
+
+      </section>
+
+      <!-- ▸ FILA 2: BENTO GRID -->
+      <section class="dash-bento-grid">
+
+        <!-- HERO de bienvenida (siempre con datos reales) -->
+        <div class="bento-welcome">
+          <div class="bento-badge">
+            <span class="bento-badge-dot"></span>
+            {{ greeting }}
+          </div>
+
+          <h2 class="bento-title">
+            Bienvenido,<br>
+            <span class="bento-username">Mateo Moreno!</span>
+          </h2>
+
+          <p class="bento-desc">
+            Gestión centralizada de catálogo, inventario y productos del Grupo Plaxtilineas.
           </p>
 
-          <div
-            class="mt-8 flex items-center gap-2 text-sm font-semibold text-white/90 group-hover:translate-x-2 transition-transform duration-300">
-            Entrar al módulo <span class="material-symbols-rounded text-lg">arrow_forward</span>
+          <div class="bento-date">
+            <span class="material-symbols-rounded" style="font-size:1.15rem">calendar_today</span>
+            <span>{{ formattedDate }}</span>
           </div>
+
+          <!-- Decorativos -->
+          <div class="bento-circle bento-circle--1"></div>
+          <div class="bento-circle bento-circle--2"></div>
         </div>
-        <!-- Decorative subtle element -->
-        <span
-          class="material-symbols-rounded absolute -bottom-8 -right-8 text-white/5 group-hover:rotate-12 transition-transform duration-700"
-          style="font-size:12rem">inventory_2</span>
-      </button>
 
-      <!-- Categories Plaxtilineas Module -->
-      <button (click)="navigateToCategories()"
-        class="w-full group relative bg-white border border-slate-200 p-8 rounded-3xl text-left text-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-slate-300">
-        <div class="relative z-10">
-          <div
-            class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors duration-300">
-            <span class="material-symbols-rounded text-slate-700" style="font-size:1.8rem">category</span>
-          </div>
-          <h3 class="text-xl font-bold tracking-tight">Categorías Plaxtilineas</h3>
-          <p class="text-slate-500 font-medium mt-3 text-sm leading-relaxed">
-            Administra las categorías y subcategorías de la línea Plaxtilineas.
-          </p>
+        <!-- ACCESO RÁPIDO -->
+        <div class="bento-quick-access">
+          <p class="bento-section-label">Acceso Rápido</p>
 
-          <div
-            class="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-700 group-hover:translate-x-2 transition-transform duration-300">
-            Entrar al módulo <span class="material-symbols-rounded text-lg">arrow_forward</span>
-          </div>
+          <button (click)="navigateToProducts()" class="quick-btn">
+            <div class="quick-btn-icon">
+              <span class="material-symbols-rounded">inventory_2</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Inventario</span>
+              <span class="quick-btn-sub">Ver y editar productos</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
+
+          <button (click)="navigateToCategories()" class="quick-btn">
+            <div class="quick-btn-icon">
+              <span class="material-symbols-rounded">category</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Plaxtilineas</span>
+              <span class="quick-btn-sub">Categorías de la línea</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
+
+          <button (click)="navigateToEspumas()" class="quick-btn">
+            <div class="quick-btn-icon">
+              <span class="material-symbols-rounded">layers</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Espumas y Plásticos</span>
+              <span class="quick-btn-sub">Categorías de la línea</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
+
+          <button (click)="navigateToDistricol()" class="quick-btn">
+            <div class="quick-btn-icon">
+              <span class="material-symbols-rounded">storefront</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Districol</span>
+              <span class="quick-btn-sub">Categorías de la línea</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
         </div>
-        <!-- Decorative subtle element -->
-        <span
-          class="material-symbols-rounded absolute -bottom-8 -right-8 text-slate-50 group-hover:rotate-12 transition-transform duration-700"
-          style="font-size:12rem">category</span>
-      </button>
 
-      <!-- Categories Espumas y Plásticos Module -->
-      <button (click)="navigateToEspumas()"
-        class="w-full group relative bg-white border border-slate-200 p-8 rounded-3xl text-left text-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-slate-300">
-        <div class="relative z-10">
-          <div
-            class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors duration-300">
-            <span class="material-symbols-rounded text-slate-700" style="font-size:1.8rem">layers</span>
-          </div>
-          <h3 class="text-xl font-bold tracking-tight">Categorías Espumas y Plásticos</h3>
-          <p class="text-slate-500 font-medium mt-3 text-sm leading-relaxed">
-            Administra las categorías y subcategorías de la línea Espumas y Plásticos.
-          </p>
+      </section>
 
-          <div
-            class="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-700 group-hover:translate-x-2 transition-transform duration-300">
-            Entrar al módulo <span class="material-symbols-rounded text-lg">arrow_forward</span>
+      <!-- ▸ FILA 3: MÓDULOS -->
+      <section class="dash-modules-row">
+
+        <button (click)="navigateToProducts()" class="module-card module-card--dark">
+          <div class="module-icon-wrap module-icon-wrap--dark">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">inventory_2</span>
           </div>
+          <h3 class="module-title">Gestionar Inventario</h3>
+          <p class="module-desc">Control detallado del catálogo, fotos, descripciones técnicas y materiales.</p>
+          <div class="module-cta">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco material-symbols-rounded">inventory_2</span>
+        </button>
+
+        <button (click)="navigateToCategories()" class="module-card module-card--light">
+          <div class="module-icon-wrap module-icon-wrap--light">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">category</span>
+          </div>
+          <h3 class="module-title">Categorías Plaxtilineas</h3>
+          <p class="module-desc">Administra las categorías y subcategorías de la línea Plaxtilineas.</p>
+          <div class="module-cta module-cta--dark">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco module-deco--light material-symbols-rounded">category</span>
+        </button>
+
+        <button (click)="navigateToEspumas()" class="module-card module-card--light">
+          <div class="module-icon-wrap module-icon-wrap--light">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">layers</span>
+          </div>
+          <h3 class="module-title">Espumas y Plásticos</h3>
+          <p class="module-desc">Administra las categorías y subcategorías de la línea Espumas y Plásticos.</p>
+          <div class="module-cta module-cta--dark">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco module-deco--light material-symbols-rounded">layers</span>
+        </button>
+
+        <button (click)="navigateToDistricol()" class="module-card module-card--light">
+          <div class="module-icon-wrap module-icon-wrap--light">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">storefront</span>
+          </div>
+          <h3 class="module-title">Categorías Districol</h3>
+          <p class="module-desc">Administra las categorías y subcategorías de la línea Districol.</p>
+          <div class="module-cta module-cta--dark">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco module-deco--light material-symbols-rounded">storefront</span>
+        </button>
+
+      </section>
+
+      <!-- ▸ FOOTER -->
+      <footer class="dash-footer">
+        <div class="dash-footer-left">
+          <span class="dash-footer-bar"></span>
+          <span>Catálogo Grupo Plaxtilineas</span>
         </div>
-        <!-- Decorative subtle element -->
-        <span
-          class="material-symbols-rounded absolute -bottom-8 -right-8 text-slate-50 group-hover:rotate-12 transition-transform duration-700"
-          style="font-size:12rem">layers</span>
-      </button>
+        <span>v3.0 · {{ today | date:'yyyy' }}</span>
+      </footer>
 
-      <!-- Categories Districol Module -->
-      <button (click)="navigateToDistricol()"
-        class="w-full group relative bg-white border border-slate-200 p-8 rounded-3xl text-left text-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-slate-300">
-        <div class="relative z-10">
-          <div
-            class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors duration-300">
-            <span class="material-symbols-rounded text-slate-700" style="font-size:1.8rem">storefront</span>
-          </div>
-          <h3 class="text-xl font-bold tracking-tight">Categorías Districol</h3>
-          <p class="text-slate-500 font-medium mt-3 text-sm leading-relaxed">
-            Administra las categorías y subcategorías de la línea Districol.
-          </p>
-
-          <div
-            class="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-700 group-hover:translate-x-2 transition-transform duration-300">
-            Entrar al módulo <span class="material-symbols-rounded text-lg">arrow_forward</span>
-          </div>
-        </div>
-        <!-- Decorative subtle element -->
-        <span
-          class="material-symbols-rounded absolute -bottom-8 -right-8 text-slate-50 group-hover:rotate-12 transition-transform duration-700"
-          style="font-size:12rem">storefront</span>
-      </button>
-
-    </section>
-
-    <!-- Footer Identity -->
-    <footer class="pt-12 pb-8 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <span class="w-6 h-1 bg-slate-300 rounded-full"></span>
-        <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Catálogo Grupo Plaxtilineas</span>
-      </div>
-      <div class="flex gap-6">
-        <span class="text-xs font-medium text-slate-400">v3.0 Elegant</span>
-        <span class="text-xs font-medium text-slate-400">2024</span>
-      </div>
-    </footer>
+    </main>
   </div>
 
 </div>
