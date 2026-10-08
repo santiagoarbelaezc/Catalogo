@@ -492,7 +492,7 @@
                     </button>
                   </div>
                   <div class="problem-table-list">
-                    <div *ngFor="let p of problemProducts; trackBy: trackByProductId" class="problem-item-row">
+                    <div *ngFor="let p of problemProducts; trackBy: trackByProductId" class="problem-item-row" (click)="editProduct(p)" title="Clic para editar producto">
                       <div class="problem-item-info">
                         <div class="problem-item-icon">
                           <span class="material-symbols-rounded">inventory_2</span>
@@ -568,7 +568,7 @@
                       <p class="problem-table-title">Productos de esta categoría</p>
                     </div>
                     <div class="problem-table-list" style="max-height: 320px;">
-                      <div *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId" class="problem-item-row">
+                      <div *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId" class="problem-item-row" (click)="editProduct(p)" title="Clic para editar producto">
                         <div>
                           <p class="problem-item-name">{{ p.name }}</p>
                           <p class="problem-item-sub">{{ p.category || '—' }}</p>
@@ -697,7 +697,10 @@
 
           <!-- Rows List -->
           <div class="prod-rows-list">
-            <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId" class="prod-row-card">
+            <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId" 
+                 class="prod-row-card"
+                 (click)="editProduct(product)"
+                 title="Clic para editar producto">
 
               <!-- Columna Imagen -->
               <div class="row-media-box">
@@ -742,10 +745,10 @@
 
               <!-- Columna Acciones -->
               <div class="row-actions-col">
-                <button (click)="editProduct(product)" class="row-action-btn" title="Editar producto">
+                <button (click)="$event.stopPropagation(); editProduct(product)" class="row-action-btn" title="Editar producto">
                   <span class="material-symbols-rounded">edit</span>
                 </button>
-                <button (click)="deleteProduct(product)" class="row-action-btn row-action-btn--delete" title="Eliminar producto">
+                <button (click)="$event.stopPropagation(); deleteProduct(product)" class="row-action-btn row-action-btn--delete" title="Eliminar producto">
                   <span class="material-symbols-rounded">delete</span>
                 </button>
               </div>
@@ -1148,17 +1151,36 @@
                 </div>
               </div>
 
-              <!-- Dropzone para archivos locales -->
-              <div class="file-dropzone-box">
-                <input type="file" multiple accept="image/*" (change)="onFileSelected($event)" class="dropzone-file-input">
+              <!-- Input de archivo nativo (fuera del contenedor para evitar bucles de eventos) -->
+              <input #fileInput
+                     id="productFileInput"
+                     type="file"
+                     multiple
+                     accept="image/png,image/jpeg,image/webp,image/jpg"
+                     (click)="$event.stopPropagation()"
+                     (change)="onFileSelected($event)"
+                     class="hidden-file-input">
+
+              <!-- Dropzone como <label> semántico enlazado por ID -->
+              <label for="productFileInput"
+                     class="file-dropzone-box"
+                     [class.is-dragging]="isDragging"
+                     (dragover)="onDragOver($event)"
+                     (dragleave)="onDragLeave($event)"
+                     (drop)="onFileDrop($event)"
+                     title="Haz clic o arrastra imágenes aquí">
                 <div class="dropzone-content">
                   <div class="dropzone-icon-circle">
                     <span class="material-symbols-rounded">cloud_upload</span>
                   </div>
                   <p class="dropzone-main-text">Arrastra o haz clic para subir nuevas fotos</p>
                   <p class="dropzone-sub-text">PNG, JPG, WEBP — Se cargarán en la nube de forma segura</p>
+                  <span class="dropzone-browse-pill">
+                    <span class="material-symbols-rounded" style="font-size:1.05rem">folder_open</span>
+                    Seleccionar fotos de tu equipo
+                  </span>
                 </div>
-              </div>
+              </label>
 
               <!-- Vista previa de archivos nuevos -->
               <div *ngIf="selectedFiles.length > 0" class="selected-files-block">

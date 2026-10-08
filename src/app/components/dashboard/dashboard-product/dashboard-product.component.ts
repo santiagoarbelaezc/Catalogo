@@ -836,26 +836,63 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  onFileSelected(event: any) {
-    const newFiles = Array.from(event.target.files) as File[];
-    if (!newFiles || newFiles.length === 0) return;
-    newFiles.forEach(file => {
-      this.selectedFiles.push(file);
-      this.filePreviews.push(URL.createObjectURL(file));
-    });
+  isDragging = false;
+
+  addFiles(files: File[]) {
+    if (!files || files.length === 0) return;
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    this.selectedFiles = [...this.selectedFiles, ...files];
+    this.filePreviews = [...this.filePreviews, ...newPreviews];
+
     const hasUrlPrimary = this.imagesArray.controls.some(ctrl => ctrl.get('isPrimary')?.value);
     if (!hasUrlPrimary && this.primaryFileIndex === -1 && this.selectedFiles.length > 0) {
       this.primaryFileIndex = 0;
     }
+    this.cdr.detectChanges();
+  }
+
+  onFileSelected(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (!input || !input.files || input.files.length === 0) return;
+    const newFiles = Array.from(input.files) as File[];
+    this.addFiles(newFiles);
+    input.value = '';
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = true;
     this.cdr.markForCheck();
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+    this.cdr.markForCheck();
+  }
+
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isDragging = false;
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      const files = Array.from(event.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      this.addFiles(files);
+    }
   }
 
   removeFile(index: number) {
     if (this.filePreviews[index]) {
       URL.revokeObjectURL(this.filePreviews[index]);
     }
-    this.selectedFiles.splice(index, 1);
-    this.filePreviews.splice(index, 1);
+    const updatedFiles = [...this.selectedFiles];
+    const updatedPreviews = [...this.filePreviews];
+    updatedFiles.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+    this.selectedFiles = updatedFiles;
+    this.filePreviews = updatedPreviews;
     if (this.primaryFileIndex === index) {
       if (this.selectedFiles.length > 0) {
         this.primaryFileIndex = 0;
@@ -868,7 +905,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     } else if (this.primaryFileIndex > index) {
       this.primaryFileIndex--;
     }
-    this.cdr.markForCheck();
+    this.cdr.detectChanges();
   }
 
   clearFilesAndPreviews() {
@@ -876,6 +913,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.selectedFiles = [];
     this.filePreviews = [];
     this.primaryFileIndex = -1;
+    this.cdr.detectChanges();
   }
 
   showCreateForm() {
