@@ -1,18 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CategoriesService, Category, Subcategory } from '../../../services/categories.service';
 import { ToastService } from '../../../services/toast.service';
-import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-districol',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './dashboard-districol.component.html',
   styleUrl: './dashboard-districol.component.css'
 })
 export class DashboardDistricolComponent implements OnInit {
+  currentBrand = 'Districol';
+  brandTitle = 'Categorías Districol';
+  brandIcon = 'storefront';
+
+  // Sidebar & Navigation
+  sidebarExpanded = true;
+  sectionsDropdownOpen = true;
+
   categories: Category[] = [];
   subcategories: Subcategory[] = [];
   selectedCategory: Category | null = null;
@@ -46,11 +55,74 @@ export class DashboardDistricolComponent implements OnInit {
   constructor(
     private categoriesService: CategoriesService,
     private toastService: ToastService,
-    private router: Router
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadCategories();
+  }
+
+  // Sidebar Controls
+  toggleSidebar(): void {
+    this.sidebarExpanded = !this.sidebarExpanded;
+    this.cdr.markForCheck();
+  }
+
+  toggleSectionsDropdown(): void {
+    if (!this.sidebarExpanded) {
+      this.sidebarExpanded = true;
+      this.sectionsDropdownOpen = true;
+      this.cdr.markForCheck();
+      return;
+    }
+    this.sectionsDropdownOpen = !this.sectionsDropdownOpen;
+    this.cdr.markForCheck();
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
+
+  navigateToProducts(): void {
+    this.router.navigate(['/dashboard/productos']);
+  }
+
+  navigateToCategories(): void {
+    this.router.navigate(['/dashboard/categorias']);
+  }
+
+  navigateToEspumas(): void {
+    this.router.navigate(['/dashboard/espumas']);
+  }
+
+  navigateToDistricol(): void {
+    this.router.navigate(['/dashboard/districol']);
+  }
+
+  openWebCatalog(): void {
+    window.open('/catalogo', '_blank');
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.authService.logout();
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    if (window.innerWidth < 1024) {
+      this.sidebarExpanded = false;
+      this.cdr.markForCheck();
+    }
   }
 
   goBack(): void {
@@ -66,18 +138,25 @@ export class DashboardDistricolComponent implements OnInit {
           this.updateCategoriesView();
 
           if (selectCategoryName) {
-            const newlyCreated = this.categories.find(c => c.name.toLowerCase() === selectCategoryName.toLowerCase());
-            if (newlyCreated) {
-              this.selectCategory(newlyCreated);
+            const target = this.categories.find(c => c.name.toLowerCase() === selectCategoryName.toLowerCase());
+            if (target) {
+              this.selectCategory(target);
+            }
+          } else if (this.selectedCategory) {
+            const reSelected = this.categories.find(c => c.id === this.selectedCategory?.id);
+            if (reSelected) {
+              this.selectedCategory = reSelected;
             }
           }
         }
         this.isLoadingCategories = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
         console.error(err);
         this.isLoadingCategories = false;
-        this.toastService.error('No se pudieron cargar las categorías de Districol');
+        this.toastService.error('No se pudieron cargar las categorías');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -96,11 +175,13 @@ export class DashboardDistricolComponent implements OnInit {
           this.updateSubcategoriesView();
         }
         this.isLoadingSubcategories = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
         console.error(err);
         this.isLoadingSubcategories = false;
         this.toastService.error('No se pudieron cargar las subcategorías');
+        this.cdr.markForCheck();
       }
     });
   }
@@ -134,6 +215,7 @@ export class DashboardDistricolComponent implements OnInit {
       letter,
       categories: groups[letter]
     }));
+    this.cdr.markForCheck();
   }
 
   updateSubcategoriesView(): void {
@@ -149,6 +231,17 @@ export class DashboardDistricolComponent implements OnInit {
     filtered.sort((a, b) => a.name.localeCompare(b.name));
     
     this.filteredSubcategories = filtered;
+    this.cdr.markForCheck();
+  }
+
+  clearSearchCategory(): void {
+    this.searchCategory = '';
+    this.updateCategoriesView();
+  }
+
+  clearSearchSubcategory(): void {
+    this.searchSubcategory = '';
+    this.updateSubcategoriesView();
   }
 
   addCategory(): void {
@@ -284,11 +377,13 @@ export class DashboardDistricolComponent implements OnInit {
       return;
     }
 
+    // Si no cambió el nombre, no hacer nada
     if (this.editTargetNewName.trim().toLowerCase() === this.editTargetOldName.trim().toLowerCase()) {
       this.cancelEditModal();
       return;
     }
 
+    // Validación de duplicados en la edición
     if (this.editTargetType === 'category') {
       const exists = this.categories.some(c => c.name.toLowerCase() === this.editTargetNewName.trim().toLowerCase() && c.id !== this.editTargetId);
       if (exists) {
@@ -306,10 +401,10 @@ export class DashboardDistricolComponent implements OnInit {
     }
 
     if (this.editTargetType === 'category') {
-      this.categoriesService.updateCategory(this.editTargetId, { name: this.editTargetNewName.trim(), brand: 'Districol' }).subscribe({
+      this.categoriesService.updateCategory(this.editTargetId, { name: this.editTargetNewName.trim() }).subscribe({
         next: (res: any) => {
           if (res.success) {
-            this.loadCategories();
+            this.loadCategories(this.editTargetNewName.trim());
             this.toastService.success('Categoría actualizada exitosamente.');
             this.cancelEditModal();
           }

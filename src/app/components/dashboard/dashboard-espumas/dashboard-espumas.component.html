@@ -1,228 +1,572 @@
-<!-- dashboard-espumas.component.html -->
-<div class="min-h-screen bg-slate-50 p-4 md:p-8">
-  <div class="max-w-7xl mx-auto space-y-6">
-    
-    <!-- Header -->
-    <header class="flex items-center justify-between pb-6 border-b border-slate-200">
-      <div class="flex items-center gap-4">
-        <button (click)="goBack()" 
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-colors">
-          <span class="material-symbols-rounded" style="font-size: 1.2rem;">arrow_back</span>
+<!-- ═══════════════════════════════════════════════
+     DASHBOARD CATEGORÍAS — ESPUMAS Y PLÁSTICOS
+     ═══════════════════════════════════════════════ -->
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
+
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
+
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      </div>
+      <span class="sidebar-brand-text">Plaxtilineas</span>
+    </div>
+
+    <!-- Toggle button flotante en el borde -->
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <!-- Inicio -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard')"
+        title="Inicio"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+      </button>
+
+      <!-- Inventario -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateToProducts()"
+        title="Inventario de Productos"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <!-- Menú Desplegable: Secciones -->
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger sidebar-dropdown-trigger--open"
+          (click)="toggleSectionsDropdown()"
+          [title]="sectionsDropdownOpen ? 'Cerrar secciones' : 'Abrir secciones'"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">3</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Subitems desplegables -->
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCategories()"
+            title="Categorías Plaxtilineas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item sidebar-submenu-item--active"
+            (click)="navigateToEspumas()"
+            title="Espumas y Plásticos"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToDistricol()"
+            title="Categorías Districol"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <!-- Ver Catálogo Web -->
+      <a
+        href="/catalogo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="sidebar-nav-item"
+        title="Ver Catálogo Web (Abre en nueva pestaña)"
+        style="text-decoration: none;"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
+      </a>
+
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar-spacer"></div>
+
+    <!-- User card at bottom -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-avatar">MM</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-username">Mateo Moreno</span>
+        <span class="sidebar-role">Administrador</span>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <button (click)="logout()" class="sidebar-logout">
+      <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      <span class="sidebar-nav-label-text">Cerrar sesión</span>
+    </button>
+
+  </aside>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
+
+    <!-- ── TOP HEADER ── -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <button
+          class="header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
         </button>
         <div>
-          <h1 class="text-2xl font-bold text-slate-800 tracking-tight">Categorías Espumas y Plásticos</h1>
-          <p class="text-sm text-slate-500 mt-1">Gestiona las categorías y subcategorías de la línea de Espumas y Plásticos</p>
+          <span class="dash-brand">Panel de Administración</span>
         </div>
+      </div>
+
+      <div class="dash-header-right">
+        <div class="dash-status-pill">
+          <span class="dash-status-dot"></span>
+          <span>Sistema Activo</span>
+        </div>
+        <div class="dash-user-chip">
+          <div class="dash-avatar-mini">MM</div>
+          <span>Mateo Moreno</span>
+        </div>
+        <button (click)="logout()" class="dash-logout-btn">
+          <span class="material-symbols-rounded" style="font-size:1.05rem">logout</span>
+          Salir
+        </button>
       </div>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      
-      <!-- Panel Izquierdo: Categorías -->
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
-        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <span class="material-symbols-rounded text-slate-400">category</span>
-            Categorías Principales
-          </h2>
-        </div>
-        
-        <!-- Crear Categoría -->
-        <div class="p-4 border-b border-slate-100 bg-white">
-          <div class="flex gap-2">
-            <input type="text" [(ngModel)]="newCategoryName" placeholder="Nueva categoría..." (keyup.enter)="addCategory()"
-              class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
-            <button (click)="addCategory()" [disabled]="!newCategoryName.trim()"
-              class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
-              Añadir
-            </button>
-          </div>
-        </div>
+    <!-- ── MAIN BODY ── -->
+    <main class="cat-main animate-fade-in">
 
-        <!-- Buscador Categorías -->
-        <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
-          <div class="relative">
-            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
-            <input type="text" [(ngModel)]="searchCategory" (ngModelChange)="updateCategoriesView()" placeholder="Buscar categoría..."
-              class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+      <!-- ── PAGE TOP BAR ── -->
+      <section class="page-top-bar">
+        <div class="page-top-left">
+          <div class="page-title-icon">
+            <span class="material-symbols-rounded">layers</span>
           </div>
-        </div>
-
-        <!-- Lista de Categorías -->
-        <div class="flex-1 overflow-y-auto p-4 space-y-2">
-          <div *ngIf="isLoadingCategories" class="text-center py-8 text-slate-400">
-            Cargando categorías...
-          </div>
-          
-          <div *ngIf="!isLoadingCategories && groupedCategories.length === 0 && searchCategory" class="text-center py-8 text-slate-400 text-sm">
-            No se encontraron categorías.
-          </div>
-
-          <div *ngFor="let group of groupedCategories" class="mb-4 animate-fade-in">
-            <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">{{ group.letter }}</h3>
-            <div class="space-y-1">
-              <div *ngFor="let cat of group.categories" 
-                   (click)="selectCategory(cat)"
-                   [class.ring-2]="selectedCategory?.id === cat.id"
-                   [class.ring-slate-800]="selectedCategory?.id === cat.id"
-                   [class.bg-slate-50]="selectedCategory?.id === cat.id"
-                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 cursor-pointer transition-all bg-white">
-                <span class="font-medium text-slate-700 text-sm">{{ cat.name }}</span>
-                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button (click)="confirmEdit('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
-                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
-                  </button>
-                  <button (click)="confirmDelete('category', cat.id!, cat.name, $event)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
-                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
-                  </button>
-                  <span class="material-symbols-rounded text-slate-300 ml-1" style="font-size: 1.1rem;">chevron_right</span>
-                </div>
-              </div>
+          <div>
+            <div class="page-breadcrumb">
+              <span (click)="navigateTo('/dashboard')" class="breadcrumb-link">Dashboard</span>
+              <span class="breadcrumb-sep">/</span>
+              <span (click)="toggleSectionsDropdown()" class="breadcrumb-link">Secciones</span>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Espumas y Plásticos</span>
             </div>
+            <h1 class="page-title">Categorías Espumas y Plásticos</h1>
           </div>
         </div>
-      </div>
 
-      <!-- Panel Derecho: Subcategorías -->
-      <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col h-[70vh]">
-        <div class="p-6 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <span class="material-symbols-rounded text-slate-400">list_alt</span>
-            Subcategorías
-            <span *ngIf="selectedCategory" class="text-sm font-normal text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200 ml-2">
-              de {{ selectedCategory.name }}
-            </span>
-          </h2>
+        <div class="page-top-actions">
+          <button (click)="loadCategories()" class="btn-action-icon" title="Recargar categorías">
+            <span class="material-symbols-rounded" [class.spin-animate]="isLoadingCategories">sync</span>
+          </button>
+          
+          <div class="header-count-badge">
+            <span class="count-num">{{ categories.length }}</span>
+            <span class="count-label">categorías principales</span>
+          </div>
+
+          <div *ngIf="selectedCategory" class="header-count-badge">
+            <span class="count-num">{{ subcategories.length }}</span>
+            <span class="count-label">subcategorías activas</span>
+          </div>
         </div>
+      </section>
 
-        <div *ngIf="!selectedCategory" class="flex-1 flex flex-col items-center justify-center text-slate-400 p-8 text-center">
-          <span class="material-symbols-rounded text-6xl mb-4 text-slate-200">touch_app</span>
-          <p>Selecciona una categoría en el panel izquierdo <br> para gestionar sus subcategorías.</p>
-        </div>
+      <!-- ── WORKSPACE 2-COLUMN GRID ── -->
+      <div class="cat-workspace-grid">
+        
+        <!-- ── COLUMNA 1: CATEGORÍAS PRINCIPALES ── -->
+        <div class="cat-card">
+          <!-- Card Header -->
+          <div class="cat-card-header">
+            <div class="cat-card-title-group">
+              <div class="cat-card-icon-pill">
+                <span class="material-symbols-rounded">layers</span>
+              </div>
+              <h2 class="cat-card-title">Categorías Principales</h2>
+            </div>
+            <span class="cat-counter-chip">{{ categories.length }} en total</span>
+          </div>
 
-        <ng-container *ngIf="selectedCategory">
-          <!-- Crear Subcategoría -->
-          <div class="p-4 border-b border-slate-100 bg-white">
-            <div class="flex gap-2">
-              <input type="text" [(ngModel)]="newSubcategoryName" placeholder="Nueva subcategoría..." (keyup.enter)="addSubcategory()"
-                class="flex-1 px-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400">
-              <button (click)="addSubcategory()" [disabled]="!newSubcategoryName.trim()"
-                class="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-lg hover:bg-slate-700 disabled:opacity-50 transition-colors">
-                Añadir
+          <!-- Quick Add Input -->
+          <div class="cat-add-bar">
+            <div class="cat-input-group">
+              <input
+                type="text"
+                [(ngModel)]="newCategoryName"
+                placeholder="Nombre de nueva categoría..."
+                (keyup.enter)="addCategory()"
+                class="cat-text-input"
+              >
+              <button
+                (click)="addCategory()"
+                [disabled]="!newCategoryName.trim()"
+                class="cat-btn-primary"
+              >
+                <span class="material-symbols-rounded" style="font-size:1.15rem">add</span>
+                <span>Añadir</span>
               </button>
             </div>
           </div>
 
-          <!-- Buscador Subcategorías -->
-          <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
-            <div class="relative">
-              <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-rounded" style="font-size: 1.1rem;">search</span>
-              <input type="text" [(ngModel)]="searchSubcategory" (ngModelChange)="updateSubcategoriesView()" placeholder="Buscar subcategoría..."
-                class="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white">
+          <!-- Search Filter Bar -->
+          <div class="cat-search-bar">
+            <div class="cat-search-wrapper">
+              <span class="material-symbols-rounded cat-search-icon">search</span>
+              <input
+                type="text"
+                [(ngModel)]="searchCategory"
+                (ngModelChange)="updateCategoriesView()"
+                placeholder="Buscar categoría..."
+                class="cat-search-input"
+              >
+              <button
+                *ngIf="searchCategory"
+                (click)="clearSearchCategory()"
+                class="cat-search-clear"
+                title="Limpiar búsqueda"
+              >
+                <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+              </button>
             </div>
           </div>
 
-          <!-- Lista de Subcategorías -->
-          <div class="flex-1 overflow-y-auto p-4 space-y-2">
-            <div *ngIf="isLoadingSubcategories" class="text-center py-8 text-slate-400">
-              Cargando subcategorías...
-            </div>
-            
-            <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && searchSubcategory" class="text-center py-8 text-slate-400 text-sm">
-              No se encontraron subcategorías.
+          <!-- Categories List Body -->
+          <div class="cat-list-scroll">
+            <!-- Loading -->
+            <div *ngIf="isLoadingCategories" class="cat-loading-state">
+              <div class="loading-spinner"></div>
+              <span>Cargando categorías...</span>
             </div>
 
-            <div class="space-y-1">
-              <div *ngFor="let sub of filteredSubcategories" 
-                   class="group flex items-center justify-between p-3.5 rounded-xl border border-slate-100 hover:border-slate-300 transition-all bg-white">
-                <div class="flex items-center gap-3">
-                  <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                  <span class="font-medium text-slate-700 text-sm">{{ sub.name }}</span>
+            <!-- Empty Search Results -->
+            <div *ngIf="!isLoadingCategories && groupedCategories.length === 0 && searchCategory" class="cat-empty-panel">
+              <div class="cat-empty-icon-box">
+                <span class="material-symbols-rounded">search_off</span>
+              </div>
+              <h3 class="cat-empty-title">Sin resultados</h3>
+              <p class="cat-empty-desc">No se encontró ninguna categoría con el término "{{ searchCategory }}".</p>
+            </div>
+
+            <!-- Empty Categories -->
+            <div *ngIf="!isLoadingCategories && categories.length === 0 && !searchCategory" class="cat-empty-panel">
+              <div class="cat-empty-icon-box">
+                <span class="material-symbols-rounded">folder_open</span>
+              </div>
+              <h3 class="cat-empty-title">No hay categorías</h3>
+              <p class="cat-empty-desc">Crea tu primera categoría principal en el campo de arriba.</p>
+            </div>
+
+            <!-- Alphabet Grouped Categories -->
+            <div *ngFor="let group of groupedCategories" class="cat-group animate-fade-in">
+              <div class="cat-letter-header">{{ group.letter }}</div>
+              
+              <div
+                *ngFor="let cat of group.categories"
+                (click)="selectCategory(cat)"
+                class="cat-item-row"
+                [class.cat-item-row--active]="selectedCategory?.id === cat.id"
+              >
+                <div class="cat-item-left">
+                  <div class="cat-item-badge-icon">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem">folder</span>
+                  </div>
+                  <span class="cat-item-name">{{ cat.name }}</span>
                 </div>
-                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button (click)="confirmEdit('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-blue-600 rounded-md hover:bg-blue-50 transition-colors">
-                    <span class="material-symbols-rounded text-[1.1rem]">edit</span>
-                  </button>
-                  <button (click)="confirmDelete('subcategory', sub.id!, sub.name)" class="p-1.5 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors">
-                    <span class="material-symbols-rounded text-[1.1rem]">delete</span>
-                  </button>
+
+                <div class="cat-item-right">
+                  <!-- Actions -->
+                  <div class="cat-item-actions">
+                    <button
+                      (click)="confirmEdit('category', cat.id!, cat.name, $event)"
+                      class="cat-row-btn"
+                      title="Editar categoría"
+                    >
+                      <span class="material-symbols-rounded" style="font-size:1.05rem">edit</span>
+                    </button>
+                    <button
+                      (click)="confirmDelete('category', cat.id!, cat.name, $event)"
+                      class="cat-row-btn cat-row-btn--delete"
+                      title="Eliminar categoría"
+                    >
+                      <span class="material-symbols-rounded" style="font-size:1.05rem">delete</span>
+                    </button>
+                  </div>
+
+                  <span class="material-symbols-rounded cat-item-chevron">chevron_right</span>
                 </div>
               </div>
             </div>
           </div>
-        </ng-container>
+        </div>
+
+        <!-- ── COLUMNA 2: SUBCATEGORÍAS ── -->
+        <div class="cat-card">
+          <!-- Card Header -->
+          <div class="cat-card-header">
+            <div class="cat-card-title-group">
+              <div class="cat-card-icon-pill">
+                <span class="material-symbols-rounded">list_alt</span>
+              </div>
+              <h2 class="cat-card-title">Subcategorías</h2>
+              <span *ngIf="selectedCategory" class="cat-card-subtitle-chip" [title]="selectedCategory.name">
+                de {{ selectedCategory.name }}
+              </span>
+            </div>
+            
+            <span *ngIf="selectedCategory" class="cat-counter-chip">
+              {{ filteredSubcategories.length }} activas
+            </span>
+          </div>
+
+          <!-- Empty Category Selection Placeholder -->
+          <div *ngIf="!selectedCategory" class="cat-empty-panel">
+            <div class="cat-empty-icon-box">
+              <span class="material-symbols-rounded">touch_app</span>
+            </div>
+            <h3 class="cat-empty-title">Selecciona una categoría</h3>
+            <p class="cat-empty-desc">
+              Haz clic en cualquier categoría principal del panel izquierdo para explorar y administrar sus subcategorías.
+            </p>
+          </div>
+
+          <!-- Subcategories Content When Selected -->
+          <ng-container *ngIf="selectedCategory">
+            <!-- Quick Add Subcategory -->
+            <div class="cat-add-bar">
+              <div class="cat-input-group">
+                <input
+                  type="text"
+                  [(ngModel)]="newSubcategoryName"
+                  [placeholder]="'Nueva subcategoría en ' + selectedCategory.name + '...'"
+                  (keyup.enter)="addSubcategory()"
+                  class="cat-text-input"
+                >
+                <button
+                  (click)="addSubcategory()"
+                  [disabled]="!newSubcategoryName.trim()"
+                  class="cat-btn-primary"
+                >
+                  <span class="material-symbols-rounded" style="font-size:1.15rem">add</span>
+                  <span>Añadir</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Search Subcategory -->
+            <div class="cat-search-bar">
+              <div class="cat-search-wrapper">
+                <span class="material-symbols-rounded cat-search-icon">search</span>
+                <input
+                  type="text"
+                  [(ngModel)]="searchSubcategory"
+                  (ngModelChange)="updateSubcategoriesView()"
+                  placeholder="Buscar subcategoría..."
+                  class="cat-search-input"
+                >
+                <button
+                  *ngIf="searchSubcategory"
+                  (click)="clearSearchSubcategory()"
+                  class="cat-search-clear"
+                  title="Limpiar búsqueda"
+                >
+                  <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subcategories List -->
+            <div class="cat-list-scroll">
+              <!-- Loading -->
+              <div *ngIf="isLoadingSubcategories" class="cat-loading-state">
+                <div class="loading-spinner"></div>
+                <span>Cargando subcategorías...</span>
+              </div>
+
+              <!-- Empty Search Results -->
+              <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && searchSubcategory" class="cat-empty-panel">
+                <div class="cat-empty-icon-box">
+                  <span class="material-symbols-rounded">search_off</span>
+                </div>
+                <h3 class="cat-empty-title">Sin resultados</h3>
+                <p class="cat-empty-desc">No se encontraron subcategorías para "{{ searchSubcategory }}".</p>
+              </div>
+
+              <!-- Empty Subcategories in Category -->
+              <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && !searchSubcategory" class="cat-empty-panel">
+                <div class="cat-empty-icon-box">
+                  <span class="material-symbols-rounded">format_list_bulleted</span>
+                </div>
+                <h3 class="cat-empty-title">No hay subcategorías</h3>
+                <p class="cat-empty-desc">Esta categoría no tiene subcategorías aún. Agrega una arriba.</p>
+              </div>
+
+              <!-- Subcategory Item Rows -->
+              <div *ngFor="let sub of filteredSubcategories" class="subcat-item-row animate-fade-in">
+                <div class="subcat-dot" style="background:#6366f1;"></div>
+                <span class="subcat-item-name">{{ sub.name }}</span>
+
+                <div class="cat-item-actions" style="opacity:1;">
+                  <button
+                    (click)="confirmEdit('subcategory', sub.id!, sub.name)"
+                    class="cat-row-btn"
+                    title="Editar subcategoría"
+                  >
+                    <span class="material-symbols-rounded" style="font-size:1.05rem">edit</span>
+                  </button>
+                  <button
+                    (click)="confirmDelete('subcategory', sub.id!, sub.name)"
+                    class="cat-row-btn cat-row-btn--delete"
+                    title="Eliminar subcategoría"
+                  >
+                    <span class="material-symbols-rounded" style="font-size:1.05rem">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
 
       </div>
-    </div>
+
+    </main>
+
   </div>
 
-  <!-- Modal de Confirmación de Eliminación -->
-  <div *ngIf="showDeleteModal" class="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
-      <div class="p-6 md:p-8 flex flex-col items-center text-center space-y-4">
-        <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
-          <span class="material-symbols-rounded text-red-500 text-3xl">warning</span>
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showDeleteModal" class="cat-modal-backdrop animate-fade-in" (click)="cancelDelete()">
+    <div class="cat-modal-card" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--danger">
+          <span class="material-symbols-rounded">warning</span>
         </div>
-        <h2 class="text-xl font-bold text-slate-900">¿Eliminar {{ deleteTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}?</h2>
-        <p class="text-sm text-slate-500 font-medium">
-          Estás a punto de eliminar <span class="text-slate-800 font-bold">"{{ deleteTargetName }}"</span>.
-          <span *ngIf="deleteTargetType === 'category'" class="block mt-1">¡También se eliminarán todas sus subcategorías!</span>
+        <h2 class="cat-modal-title">¿Eliminar {{ deleteTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}?</h2>
+        <p class="cat-modal-desc">
+          Estás a punto de eliminar <strong style="color:#0f172a;">"{{ deleteTargetName }}"</strong>.
+          <span *ngIf="deleteTargetType === 'category'" style="display:block; margin-top:6px; color:#ef4444; font-weight:600;">
+            ¡Esta acción también eliminará permanentemente todas sus subcategorías asociadas!
+          </span>
           Esta acción no se puede deshacer.
         </p>
       </div>
-      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-center gap-3 w-full">
-        <button (click)="cancelDelete()" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-100 active:scale-95 transition-all w-full sm:w-auto">
+      <div class="cat-modal-footer">
+        <button (click)="cancelDelete()" class="cat-modal-btn-cancel">
           Cancelar
         </button>
-        <button (click)="executeDelete()" class="px-6 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 active:scale-95 transition-all shadow-sm w-full sm:w-auto">
+        <button (click)="executeDelete()" class="cat-modal-btn-delete">
           Sí, eliminar
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Edición -->
-  <div *ngIf="showEditModal" class="fixed inset-0 z-50 flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-white rounded-3xl w-full max-w-md shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
-      <div class="p-6 md:p-8 flex flex-col items-center space-y-4">
-        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
-          <span class="material-symbols-rounded text-blue-500 text-3xl">edit_square</span>
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE EDICIÓN
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showEditModal" class="cat-modal-backdrop animate-fade-in" (click)="cancelEditModal()">
+    <div class="cat-modal-card" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--info">
+          <span class="material-symbols-rounded">edit_square</span>
         </div>
-        <h2 class="text-xl font-bold text-slate-900 text-center">Editar {{ editTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}</h2>
+        <h2 class="cat-modal-title">Editar {{ editTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}</h2>
+        <p class="cat-modal-desc">Modifica el nombre para actualizarlo en todo el catálogo.</p>
         
-        <div class="w-full mt-4">
-          <label class="text-xs font-semibold text-slate-600 mb-2 block px-1">Nombre</label>
-          <input type="text" [(ngModel)]="editTargetNewName" (keyup.enter)="executeEdit()"
-            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-800 outline-none focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all"
-            placeholder="Escribe el nuevo nombre...">
+        <div class="cat-modal-form">
+          <label class="cat-modal-label">Nombre</label>
+          <input
+            type="text"
+            [(ngModel)]="editTargetNewName"
+            (keyup.enter)="executeEdit()"
+            class="cat-modal-input"
+            placeholder="Escribe el nuevo nombre..."
+            autofocus
+          >
         </div>
       </div>
-      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col-reverse sm:flex-row justify-end gap-3 w-full">
-        <button (click)="cancelEditModal()" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-100 active:scale-95 transition-all w-full sm:w-auto">
+      <div class="cat-modal-footer">
+        <button (click)="cancelEditModal()" class="cat-modal-btn-cancel">
           Cancelar
         </button>
-        <button (click)="executeEdit()" [disabled]="!editTargetNewName.trim() || editTargetNewName.trim() === editTargetOldName.trim()" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 disabled:opacity-50 transition-all shadow-sm w-full sm:w-auto">
+        <button
+          (click)="executeEdit()"
+          [disabled]="!editTargetNewName.trim() || editTargetNewName.trim() === editTargetOldName.trim()"
+          class="cat-modal-btn-save"
+        >
           Guardar Cambios
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Modal de Validación de Duplicados -->
-  <div *ngIf="showValidationModal" class="fixed inset-0 z-[60] flex justify-center items-center overflow-y-auto bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
-    <div class="bg-white rounded-3xl w-full max-w-sm shadow-2xl relative overflow-hidden flex flex-col transform transition-all">
-      <div class="p-6 md:p-8 flex flex-col items-center text-center space-y-4">
-        <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center">
-          <span class="material-symbols-rounded text-amber-500 text-3xl">error</span>
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE VALIDACIÓN DE DUPLICADOS
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showValidationModal" class="cat-modal-backdrop animate-fade-in" (click)="showValidationModal = false">
+    <div class="cat-modal-card cat-modal-card--sm" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--warning">
+          <span class="material-symbols-rounded">error</span>
         </div>
-        <h2 class="text-xl font-bold text-slate-900">Acción no permitida</h2>
-        <p class="text-sm text-slate-500 font-medium">{{ validationMessage }}</p>
+        <h2 class="cat-modal-title">Acción no permitida</h2>
+        <p class="cat-modal-desc">{{ validationMessage }}</p>
       </div>
-      <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-center w-full">
-        <button (click)="showValidationModal = false" class="px-6 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-xl hover:bg-slate-800 active:scale-95 transition-all shadow-sm w-full">
+      <div class="cat-modal-footer" style="justify-content: center;">
+        <button (click)="showValidationModal = false" class="cat-modal-btn-save" style="width: 100%;">
           Entendido
         </button>
       </div>
     </div>
   </div>
+
 </div>
