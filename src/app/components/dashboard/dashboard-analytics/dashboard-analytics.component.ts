@@ -47,6 +47,7 @@ export class DashboardAnalyticsComponent implements OnInit {
   };
 
   // Charts
+  // ── Charts: Monochromatic with Red, Gray & Black ──
   public lineChartOptions: any = {
     responsive: true,
     maintainAspectRatio: false,
@@ -54,13 +55,27 @@ export class DashboardAnalyticsComponent implements OnInit {
       legend: {
         position: 'right',
         labels: {
-          font: { family: 'Inter Tight', size: 12, weight: '600' },
+          font: { family: 'Inter Tight', size: 12, weight: '700' },
+          color: '#18181b',
           padding: 18,
-          usePointStyle: true
+          usePointStyle: true,
+          pointStyleWidth: 10
         }
+      },
+      tooltip: {
+        backgroundColor: '#09090b',
+        titleFont: { family: 'Inter Tight', size: 13, weight: '700' },
+        titleColor: '#ffffff',
+        bodyFont: { family: 'Inter Tight', size: 12 },
+        bodyColor: '#e4e4e7',
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 10,
+        boxPadding: 6
       }
     },
-    cutout: '68%'
+    cutout: '72%'
   };
   public lineChartType: ChartType = 'doughnut';
   public lineChartData: ChartData<'doughnut'> = {
@@ -68,9 +83,11 @@ export class DashboardAnalyticsComponent implements OnInit {
     datasets: [
       {
         data: [0, 0, 0, 0],
-        backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'],
-        borderWidth: 0,
-        hoverOffset: 8
+        backgroundColor: ['#dc2626', '#09090b', '#71717a', '#d4d4d8'],
+        hoverBackgroundColor: ['#b91c1c', '#000000', '#52525b', '#a1a1aa'],
+        borderColor: '#ffffff',
+        borderWidth: 3,
+        hoverOffset: 10
       }
     ]
   };
@@ -79,10 +96,30 @@ export class DashboardAnalyticsComponent implements OnInit {
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: 'y',
-    plugins: { legend: { display: false } },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#09090b',
+        titleFont: { family: 'Inter Tight', size: 13, weight: '700' },
+        titleColor: '#ffffff',
+        bodyFont: { family: 'Inter Tight', size: 12, weight: '600' },
+        bodyColor: '#fca5a5',
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 10
+      }
+    },
     scales: {
-      x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-      y: { grid: { display: false } }
+      x: {
+        beginAtZero: true,
+        grid: { color: '#f1f5f9' },
+        ticks: { font: { family: 'Inter Tight', size: 11, weight: '600' }, color: '#71717a' }
+      },
+      y: {
+        grid: { display: false },
+        ticks: { font: { family: 'Inter Tight', size: 12, weight: '700' }, color: '#18181b' }
+      }
     }
   };
   public categoryChartType: ChartType = 'bar';
@@ -91,7 +128,7 @@ export class DashboardAnalyticsComponent implements OnInit {
     datasets: [
       {
         data: [],
-        backgroundColor: '#6366f1',
+        backgroundColor: [],
         borderRadius: 8,
         barPercentage: 0.65
       }
@@ -250,26 +287,36 @@ export class DashboardAnalyticsComponent implements OnInit {
       completePct: total > 0 ? Math.round((complete / total) * 100) : 0
     };
 
-    // Actualizar Gráficos
+    // Actualizar Gráficos (Monocromático: Rojo, Gris, Negro)
     this.lineChartData = {
       labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
       datasets: [
         {
           data: [plaxti, espumas, distri, otros],
-          backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'],
-          borderWidth: 0,
-          hoverOffset: 8
+          backgroundColor: ['#dc2626', '#09090b', '#71717a', '#d4d4d8'],
+          hoverBackgroundColor: ['#b91c1c', '#000000', '#52525b', '#a1a1aa'],
+          borderColor: '#ffffff',
+          borderWidth: 3,
+          hoverOffset: 10
         }
       ]
     };
 
     const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    const barColors = sortedCats.map((_, index) => {
+      if (index === 0) return '#dc2626'; // #1 en Rojo vibrante
+      if (index < 3) return '#09090b';   // #2 y #3 en Negro puro
+      if (index < 6) return '#3f3f46';   // #4 a #6 en Carbón grafito
+      return '#71717a';                  // Resto en Gris pizarra
+    });
+
     this.categoryChartData = {
       labels: sortedCats.map(c => c[0]),
       datasets: [
         {
           data: sortedCats.map(c => c[1]),
-          backgroundColor: '#6366f1',
+          backgroundColor: barColors,
+          hoverBackgroundColor: barColors.map(c => c === '#dc2626' ? '#b91c1c' : '#000000'),
           borderRadius: 8,
           barPercentage: 0.65
         }
