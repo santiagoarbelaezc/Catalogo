@@ -711,7 +711,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       description: ['', [Validators.required, Validators.minLength(3)]],
       material: [''],
       category: ['', [Validators.required]], // Línea de negocio
-      category_id: ['', [Validators.required]],
+      category_id: [''],
       subcategory_id: [''],
       options: [''],
       isNew: [true],
@@ -857,6 +857,22 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     const newFiles = Array.from(input.files) as File[];
     this.addFiles(newFiles);
     input.value = '';
+  }
+
+  openFilePicker(event?: Event) {
+    event?.preventDefault();
+    const picker = document.createElement('input');
+    picker.type = 'file';
+    picker.multiple = true;
+    picker.accept = 'image/*';
+    picker.style.display = 'none';
+    picker.addEventListener('change', () => {
+      const files = Array.from(picker.files ?? []);
+      this.addFiles(files);
+      picker.remove();
+    });
+    document.body.appendChild(picker);
+    picker.click();
   }
 
   onDragOver(event: DragEvent) {
@@ -1057,9 +1073,16 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       // Si falla algún campo obligatorio general, regresar automáticamente al primer tab
       const nameInv = this.productForm.get('name')?.invalid;
       const descInv = this.productForm.get('description')?.invalid;
-      const catInv = this.productForm.get('category')?.invalid || this.productForm.get('category_id')?.invalid;
+      const catInv = this.productForm.get('category')?.invalid;
+      const varInv = this.productForm.get('variants')?.invalid;
+      const imgInv = this.productForm.get('images')?.invalid;
+
       if (nameInv || descInv || catInv) {
         this.activeModalTab = 'general';
+      } else if (varInv) {
+        this.activeModalTab = 'variants';
+      } else if (imgInv) {
+        this.activeModalTab = 'media';
       }
       this.cdr.detectChanges();
       this.toastService.error('Faltan campos obligatorios. Revisa las áreas en rojo.');
@@ -1070,8 +1093,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     const normalizedData = {
       ...productData,
       primaryFileIndex: this.primaryFileIndex,
-      isNew: productData.isNew === 1 || productData.isNew === true,
-      isFeatured: productData.isFeatured === 1 || productData.isFeatured === true,
+      isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
+      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
         available: v.available === 1 || v.available === true,
@@ -1088,13 +1111,17 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
           this.toastService.success('Producto creado satisfactoriamente.');
           this.loadProducts();
           this.cancelEdit();
+        } else {
+          this.toastService.error(response.message || 'No se pudo crear el producto.');
         }
         this.isSubmitting = false;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: (error) => {
+        console.error('Error al crear producto:', error);
+        this.toastService.error(error?.error?.message || error?.message || 'Error del servidor al crear el producto.');
         this.isSubmitting = false;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     });
     this.subscriptions.push(createSub);
@@ -1104,8 +1131,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     const normalizedData = {
       ...productData,
       primaryFileIndex: this.primaryFileIndex,
-      isNew: productData.isNew === 1 || productData.isNew === true,
-      isFeatured: productData.isFeatured === 1 || productData.isFeatured === true,
+      isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
+      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
         available: v.available === 1 || v.available === true,
@@ -1122,13 +1149,17 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
           this.toastService.success('Producto actualizado exitosamente.');
           this.loadProducts();
           this.cancelEdit();
+        } else {
+          this.toastService.error(response.message || 'No se pudo actualizar el producto.');
         }
         this.isSubmitting = false;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       },
       error: (error) => {
+        console.error('Error al actualizar producto:', error);
+        this.toastService.error(error?.error?.message || error?.message || 'Error del servidor al actualizar el producto.');
         this.isSubmitting = false;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
       }
     });
     this.subscriptions.push(updateSub);

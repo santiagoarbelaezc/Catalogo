@@ -1151,23 +1151,16 @@
                 </div>
               </div>
 
-              <!-- Input de archivo nativo (fuera del contenedor para evitar bucles de eventos) -->
-              <input #fileInput
-                     id="productFileInput"
-                     type="file"
-                     multiple
-                     accept="image/png,image/jpeg,image/webp,image/jpg"
-                     (click)="$event.stopPropagation()"
-                     (change)="onFileSelected($event)"
-                     class="hidden-file-input">
-
-              <!-- Dropzone como <label> semántico enlazado por ID -->
-              <label for="productFileInput"
-                     class="file-dropzone-box"
+              <!-- Dropzone: el selector se abre con un input creado dinámicamente (openFilePicker) -->
+              <div class="file-dropzone-box"
                      [class.is-dragging]="isDragging"
+                     (click)="openFilePicker($event)"
+                     (keydown.enter)="openFilePicker($event)"
                      (dragover)="onDragOver($event)"
                      (dragleave)="onDragLeave($event)"
                      (drop)="onFileDrop($event)"
+                     role="button"
+                     tabindex="0"
                      title="Haz clic o arrastra imágenes aquí">
                 <div class="dropzone-content">
                   <div class="dropzone-icon-circle">
@@ -1180,7 +1173,7 @@
                     Seleccionar fotos de tu equipo
                   </span>
                 </div>
-              </label>
+              </div>
 
               <!-- Vista previa de archivos nuevos -->
               <div *ngIf="selectedFiles.length > 0" class="selected-files-block">
@@ -1235,7 +1228,7 @@
           <button type="button" (click)="cancelEdit()" class="btn-modal-cancel">
             Cancelar
           </button>
-          <button type="submit" form="productEditForm" [disabled]="isSubmitting || productForm.invalid" class="btn-modal-submit">
+          <button type="button" (click)="onSubmit()" [disabled]="isSubmitting" class="btn-modal-submit">
             <div *ngIf="isSubmitting" class="loading-spinner-mini"></div>
             <span>{{ isSubmitting ? 'Guardando...' : (editingProduct ? 'Guardar Cambios' : 'Confirmar Registro') }}</span>
           </button>
