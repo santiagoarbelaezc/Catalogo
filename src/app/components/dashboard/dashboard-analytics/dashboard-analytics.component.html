@@ -1,0 +1,606 @@
+<!-- ═══════════════════════════════════════════════
+     DASHBOARD ANALYTICS — Dedicated Module
+     ═══════════════════════════════════════════════ -->
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
+
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
+
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      </div>
+      <span class="sidebar-brand-text">Plaxtilineas</span>
+    </div>
+
+    <!-- Toggle button flotante en el borde -->
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <!-- Inicio -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard')"
+        title="Inicio"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+      </button>
+
+      <!-- Inventario -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateToProducts()"
+        title="Inventario de Productos"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+      </button>
+
+      <!-- Analíticas (Activo) -->
+      <button
+        class="sidebar-nav-item sidebar-nav-item--active"
+        (click)="navigateToAnalytics()"
+        title="Analíticas y Reportes"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
+        <span class="sidebar-nav-label-text">Analíticas</span>
+        <span class="sidebar-nav-active-dot"></span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <!-- Menú Desplegable: Secciones -->
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger"
+          [class.sidebar-dropdown-trigger--open]="sectionsDropdownOpen"
+          (click)="toggleSectionsDropdown()"
+          [title]="sectionsDropdownOpen ? 'Cerrar secciones' : 'Abrir secciones'"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">3</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Subitems desplegables -->
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCategories()"
+            title="Categorías Plaxtilineas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToEspumas()"
+            title="Espumas y Plásticos"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToDistricol()"
+            title="Categorías Districol"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <!-- Ver Catálogo Web -->
+      <a
+        href="/catalogo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="sidebar-nav-item"
+        title="Ver Catálogo Web (Abre en nueva pestaña)"
+        style="text-decoration: none;"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
+      </a>
+
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar-spacer"></div>
+
+    <!-- User card at bottom -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-avatar">MM</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-username">Mateo Moreno</span>
+        <span class="sidebar-role">Administrador</span>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <button (click)="logout()" class="sidebar-logout">
+      <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      <span class="sidebar-nav-label-text">Cerrar sesión</span>
+    </button>
+
+  </aside>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
+
+    <!-- ── TOP HEADER ── -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <button
+          class="header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
+        </button>
+        <div>
+          <span class="dash-brand">Panel de Administración</span>
+        </div>
+      </div>
+
+      <div class="dash-header-right">
+        <div class="dash-status-pill">
+          <span class="dash-status-dot"></span>
+          <span>Sistema Activo</span>
+        </div>
+        <div class="dash-user-chip">
+          <div class="dash-avatar-mini">MM</div>
+          <span>Mateo Moreno</span>
+        </div>
+        <button (click)="logout()" class="dash-logout-btn">
+          <span class="material-symbols-rounded" style="font-size:1.05rem">logout</span>
+          Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- ── MAIN BODY ── -->
+    <main class="analytics-main animate-fade-in">
+
+      <!-- ── PAGE TOP BAR ── -->
+      <section class="page-top-bar">
+        <div class="page-top-left">
+          <div class="page-title-icon">
+            <span class="material-symbols-rounded">analytics</span>
+          </div>
+          <div>
+            <div class="page-breadcrumb">
+              <span (click)="navigateTo('/dashboard')" class="breadcrumb-link">Dashboard</span>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Analíticas</span>
+            </div>
+            <h1 class="page-title">Reporte y Analíticas de Inventario</h1>
+          </div>
+        </div>
+
+        <div class="page-top-actions">
+          <button (click)="loadData()" class="btn-action-icon" title="Recargar métricas">
+            <span class="material-symbols-rounded" [class.spin-animate]="isLoading">sync</span>
+          </button>
+          
+          <div class="header-count-badge">
+            <span class="count-num">{{ statsGlobal.total }}</span>
+            <span class="count-label">productos monitoreados</span>
+          </div>
+
+          <div class="header-count-badge">
+            <span class="count-num" style="color:#6366f1;">{{ statsGlobal.completePct }}%</span>
+            <span class="count-label">salud general</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="cat-loading-state" style="padding: 60px 20px;">
+        <div class="loading-spinner"></div>
+        <span>Calculando estadísticas en tiempo real...</span>
+      </div>
+
+      <!-- Main Analytics Card -->
+      <div *ngIf="!isLoading" class="analytics-card animate-fade-in">
+
+        <!-- Tabs Header -->
+        <div class="analytics-tabs-header">
+          <div class="analytics-nav-tabs">
+            <button
+              (click)="reportTab = 0"
+              class="analytics-tab-btn"
+              [class.analytics-tab-btn--active]="reportTab === 0"
+            >
+              <span class="material-symbols-rounded" style="font-size:1.15rem">bar_chart</span>
+              <span>Resumen & Distribución</span>
+            </button>
+
+            <button
+              (click)="reportTab = 1"
+              class="analytics-tab-btn"
+              [class.analytics-tab-btn--active]="reportTab === 1"
+            >
+              <span class="material-symbols-rounded" style="font-size:1.15rem">warning</span>
+              <span>Calidad del Catálogo</span>
+              <span class="tab-badge-counter">
+                {{ statsGlobal.missingDescription + statsGlobal.missingImages + statsGlobal.missingVariants + statsGlobal.missingPrice }}
+              </span>
+            </button>
+
+            <button
+              (click)="reportTab = 2"
+              class="analytics-tab-btn"
+              [class.analytics-tab-btn--active]="reportTab === 2"
+            >
+              <span class="material-symbols-rounded" style="font-size:1.15rem">category</span>
+              <span>Por Categoría</span>
+            </button>
+          </div>
+
+          <button (click)="goToInventory()" class="problem-filter-apply-btn" title="Ir al Inventario completo">
+            <span class="material-symbols-rounded" style="font-size:1rem">inventory_2</span>
+            <span>Ver Inventario Completo</span>
+          </button>
+        </div>
+
+        <!-- Content Body -->
+        <div class="analytics-content-body">
+
+          <!-- ═════ PESTAÑA 0: RESUMEN GENERAL ═════ -->
+          <div *ngIf="reportTab === 0" class="report-tab-pane animate-fade-in">
+            
+            <!-- KPI Strip -->
+            <div class="report-kpi-grid">
+              <div class="kpi-card kpi-card--dark">
+                <p class="kpi-label">Total Catálogo</p>
+                <p class="kpi-value">{{ statsGlobal.total }}</p>
+                <p class="kpi-sub">productos registrados</p>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="line-dot line-dot--emerald"></span>
+                  <p class="kpi-label">Plaxtilineas</p>
+                </div>
+                <p class="kpi-value text-slate-900">{{ statsGlobal.plaxtilineas }}</p>
+                <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.plaxtilineas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="line-dot line-dot--blue"></span>
+                  <p class="kpi-label">Espumas</p>
+                </div>
+                <p class="kpi-value text-slate-900">{{ statsGlobal.espumas }}</p>
+                <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.espumas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+              </div>
+              <div class="kpi-card">
+                <div class="kpi-header">
+                  <span class="line-dot line-dot--amber"></span>
+                  <p class="kpi-label">Districol</p>
+                </div>
+                <p class="kpi-value text-slate-900">{{ statsGlobal.districol }}</p>
+                <p class="kpi-sub">{{ statsGlobal.total > 0 ? (statsGlobal.districol / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+              </div>
+              <div class="kpi-card">
+                <p class="kpi-label mb-1">Completitud</p>
+                <p class="kpi-value text-indigo-600">{{ statsGlobal.completePct }}%</p>
+                <p class="kpi-sub">{{ statsGlobal.complete }} prods. completos</p>
+              </div>
+            </div>
+
+            <!-- Completeness Progress Bar -->
+            <div class="completeness-banner">
+              <div class="completeness-header">
+                <span class="completeness-title">
+                  <span class="material-symbols-rounded text-indigo-600">health_and_safety</span>
+                  Salud y Calidad del Catálogo
+                </span>
+                <span class="completeness-pct">{{ statsGlobal.completePct }}%</span>
+              </div>
+              <div class="completeness-track">
+                <div class="completeness-bar" [style.width.%]="statsGlobal.completePct"></div>
+              </div>
+              <p class="completeness-note">
+                <strong>{{ statsGlobal.complete }}</strong> de {{ statsGlobal.total }} productos tienen descripción, fotografía, variantes y precio correctamente asignados.
+              </p>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="report-charts-grid">
+              <div class="chart-container-card">
+                <h4 class="chart-card-title">
+                  <span class="material-symbols-rounded text-slate-500">pie_chart</span>
+                  Distribución por Línea de Negocio
+                </h4>
+                <div style="height:270px; position:relative;">
+                  <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" [type]="lineChartType"></canvas>
+                </div>
+              </div>
+              <div class="chart-container-card">
+                <h4 class="chart-card-title">
+                  <span class="material-symbols-rounded text-slate-500">bar_chart</span>
+                  Top 10 Categorías con más Productos
+                </h4>
+                <div style="height:270px; position:relative;">
+                  <canvas baseChart [data]="categoryChartData" [options]="categoryChartOptions" [type]="categoryChartType"></canvas>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ═════ PESTAÑA 1: CALIDAD DEL CATÁLOGO ═════ -->
+          <div *ngIf="reportTab === 1" class="report-tab-pane animate-fade-in">
+            
+            <!-- Quality Line Filter -->
+            <div class="quality-filter-bar">
+              <span class="quality-filter-title">Filtrar por Línea:</span>
+              <button
+                (click)="reportLineFilter = ''; onReportLineFilterChange()"
+                class="quality-pill-btn"
+                [class.is-selected]="reportLineFilter === ''"
+              >
+                Todas las marcas
+              </button>
+              <button
+                (click)="reportLineFilter = 'Plaxtilineas'; onReportLineFilterChange()"
+                class="quality-pill-btn quality-pill-btn--plax"
+                [class.is-selected]="reportLineFilter === 'Plaxtilineas'"
+              >
+                Plaxtilineas
+              </button>
+              <button
+                (click)="reportLineFilter = 'Espumas'; onReportLineFilterChange()"
+                class="quality-pill-btn quality-pill-btn--espumas"
+                [class.is-selected]="reportLineFilter === 'Espumas'"
+              >
+                Espumas y Plásticos
+              </button>
+              <button
+                (click)="reportLineFilter = 'Districol'; onReportLineFilterChange()"
+                class="quality-pill-btn quality-pill-btn--districol"
+                [class.is-selected]="reportLineFilter === 'Districol'"
+              >
+                Districol
+              </button>
+              <span style="margin-left:auto; font-size:0.76rem; font-weight:700; color:#64748b;">
+                {{ filteredLineStats.total }} productos analizados
+              </span>
+            </div>
+
+            <!-- Action Cards -->
+            <div class="action-cards-grid">
+              <!-- Sin Descripción -->
+              <button
+                (click)="selectActionCard('description')"
+                class="action-card"
+                [class.action-card--active]="activeActionCard === 'description'"
+              >
+                <div class="action-card-icon action-card-icon--rose">
+                  <span class="material-symbols-rounded">description</span>
+                </div>
+                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingDesc }}</div>
+                <div class="action-card-name">Sin Descripción</div>
+                <div class="action-card-hint">Requieren texto informativo</div>
+              </button>
+
+              <!-- Sin Imágenes -->
+              <button
+                (click)="selectActionCard('images')"
+                class="action-card"
+                [class.action-card--active]="activeActionCard === 'images'"
+              >
+                <div class="action-card-icon action-card-icon--rose">
+                  <span class="material-symbols-rounded">image</span>
+                </div>
+                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingImg }}</div>
+                <div class="action-card-name">Sin Imágenes</div>
+                <div class="action-card-hint">Requieren fotografía</div>
+              </button>
+
+              <!-- Sin Variantes -->
+              <button
+                (click)="selectActionCard('variants')"
+                class="action-card"
+                [class.action-card--active]="activeActionCard === 'variants'"
+              >
+                <div class="action-card-icon action-card-icon--amber">
+                  <span class="material-symbols-rounded">inventory_2</span>
+                </div>
+                <div class="action-card-val text-amber-500">{{ filteredLineStats.missingVars }}</div>
+                <div class="action-card-name">Sin Variantes</div>
+                <div class="action-card-hint">Sin medidas o referencias</div>
+              </button>
+
+              <!-- Sin Precio -->
+              <button
+                (click)="selectActionCard('price')"
+                class="action-card"
+                [class.action-card--active]="activeActionCard === 'price'"
+              >
+                <div class="action-card-icon action-card-icon--rose">
+                  <span class="material-symbols-rounded">sell</span>
+                </div>
+                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingPrice }}</div>
+                <div class="action-card-name">Sin Precio</div>
+                <div class="action-card-hint">Variantes con precio en $0</div>
+              </button>
+            </div>
+
+            <!-- Problem Products Table -->
+            <div *ngIf="activeActionCard && problemProducts.length > 0" class="problem-table-container animate-fade-in">
+              <div class="problem-table-header">
+                <p class="problem-table-title">{{ problemProducts.length }} productos que requieren atención</p>
+                <button (click)="goToInventory()" class="problem-filter-apply-btn">
+                  <span class="material-symbols-rounded" style="font-size:0.95rem">open_in_new</span>
+                  <span>Gestionar en inventario</span>
+                </button>
+              </div>
+              <div class="problem-table-list">
+                <div
+                  *ngFor="let p of problemProducts; trackBy: trackByProductId"
+                  class="problem-item-row"
+                  (click)="goToInventory()"
+                  title="Clic para ir al inventario"
+                >
+                  <div class="problem-item-info">
+                    <div class="problem-item-icon">
+                      <span class="material-symbols-rounded">inventory_2</span>
+                    </div>
+                    <div>
+                      <p class="problem-item-name">{{ p.name }}</p>
+                      <p class="problem-item-sub">{{ p.category_name || 'Sin categoría' }} · {{ p.category || '—' }}</p>
+                    </div>
+                  </div>
+                  <span
+                    class="brand-tag-mini"
+                    [ngClass]="p.category === 'Plaxtilineas' ? 'brand-tag-mini--plax' : p.category === 'Espumas' ? 'brand-tag-mini--espumas' : p.category === 'Districol' ? 'brand-tag-mini--districol' : ''"
+                  >
+                    {{ p.category || 'Sin línea' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="activeActionCard && problemProducts.length === 0" class="empty-problems-banner animate-fade-in">
+              <span class="material-symbols-rounded text-emerald-500" style="font-size: 3.5rem;">check_circle</span>
+              <p style="color:#059669; font-weight:800; font-size:1.1rem; margin-top:8px;">¡Excelente! No hay productos con esta observación</p>
+            </div>
+
+          </div>
+
+          <!-- ═════ PESTAÑA 2: ANÁLISIS POR CATEGORÍA ═════ -->
+          <div *ngIf="reportTab === 2" class="report-tab-pane animate-fade-in">
+            
+            <!-- Selector -->
+            <div class="category-filter-select-row">
+              <p class="select-label">Selecciona una categoría:</p>
+              <div class="select-wrapper" style="max-width: 340px;">
+                <select [(ngModel)]="reportCategoryFilter" class="filter-select">
+                  <option value="">— Elige una categoría para analizar —</option>
+                  <option *ngFor="let name of uniqueCategoryNames" [value]="name">{{ name }}</option>
+                </select>
+                <span class="material-symbols-rounded select-arrow">expand_more</span>
+              </div>
+            </div>
+
+            <!-- KPIs de Categoría -->
+            <div *ngIf="reportCategoryFilter && categoryAnalysisProducts.length > 0" class="category-analysis-stack animate-fade-in">
+              <div class="category-analysis-kpis">
+                <div class="cat-kpi cat-kpi--primary">
+                  <p class="cat-kpi-label">Total Productos</p>
+                  <p class="cat-kpi-val">{{ categoryAnalysisProducts.length }}</p>
+                  <p class="cat-kpi-sub">en {{ reportCategoryFilter }}</p>
+                </div>
+                <div class="cat-kpi">
+                  <p class="cat-kpi-label">Con Imagen</p>
+                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('images') }}</p>
+                  <p class="cat-kpi-sub">productos</p>
+                </div>
+                <div class="cat-kpi">
+                  <p class="cat-kpi-label">Con Descripción</p>
+                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('description') }}</p>
+                  <p class="cat-kpi-sub">productos</p>
+                </div>
+                <div class="cat-kpi">
+                  <p class="cat-kpi-label">Con Variantes</p>
+                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('variants') }}</p>
+                  <p class="cat-kpi-sub">productos</p>
+                </div>
+                <div class="cat-kpi">
+                  <p class="cat-kpi-label">Con Precio</p>
+                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('price') }}</p>
+                  <p class="cat-kpi-sub">productos</p>
+                </div>
+              </div>
+
+              <!-- Lista detallada -->
+              <div class="problem-table-container">
+                <div class="problem-table-header">
+                  <p class="problem-table-title">Productos en {{ reportCategoryFilter }}</p>
+                  <button (click)="goToInventory()" class="problem-filter-apply-btn">
+                    <span class="material-symbols-rounded" style="font-size:0.95rem">edit</span>
+                    <span>Modificar en inventario</span>
+                  </button>
+                </div>
+                <div class="problem-table-list" style="max-height: 360px;">
+                  <div
+                    *ngFor="let p of categoryAnalysisProducts; trackBy: trackByProductId"
+                    class="problem-item-row"
+                    (click)="goToInventory()"
+                    title="Clic para ir al inventario"
+                  >
+                    <div>
+                      <p class="problem-item-name">{{ p.name }}</p>
+                      <p class="problem-item-sub">{{ p.category || '—' }}</p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span class="health-chip" [class.health-chip--ok]="p.description && p.description.trim()" title="Descripción">
+                        <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.description && p.description.trim() ? 'check' : 'close' }}</span>
+                      </span>
+                      <span class="health-chip" [class.health-chip--ok]="p.images && p.images.length > 0" title="Imagen">
+                        <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.images && p.images.length > 0 ? 'check' : 'close' }}</span>
+                      </span>
+                      <span class="health-chip" [class.health-chip--ok]="p.variants && p.variants.length > 0" title="Variantes">
+                        <span class="material-symbols-rounded" style="font-size:0.85rem">{{ p.variants && p.variants.length > 0 ? 'check' : 'close' }}</span>
+                      </span>
+                      <span class="health-chip" [class.health-chip--ok]="hasValidPrice(p)" title="Precio">
+                        <span class="material-symbols-rounded" style="font-size:0.85rem">{{ hasValidPrice(p) ? 'check' : 'close' }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="!reportCategoryFilter" class="empty-problems-banner" style="padding: 60px 20px;">
+              <span class="material-symbols-rounded text-slate-300" style="font-size: 3.5rem;">category</span>
+              <p style="color:#64748b; font-weight:700; margin-top:8px;">Selecciona una categoría para ver su diagnóstico detallado</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</div>

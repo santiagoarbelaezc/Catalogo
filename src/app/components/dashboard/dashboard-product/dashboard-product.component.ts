@@ -67,7 +67,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   itemsPerPage = 12;
 
   activeActionFilter: string | null = null;
-  showReports = false;
 
   // === SIDEBAR STATE ===
   sidebarExpanded = true;
@@ -95,6 +94,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   }
 
   navigateToProducts()    { this.router.navigate(['/dashboard/productos']); }
+  navigateToAnalytics()   { this.router.navigate(['/dashboard/analiticas']); }
   navigateToCategories()  { this.router.navigate(['/dashboard/categorias']); }
   navigateToEspumas()     { this.router.navigate(['/dashboard/espumas']); }
   navigateToDistricol()   { this.router.navigate(['/dashboard/districol']); }
@@ -452,23 +452,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     }
   }
 
-  // --- REPORTS & STATS LOGIC ---
-  toggleReports() {
-    this.showReports = !this.showReports;
-    if (this.showReports) {
-      this.reportTab = 0;
-      this.reportLineFilter = '';
-      this.reportCategoryFilter = '';
-      this.activeActionCard = null;
-      this.problemProducts = [];
-      this.calculateStats();
-    }
-  }
-
-  closeModal() {
-    this.showReports = false;
-    this.cdr.markForCheck();
-  }
+  // --- STATS LOGIC ---
 
   calculateStats() {
     let missingDesc = 0, missingImg = 0, missingPrice = 0, missingVars = 0;
@@ -547,7 +531,6 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   applyActionFilter() {
     if (!this.activeActionCard) return;
     this.filterActionable(this.activeActionCard as any);
-    this.closeModal();
   }
 
   filterActionable(type: 'description' | 'images' | 'variants' | 'price' | null) {

@@ -89,6 +89,10 @@ export class DashboardEspumasComponent implements OnInit {
     this.router.navigate(['/dashboard/productos']);
   }
 
+  navigateToAnalytics(): void {
+    this.router.navigate(['/dashboard/analiticas']);
+  }
+
   navigateToCategories(): void {
     this.router.navigate(['/dashboard/categorias']);
   }
