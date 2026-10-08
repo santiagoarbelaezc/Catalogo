@@ -1,2 +1,9 @@
 <router-outlet />
 <app-toast-container />
+
+<!-- Modal Global de Detalle Completo de Producto (Libre de conflictos de transform/overflow) -->
+<app-product-detail
+  *ngIf="detailService.selectedProduct()"
+  [product]="detailService.selectedProduct()!"
+  (close)="detailService.close()">
+</app-product-detail>

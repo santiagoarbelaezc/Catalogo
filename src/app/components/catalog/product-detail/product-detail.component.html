@@ -1,0 +1,230 @@
+<div class="modal-backdrop" (click)="onBackdropClick($event)">
+  
+  <div class="modal-panel font-sans" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+    
+    <!-- Top Header Bar -->
+    <header class="detail-header">
+      <div class="header-breadcrumbs">
+        <span class="crumb-tag" *ngIf="product?.category_name || product?.category">
+          <span class="material-symbols-rounded">category</span>
+          {{ product?.category_name || product?.category }}
+        </span>
+        <span class="crumb-sep" *ngIf="product?.subcategory_name">/</span>
+        <span class="crumb-sub" *ngIf="product?.subcategory_name">
+          {{ product?.subcategory_name }}
+        </span>
+      </div>
+
+      <button type="button" class="close-btn" (click)="closeDetail($event)" aria-label="Cerrar detalle">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </header>
+
+    <!-- Loading State -->
+    <div class="loading-box" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Cargando información del producto...</p>
+    </div>
+
+    <!-- Product Content (Dual Column) -->
+    <div class="detail-content-grid" *ngIf="!isLoading && product">
+      
+      <!-- ===== COLUMNA IZQUIERDA: GALERÍA COMPLETA DE IMÁGENES ===== -->
+      <section class="gallery-column">
+        
+        <!-- Visor de Imagen Principal -->
+        <div class="main-viewer">
+          
+          <!-- Badges de Imagen -->
+          <div class="viewer-badges">
+            <span class="photo-counter" *ngIf="product.images && product.images.length > 1">
+              <span class="material-symbols-rounded">photo_camera</span>
+              {{ selectedImageIndex + 1 }} / {{ product.images.length }}
+            </span>
+            <span class="badge-featured" *ngIf="product.isFeatured">Destacado</span>
+          </div>
+
+          <!-- Imagen Activa -->
+          <img
+            *ngIf="currentImageUrl"
+            [src]="currentImageUrl"
+            [alt]="product.name"
+            class="viewer-img"
+          />
+
+          <div class="no-img-placeholder" *ngIf="!currentImageUrl">
+            <span class="material-symbols-rounded">image</span>
+            <span>Sin imagen disponible</span>
+          </div>
+
+          <!-- Flechas de navegación (si hay más de 1 imagen) -->
+          <button
+            type="button"
+            class="nav-arrow arrow-prev"
+            *ngIf="product.images && product.images.length > 1"
+            (click)="prevImage($event)"
+            aria-label="Foto anterior">
+            <span class="material-symbols-rounded">chevron_left</span>
+          </button>
+
+          <button
+            type="button"
+            class="nav-arrow arrow-next"
+            *ngIf="product.images && product.images.length > 1"
+            (click)="nextImage($event)"
+            aria-label="Siguiente foto">
+            <span class="material-symbols-rounded">chevron_right</span>
+          </button>
+        </div>
+
+        <!-- Botón de Cotizar por WhatsApp (Debajo de la primera imagen) -->
+        <div class="cta-actions-group">
+          <button type="button" class="cta-primary-whatsapp" (click)="contactWhatsApp()">
+            <div class="cta-inner-left">
+              <svg class="wa-svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.746.953 3.71 1.455 5.703 1.457h.004c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              <span>Cotizar por WhatsApp</span>
+            </div>
+            <span class="material-symbols-rounded">arrow_forward</span>
+          </button>
+        </div>
+
+        <!-- Tira Completa de Miniaturas (Las demás imágenes debajo del botón de cotizar) -->
+        <div class="thumbnails-container" *ngIf="product.images && product.images.length > 1">
+          <span class="thumbs-label">Galería de imágenes ({{ product.images.length }}):</span>
+          <div class="thumbnails-track">
+            <button
+              type="button"
+              *ngFor="let img of product.images; let idx = index"
+              (click)="selectImage(idx)"
+              class="thumb-item"
+              [class.active]="selectedImageIndex === idx"
+              [title]="'Foto ' + (idx + 1)">
+              <img [src]="img.url" [alt]="product.name + ' - Foto ' + (idx + 1)" loading="lazy" />
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===== COLUMNA DERECHA: INFORMACIÓN COMPLETA & COMPRA ===== -->
+      <section class="info-column">
+        
+        <!-- Título y Marca -->
+        <div class="product-title-group">
+          <span class="brand-badge" *ngIf="product.marca">
+            <span class="material-symbols-rounded">verified</span>
+            {{ product.marca }}
+          </span>
+          <h1 class="full-title">{{ product.name }}</h1>
+        </div>
+
+        <!-- Fila de Precio y Calculadora de Pedido (Al lado derecho del precio) -->
+        <div class="price-calc-container" *ngIf="priceDisplay || selectedPrice > 0">
+          
+          <!-- Precio Destacado (Izquierda) -->
+          <div class="price-showcase" *ngIf="priceDisplay">
+            <span class="price-note">Precio unitario oficial</span>
+            <div class="price-main">
+              <span class="price-number">{{ priceDisplay }}</span>
+              <span class="price-currency">COP</span>
+            </div>
+          </div>
+
+          <!-- Calculadora de Pedido (Lado derecho del precio) -->
+          <div class="order-calc-panel" *ngIf="selectedPrice > 0">
+            <div class="calc-row-top">
+              <span class="calc-title">Calcular pedido:</span>
+              <div class="stepper-widget">
+                <button type="button" class="btn-step" (click)="decreaseQty()" aria-label="Disminuir">-</button>
+                <span class="step-num">{{ quantity }}</span>
+                <button type="button" class="btn-step" (click)="increaseQty()" aria-label="Aumentar">+</button>
+              </div>
+            </div>
+
+            <div class="calc-row-bottom">
+              <span class="calc-math">{{ formatPrice(selectedPrice) }} × {{ quantity }} unds</span>
+              <div class="calc-result">
+                <span class="result-lbl">Total estimado:</span>
+                <span class="result-num">{{ calculatedTotalPriceDisplay }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Variantes y Referencias disponibles (Debajo del precio) -->
+        <div class="variants-block" *ngIf="(product.references && product.references.length > 0) || (product.variants && product.variants.length > 0)">
+          <h3 class="section-heading">Referencias & Opciones disponibles</h3>
+          <div class="variants-list">
+            <button
+              type="button"
+              *ngFor="let ref of (product.references || product.variants)"
+              (click)="selectVariant(ref)"
+              [disabled]="!ref.available"
+              class="variant-btn"
+              [class.active]="selectedVariant === ref"
+              [class.disabled]="!ref.available">
+              <div class="v-main">
+                <span class="v-dot" *ngIf="selectedVariant === ref"></span>
+                <span class="v-title">{{ ref.name }}</span>
+              </div>
+              <span class="v-cost" *ngIf="ref.price">{{ formatPrice(ref.price) }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Línea Minimalista -->
+        <div class="detail-divider"></div>
+
+        <!-- Descripción Completa -->
+        <div class="desc-section" *ngIf="product.description">
+          <h3 class="section-heading">Descripción del producto</h3>
+          <p class="desc-text">{{ product.description }}</p>
+        </div>
+
+        <!-- Línea Minimalista -->
+        <div class="detail-divider"></div>
+
+        <!-- Especificaciones Técnicas (Material, Gramaje, Colores) -->
+        <div class="specs-section">
+          <h3 class="section-heading">Ficha Técnica & Características</h3>
+          
+          <div class="specs-grid">
+            <div class="spec-card" *ngIf="product.material">
+              <span class="material-symbols-rounded spec-icon">texture</span>
+              <div class="spec-info">
+                <span class="spec-lbl">Material</span>
+                <span class="spec-val">{{ product.material }}</span>
+              </div>
+            </div>
+
+            <div class="spec-card" *ngIf="product.gramaje">
+              <span class="material-symbols-rounded spec-icon">scale</span>
+              <div class="spec-info">
+                <span class="spec-lbl">Gramaje / Calibre</span>
+                <span class="spec-val">{{ product.gramaje }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Muestras de Colores disponibles -->
+          <div class="colors-wrap" *ngIf="product.colors && product.colors.length > 0">
+            <span class="spec-lbl">Colores disponibles:</span>
+            <div class="color-badges-row">
+              <span class="color-badge" *ngFor="let col of product.colors">
+                <span class="color-swatch" [style.background-color]="getColorCode(col)"></span>
+                <span>{{ col }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+  </div>
+
+</div>

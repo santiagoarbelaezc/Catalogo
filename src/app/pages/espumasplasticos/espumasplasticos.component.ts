@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { CatalogItemComponent } from '../../components/catalog/catalog-item/catalog-item.component';
 
 import { ProductsService } from '../../services/products.service';
@@ -97,7 +98,10 @@ export class EspumasplasticosComponent implements OnInit {
     }
   }
 
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.productsService.getAllProducts().subscribe({
@@ -113,5 +117,12 @@ export class EspumasplasticosComponent implements OnInit {
         console.error('Error cargando productos Espumas Plásticas:', error);
       }
     });
+  }
+
+  goToPrint(): void {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/catalogo-print'], { queryParams: { brand: 'Espumas' } })
+    );
+    window.open(url, '_blank');
   }
 }

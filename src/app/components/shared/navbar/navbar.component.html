@@ -71,27 +71,109 @@
         </a>
       </div>
 
-      <!-- RIGHT: Action elements (Botones Negros, sin hamburguesa) -->
-      <div class="navbar-actions">
+      <!-- RIGHT: SEARCH BAR & ACTIONS -->
+      <div class="navbar-right-side">
 
-        <!-- WhatsApp Button -->
-        <a href="https://wa.me/573006680125" target="_blank" class="action-btn-black action-btn-whatsapp" title="Contactar por WhatsApp">
-          <fa-icon [icon]="faPhone" class="action-icon-green"></fa-icon>
-          <span class="hidden sm:inline">WhatsApp</span>
-        </a>
+        <!-- BUSCADOR DE PRODUCTOS CON DROPDOWN EN VIVO -->
+        <div class="nav-search-wrapper">
+          <div class="nav-search-input-box" [class.search-active]="isDropdownOpen">
+            <fa-icon [icon]="faSearch" class="nav-search-icon"></fa-icon>
+            <input
+              type="text"
+              class="nav-search-input"
+              placeholder="Buscar productos..."
+              [(ngModel)]="searchQuery"
+              (input)="onSearchInput()"
+              (focus)="onSearchFocus()"
+              (keydown.enter)="submitSearch()"
+              autocomplete="off"
+              aria-label="Buscar productos"
+            />
+            <button
+              type="button"
+              *ngIf="searchQuery"
+              class="search-clear-btn"
+              (click)="clearSearch()"
+              aria-label="Limpiar búsqueda">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          </div>
 
-        <!-- Panel Admin button (si está autenticado) -->
-        <a *ngIf="isAuthenticated" routerLink="/dashboard" class="action-btn-black action-btn-admin" title="Ir al Panel de Administración">
-          <fa-icon [icon]="faUserShield"></fa-icon>
-          <span class="hidden sm:inline">Admin</span>
-          <span class="admin-badge-dot"></span>
-        </a>
+          <!-- DROPDOWN DE RESULTADOS EN VIVO -->
+          <div class="search-dropdown-menu" *ngIf="isDropdownOpen">
+            
+            <div class="dropdown-header" *ngIf="searchResults.length > 0">
+              <span class="dropdown-header-title">Productos encontrados ({{ searchResults.length }})</span>
+              <span class="dropdown-header-hint">Enter para ver todos</span>
+            </div>
 
-        <!-- Login button (si NO está autenticado) -->
-        <a *ngIf="!isAuthenticated" routerLink="/login" class="action-btn-black action-btn-login" title="Iniciar Sesión">
-          <fa-icon [icon]="faStore"></fa-icon>
-          <span class="hidden sm:inline">Ingresar</span>
-        </a>
+            <!-- LISTA DE PRODUCTOS -->
+            <div class="dropdown-items-list" *ngIf="searchResults.length > 0">
+              <div
+                *ngFor="let prod of searchResults"
+                class="dropdown-product-item"
+                (click)="openProduct(prod)">
+                
+                <div class="item-thumb-box">
+                  <img
+                    *ngIf="getProductImage(prod)"
+                    [src]="getProductImage(prod)"
+                    [alt]="prod.name"
+                    class="item-thumb-img"
+                    loading="lazy"
+                  />
+                  <span class="material-symbols-rounded item-thumb-fallback" *ngIf="!getProductImage(prod)">image</span>
+                </div>
+
+                <div class="item-text-info">
+                  <span class="item-product-name">{{ prod.name }}</span>
+                  <div class="item-sub-meta">
+                    <span class="item-brand-tag" *ngIf="prod.marca">{{ prod.marca }}</span>
+                    <span class="item-cat-name">{{ prod.category_name || prod.category }}</span>
+                  </div>
+                </div>
+
+                <div class="item-price-side" *ngIf="getProductPrice(prod)">
+                  <span class="item-price-val">{{ getProductPrice(prod) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- FOOTER: VER TODOS LOS RESULTADOS -->
+            <div class="dropdown-footer" *ngIf="searchResults.length > 0">
+              <button type="button" class="view-all-btn" (click)="submitSearch()">
+                <span>Ver todos los resultados para "{{ searchQuery }}"</span>
+                <span class="material-symbols-rounded">arrow_forward</span>
+              </button>
+            </div>
+
+            <!-- ESTADO VACÍO (NO ENCONTRADO) -->
+            <div class="dropdown-empty-state" *ngIf="searchResults.length === 0 && searchQuery.trim().length > 0">
+              <span class="material-symbols-rounded empty-icon">search_off</span>
+              <p class="empty-title">Sin resultados para "{{ searchQuery }}"</p>
+              <p class="empty-hint">Intenta con otro término o categoría.</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ACCIONES (Admin / Login) -->
+        <div class="navbar-actions">
+
+          <!-- Panel Admin button (si está autenticado) -->
+          <a *ngIf="isAuthenticated" routerLink="/dashboard" class="action-btn-black action-btn-admin" title="Ir al Panel de Administración">
+            <fa-icon [icon]="faUserShield"></fa-icon>
+            <span class="hidden sm:inline">Admin</span>
+            <span class="admin-badge-dot"></span>
+          </a>
+
+          <!-- Login button (si NO está autenticado) -->
+          <a *ngIf="!isAuthenticated" routerLink="/login" class="action-btn-black action-btn-login" title="Iniciar Sesión">
+            <fa-icon [icon]="faStore"></fa-icon>
+            <span class="hidden sm:inline">Ingresar</span>
+          </a>
+
+        </div>
 
       </div>
 

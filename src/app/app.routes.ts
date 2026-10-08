@@ -11,6 +11,7 @@ import { DashboardCategoriesComponent } from './components/dashboard/dashboard-c
 import { DashboardEspumasComponent } from './components/dashboard/dashboard-espumas/dashboard-espumas.component';
 import { DashboardDistricolComponent } from './components/dashboard/dashboard-districol/dashboard-districol.component';
 import { authGuard } from './guards/auth.guard';
+import { ProductDetailComponent } from './components/catalog/product-detail/product-detail.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { UnauthorizedComponent } from './pages/unauthorized/unauthorized.component';
 
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'districol', component: DistricolComponent },
   { path: 'espumasplasticos', component: EspumasplasticosComponent },
   { path: 'plaxtilineas', component: PlaxtilineasComponent },
+  { path: 'producto/:id', component: ProductDetailComponent },
   { path: 'catalogo-print', component: CatalogoPrintComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },
   { path: '**', component: NotFoundComponent }

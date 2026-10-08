@@ -1,19 +1,21 @@
-<article class="catalog-card font-sans">
+<article class="catalog-card font-sans" (click)="openDetail($event)">
 
-  <!-- ===== ZONA DE IMAGEN Y BADGES ===== -->
+  <!-- ===== ZONA DE IMAGEN CUADRADA (SOLO 1 IMAGEN EN EL GRID) ===== -->
   <div class="card-media">
+    
     <!-- Badges flotantes -->
     <div class="badges-overlay">
       <span class="cat-pill" *ngIf="product.category_name || product.category">
         <span class="material-symbols-rounded">category</span>
         {{ product.category_name || product.category }}
       </span>
-      <span class="subcat-pill" *ngIf="product.subcategory_name">
-        {{ product.subcategory_name }}
+      <span class="photo-count-pill" *ngIf="product.images && product.images.length > 1" title="Ver galería completa de fotos">
+        <span class="material-symbols-rounded">photo_library</span>
+        {{ product.images.length }}
       </span>
     </div>
 
-    <!-- Imagen Principal -->
+    <!-- Imagen Principal (Aspect Ratio 1:1 Cuadrada) -->
     <div class="main-image-wrap">
       <img
         *ngIf="currentImageUrl"
@@ -25,30 +27,26 @@
       <div class="no-img-state" *ngIf="!currentImageUrl">
         <span class="material-symbols-rounded">image</span>
       </div>
+
+      <!-- Quick Action Eye Icon on Hover -->
+      <div class="quick-view-overlay">
+        <span class="quick-view-badge">
+          <span class="material-symbols-rounded">visibility</span>
+          Ver detalle
+        </span>
+      </div>
     </div>
 
-    <!-- Thumbnails de fotos (si tiene más de 1 imagen) -->
-    <div class="thumbs-strip" *ngIf="product.images && product.images.length > 1">
-      <button
-        type="button"
-        *ngFor="let img of product.images.slice(0, 5); let idx = index"
-        (click)="selectImage(idx)"
-        class="thumb-btn"
-        [class.active]="selectedImageIndex === idx"
-        [title]="img.description || ('Foto ' + (idx + 1))">
-        <img [src]="img.url" [alt]="img.description || product.name" loading="lazy" />
-      </button>
-      <span class="thumbs-more" *ngIf="product.images.length > 5">
-        +{{ product.images.length - 5 }}
-      </span>
-    </div>
   </div>
 
-  <!-- ===== CUERPO DE LA TARJETA ===== -->
+  <!-- ===== CUERPO DE LA TARJETA (COMPACTO Y CON MISMO TAMAÑO) ===== -->
   <div class="card-body">
+    
     <!-- Header: Título y Precio -->
     <div class="card-head">
-      <h3 class="product-title" [title]="product.name">{{ product.name }}</h3>
+      <h3 class="product-title" [title]="product.name">
+        {{ product.name }}
+      </h3>
       
       <div class="price-badge-wrap" *ngIf="priceDisplay">
         <span class="price-val">{{ priceDisplay }}</span>
@@ -56,70 +54,50 @@
       </div>
     </div>
 
-    <!-- Descripción breve -->
-    <p class="product-description" *ngIf="product.description">
-      {{ product.description }}
-    </p>
+    <!-- Línea minimalista separadora -->
+    <div class="card-divider"></div>
 
-    <!-- Especificaciones (Material / Colores) -->
-    <div class="specs-pills" *ngIf="product.material || (product.colors && product.colors.length > 0)">
-      <span class="spec-pill" *ngIf="product.material">
-        <span class="material-symbols-rounded">texture</span>
-        {{ product.material }}
-      </span>
-      <span class="spec-pill" *ngFor="let color of product.colors">
-        <span class="color-dot" [style.background-color]="getColorCode(color)"></span>
-        {{ color }}
-      </span>
-    </div>
+    <!-- Bloque de Descripción Compacta (2 Líneas) -->
+    <div class="card-details-block">
+      <p class="product-description" *ngIf="product.description">
+        {{ product.description }}
+      </p>
 
-    <!-- Variantes / Referencias -->
-    <div class="variants-section" *ngIf="product.variants && product.variants.length > 0">
-      <span class="section-micro-label">Opciones disponibles:</span>
-      <div class="variant-chips-wrap">
-        <button
-          type="button"
-          *ngFor="let variant of product.variants"
-          (click)="selectVariant(variant)"
-          [disabled]="!variant.available"
-          class="variant-chip"
-          [class.active]="selectedVariant === variant"
-          [class.unavailable]="!variant.available">
-          <span class="v-name">{{ variant.name }}</span>
-          <span class="v-price" *ngIf="variant.price">{{ formatPrice(variant.price) }}</span>
-        </button>
+      <!-- Especificaciones rápidas (Material / Colores) -->
+      <div class="specs-pills" *ngIf="product.material || (product.colors && product.colors.length > 0)">
+        <span class="spec-pill" *ngIf="product.material">
+          <span class="material-symbols-rounded">texture</span>
+          {{ product.material }}
+        </span>
+        <span class="spec-pill" *ngFor="let color of product.colors.slice(0, 3)">
+          <span class="color-dot" [style.background-color]="getColorCode(color)"></span>
+          {{ color }}
+        </span>
       </div>
     </div>
 
-    <!-- Espaciador flexible -->
+    <!-- Espaciador flexible para alinear todas las tarjetas a la misma altura -->
     <div class="card-spacer"></div>
 
-    <!-- Calculadora compacta de cantidad y total -->
-    <div class="calc-panel" *ngIf="selectedPrice > 0">
-      <div class="calc-top-row">
-        <span class="calc-legend">Cantidad:</span>
-        <div class="qty-stepper">
-          <button type="button" class="stepper-btn" (click)="decreaseQty()" aria-label="Menos">-</button>
-          <span class="qty-count">{{ quantity }}</span>
-          <button type="button" class="stepper-btn" (click)="increaseQty()" aria-label="Más">+</button>
-        </div>
-      </div>
-      <div class="calc-bottom-row">
-        <span class="calc-unit-math">{{ formatPrice(selectedPrice) }} × {{ quantity }}</span>
-        <span class="calc-total-badge">{{ calculatedTotalPriceDisplay }}</span>
-      </div>
-    </div>
+    <!-- Línea minimalista antes de las acciones -->
+    <div class="card-divider"></div>
 
-    <!-- Botón CTA WhatsApp -->
-    <button type="button" class="cta-whatsapp-btn" (click)="contact()">
-      <div class="cta-content-left">
+    <!-- Botones de Acción (Compactos y Alineados) -->
+    <div class="card-actions-row">
+      <!-- Botón Ver Detalles / Ingresar -->
+      <button type="button" class="btn-detail-view" (click)="openDetail($event)">
+        <span class="material-symbols-rounded">info</span>
+        <span>Ver detalle</span>
+      </button>
+
+      <!-- Botón WhatsApp Directo -->
+      <button type="button" class="btn-whatsapp-quick" (click)="contact($event)" title="Cotizar por WhatsApp">
         <svg class="whatsapp-icon" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.053-1.636-.36-1.077-.442-1.74-1.536-1.792-1.606-.053-.07-1.144-1.523-1.144-2.905 0-1.383.725-2.062.983-2.344.258-.283.563-.355.751-.355.188 0 .376.002.54.01.176.008.411-.067.643.49.238.572.812 1.979.882 2.123.07.144.117.312.023.499-.093.187-.14.305-.281.469-.141.164-.298.367-.425.493-.142.14-.289.294-.124.577.165.282.733 1.209 1.573 1.957 1.082.964 1.993 1.263 2.276 1.404.282.141.446.118.611-.07.165-.189.704-.823.892-1.106.188-.282.376-.235.634-.141.258.094 1.644.774 1.926.915.282.141.47.212.54.329.07.118.07.682-.074 1.087z"/>
         </svg>
-        <span>Solicitar por WhatsApp</span>
-      </div>
-      <span class="material-symbols-rounded cta-arrow">arrow_forward</span>
-    </button>
+        <span class="hidden sm:inline">WhatsApp</span>
+      </button>
+    </div>
 
   </div>
 

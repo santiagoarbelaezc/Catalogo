@@ -158,3 +158,171 @@ section:not(.dash-main section), main:not(.dash-main), header:not(.dash-header) 
   padding: 40px;
   box-shadow: 0 40px 100px rgba(0,0,0,0.1);
 }
+
+/* ===== BOTONES FLOTANTES DE ACCIÓN (WHATSAPP & IMPRIMIR) ===== */
+.floating-fab-group {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 999;
+}
+
+.fab-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.28);
+  border: none;
+}
+
+.fab-btn:hover {
+  transform: translateY(-3px) scale(1.06);
+}
+
+/* WhatsApp: Verde oficial vibrante */
+.fab-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.fab-whatsapp:hover {
+  background: #20ba5a;
+  box-shadow: 0 12px 28px -4px rgba(37, 211, 102, 0.45);
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.social-icon {
+  width: 27px;
+  height: 27px;
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.fab-whatsapp:hover .social-icon {
+  transform: scale(1.08);
+}
+
+/* Badge de Notificación */
+.notification {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: pulseBadge 2.2s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulseBadge {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Tooltip interactivo "¿Necesitas ayuda?" */
+.button-tooltip {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 9px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fab-whatsapp:hover .button-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-4px);
+}
+
+/* Imprimir: Negro / Slate oscuro minimalista */
+.fab-print {
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.fab-print:hover {
+  background: #1e293b;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.45);
+}
+
+.fab-print .material-symbols-rounded {
+  font-size: 24px;
+}
+
+/* Tooltips */
+.fab-tooltip {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fab-print:hover .fab-tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(-2px);
+}
+
+@media (max-width: 640px) {
+  .floating-fab-group {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    gap: 10px;
+  }
+
+  .fab-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+  }
+}

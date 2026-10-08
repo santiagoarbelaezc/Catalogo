@@ -4,7 +4,7 @@ import { NavbarComponent } from "../../components/shared/navbar/navbar.component
 import { CatalogItemComponent } from "../../components/catalog/catalog-item/catalog-item.component";
 import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { CatalogFilterBarComponent, CatalogFilters } from '../../components/catalog/catalog-filter-bar/catalog-filter-bar.component';
 
@@ -32,7 +32,8 @@ export class CatalogoHomeComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +49,15 @@ export class CatalogoHomeComponent implements OnInit {
       },
       error: (error: any) => {
         console.error('Error cargando catálogo general:', error);
+      }
+    });
+
+    this.route.queryParams.subscribe(params => {
+      if (params['q'] !== undefined) {
+        this.currentFilters.searchQuery = params['q'] || '';
+        if (this.products.length > 0) {
+          this.applyFilters(this.currentFilters);
+        }
       }
     });
   }

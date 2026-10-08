@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CatalogProduct } from '../../../models/product.model';
+import { ProductDetailService } from '../../../services/product-detail.service';
 
 @Component({
   selector: 'app-catalog-item',
@@ -18,6 +19,8 @@ export class CatalogItemComponent implements OnInit {
   selectedVariant: any = null;
   selectedImageIndex: number = 0;
   quantity: number = 1;
+
+  constructor(public detailService: ProductDetailService) {}
 
   ngOnInit() {
     const variants = this.product.references || this.product.variants || [];
@@ -117,7 +120,8 @@ export class CatalogItemComponent implements OnInit {
     return colorMap[colorName] || '#CCCCCC';
   }
 
-  contact(): void {
+  contact(event?: Event): void {
+    event?.stopPropagation();
     let message = `Hola, estoy interesado en el producto: *${this.product.name}*`;
     if (this.selectedVariant?.name) {
       message += ` (Opción: ${this.selectedVariant.name})`;
@@ -131,6 +135,11 @@ export class CatalogItemComponent implements OnInit {
     message += `. ¿Podrían brindarme más información?`;
     const whatsappUrl = `https://wa.me/573006680125?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
+  }
+
+  openDetail(event?: Event): void {
+    event?.stopPropagation();
+    this.detailService.open(this.product);
   }
 
   downloadCatalog(): void {
