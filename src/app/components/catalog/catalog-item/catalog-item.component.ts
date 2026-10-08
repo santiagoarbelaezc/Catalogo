@@ -12,10 +12,11 @@ import { CatalogProduct } from '../../../models/product.model';
 })
 export class CatalogItemComponent implements OnInit {
   @Input() product!: CatalogProduct;
-  @Input() backgroundGradient: string = 'var(--primary-bg),var(--primary-bg)'; // Degradado por defecto (color sólido)
-  @Input() reverseLayout: boolean = false; // Para invertir el orden de las secciones
+  @Input() backgroundGradient: string = 'var(--primary-bg),var(--primary-bg)';
+  @Input() reverseLayout: boolean = false;
 
   selectedVariant: any = null;
+  selectedImageIndex: number = 0;
   quantity: number = 1;
 
   ngOnInit() {
@@ -28,7 +29,24 @@ export class CatalogItemComponent implements OnInit {
     }
   }
 
+  selectImage(index: number): void {
+    this.selectedImageIndex = index;
+  }
+
+  get currentImageUrl(): string | null {
+    if (this.product?.images && this.product.images[this.selectedImageIndex]) {
+      return this.product.images[this.selectedImageIndex].url;
+    }
+    if (this.product?.images && this.product.images[0]) {
+      return this.product.images[0].url;
+    }
+    return null;
+  }
+
   get priceDisplay(): string | null {
+    if (this.selectedVariant && this.selectedVariant.price) {
+      return this.formatPrice(Number(this.selectedVariant.price));
+    }
     const variants = this.product.references || this.product.variants || [];
     const prices = variants
       .map(v => v.price)
@@ -57,6 +75,16 @@ export class CatalogItemComponent implements OnInit {
 
   get calculatedTotalPriceDisplay(): string {
     return this.formatPrice(this.calculatedTotalPrice);
+  }
+
+  decreaseQty(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  increaseQty(): void {
+    this.quantity++;
   }
 
   selectVariant(variant: any) {
@@ -89,30 +117,23 @@ export class CatalogItemComponent implements OnInit {
     return colorMap[colorName] || '#CCCCCC';
   }
 
-  getBackgroundGradient(): string {
-    const colors = this.backgroundGradient.split(',');
-    if (colors.length === 1) {
-      // Si solo hay un color, devolver color sólido
-      return colors[0].trim();
-    } else if (colors.length === 2) {
-      // Si hay dos colores, crear degradado
-      return `linear-gradient(to bottom, ${colors[0].trim()}, ${colors[1].trim()})`;
-    } else {
-      // Fallback por defecto
-      return 'var(--primary-bg)';
-    }
-  }
-
   contact(): void {
-    // Lógica para contacto vía WhatsApp
-    const message = `Hola, estoy interesado en el producto: ${this.product.name}. ¿Podrían darme más información?`;
-    const whatsappUrl = `https://wa.me/3006680125?text=${encodeURIComponent(message)}`;
+    let message = `Hola, estoy interesado en el producto: *${this.product.name}*`;
+    if (this.selectedVariant?.name) {
+      message += ` (Opción: ${this.selectedVariant.name})`;
+    }
+    if (this.quantity > 1) {
+      message += ` (Cantidad: ${this.quantity} unds)`;
+    }
+    if (this.selectedPrice > 0) {
+      message += ` - Total estimado: ${this.calculatedTotalPriceDisplay}`;
+    }
+    message += `. ¿Podrían brindarme más información?`;
+    const whatsappUrl = `https://wa.me/573006680125?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   }
 
   downloadCatalog(): void {
-    // Lógica para descargar ficha técnica
     console.log('Descargar ficha de:', this.product.name);
-    // Implementar descarga real aquí
   }
 }

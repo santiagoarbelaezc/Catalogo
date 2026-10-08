@@ -129,6 +129,7 @@ export class DashboardInicioComponent implements OnInit, OnDestroy {
   navigateToCategories()  { this.router.navigate(['/dashboard/categorias']); }
   navigateToEspumas()     { this.router.navigate(['/dashboard/espumas']); }
   navigateToDistricol()   { this.router.navigate(['/dashboard/districol']); }
+  openWebCatalog()        { window.open('/catalogo', '_blank'); }
 
   /** Iniciales del usuario para el avatar */
   get userInitials(): string {

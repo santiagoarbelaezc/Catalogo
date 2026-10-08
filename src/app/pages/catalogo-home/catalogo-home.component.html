@@ -2,91 +2,153 @@
 
 <div class="home-page font-sans">
 
-  <!-- ===== GLOBAL HERO ===== -->
+  <!-- ===== HERO DE ALTO IMPACTO (ESTILO DASHBOARD DARK BENTO) ===== -->
   <header class="home-hero">
-    <div class="hero-blob hero-blob-1"></div>
-    <div class="hero-blob hero-blob-2"></div>
+    <!-- Ambient mesh lighting -->
+    <div class="hero-mesh-blob hero-blob-cyan"></div>
+    <div class="hero-mesh-blob hero-blob-emerald"></div>
+    <div class="hero-mesh-blob hero-blob-indigo"></div>
 
-    <div class="hero-content">
-      <div class="hero-logo-wrap">
-        <h1 class="hero-title" style="letter-spacing: 2px;">CATÁLOGO GENERAL</h1>
+    <div class="hero-content-wrap">
+      
+      <!-- Top Badge -->
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>Catálogo Oficial Digital · Temporada 2026</span>
       </div>
 
-      <p class="hero-subtitle">TODAS NUESTRAS MARCAS EN UN SOLO LUGAR</p>
+      <!-- Main Headline -->
+      <h1 class="hero-headline">
+        CATÁLOGO <span class="headline-gradient">GENERAL</span>
+      </h1>
 
-      <div class="hero-pill">
-        <span class="material-symbols-rounded" style="font-size:1rem">inventory_2</span>
-        Descubre nuestros productos
+      <p class="hero-lead">
+        Portafolio oficial multimarca: Plaxtilineas, Districol y Espumas y Plásticos.
+      </p>
+
+      <!-- Bento Cards: Nuestras 3 Líneas de Negocio -->
+      <div class="hero-bento-grid">
+        
+        <!-- Tarjeta Plaxtilineas -->
+        <a routerLink="/plaxtilineas" class="hero-bento-card bento-card-plax">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">architecture</span>
+            </span>
+            <span class="bento-arrow material-symbols-rounded">arrow_outward</span>
+          </div>
+          <div class="bento-card-info">
+            <h3 class="bento-title">Plaxtilineas</h3>
+            <p class="bento-desc">Cuerdas, mallas, plásticos y ferretería liviana.</p>
+          </div>
+          <span class="bento-link-label">Explorar línea →</span>
+        </a>
+
+        <!-- Tarjeta Districol -->
+        <a routerLink="/districol" class="hero-bento-card bento-card-districol">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">bed</span>
+            </span>
+            <span class="bento-arrow material-symbols-rounded">arrow_outward</span>
+          </div>
+          <div class="bento-card-info">
+            <h3 class="bento-title">Districol</h3>
+            <p class="bento-desc">Colchones ortopédicos y sistemas de descanso.</p>
+          </div>
+          <span class="bento-link-label">Explorar línea →</span>
+        </a>
+
+        <!-- Tarjeta Espumas y Plásticos -->
+        <a routerLink="/espumasplasticos" class="hero-bento-card bento-card-espumas">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">layers</span>
+            </span>
+            <span class="bento-arrow material-symbols-rounded">arrow_outward</span>
+          </div>
+          <div class="bento-card-info">
+            <h3 class="bento-title">Espumas y Plásticos</h3>
+            <p class="bento-desc">Espumas por bloque, sábanas, almohadas y confort.</p>
+          </div>
+          <span class="bento-link-label">Explorar línea →</span>
+        </a>
+
       </div>
+
+      <!-- Trust Pillars Strip -->
+      <div class="hero-stats-strip">
+        <div class="stat-pill">
+          <span class="material-symbols-rounded">verified</span>
+          <span>Calidad Certificada</span>
+        </div>
+        <div class="stat-pill">
+          <span class="material-symbols-rounded">precision_manufacturing</span>
+          <span>Venta Directa de Fábrica</span>
+        </div>
+        <div class="stat-pill">
+          <span class="material-symbols-rounded">local_shipping</span>
+          <span>Envíos a Nivel Nacional</span>
+        </div>
+      </div>
+
     </div>
   </header>
 
-  <!-- ===== QUICK BRANDS OVERVIEW ===== -->
-  <section class="brands-bar">
-    <div class="brand-item">
-      <span class="brand-dot bg-black"></span>
-      <strong>Plaxtilineas:</strong> Cuerdas, Mallas y Plásticos
-    </div>
-    <div class="brand-item">
-      <span class="brand-dot bg-espumas"></span>
-      <strong>Espumas:</strong> Sábanas y Confort
-    </div>
-    <div class="brand-item">
-      <span class="brand-dot bg-districol"></span>
-      <strong>Districol:</strong> Colchones y Descanso
-    </div>
-  </section>
-
-  <!-- ===== PRODUCTS ===== -->
+  <!-- ===== SECCIÓN DE PRODUCTOS (GRAN ANCHO 1600PX, 2 POR FILA) ===== -->
   <section id="catalogo-grid" class="home-products">
-    <div class="products-header">
-      <div class="section-label">
-        <span class="material-symbols-rounded" style="font-size:0.9rem">apps</span>
-        TODOS LOS PRODUCTOS
+    <div class="products-section-container">
+      
+      <div class="products-header">
+        <div class="section-label">
+          <span class="material-symbols-rounded" style="font-size:0.9rem">apps</span>
+          INVENTARIO COMPLETO
+        </div>
+        <h2 class="section-title">Explora nuestra colección</h2>
+        <p class="section-subtitle">Visualiza y cotiza productos de todas nuestras marcas en tiempo real</p>
       </div>
-      <h2 class="section-title">Explora nuestra colección</h2>
-    </div>
 
-    <!-- Filtros -->
-    <app-catalog-filter-bar 
-      [totalProducts]="filteredProducts.length"
-      (filtersChanged)="applyFilters($event)">
-    </app-catalog-filter-bar>
+      <!-- Filtros -->
+      <app-catalog-filter-bar 
+        [totalProducts]="filteredProducts.length"
+        (filtersChanged)="applyFilters($event)">
+      </app-catalog-filter-bar>
 
-    <!-- Si no hay productos (cargando) -->
-    <div *ngIf="products.length === 0" class="loading-state">
-      <div class="loading-ring"></div>
-      <p>Cargando catálogo...</p>
-    </div>
+      <!-- Si no hay productos (cargando) -->
+      <div *ngIf="products.length === 0" class="loading-state">
+        <div class="loading-ring"></div>
+        <p>Cargando catálogo...</p>
+      </div>
 
-    <!-- Catálogo Mixto -->
-    <ng-container *ngIf="products.length > 0">
-      <app-catalog-item
-        *ngFor="let product of paginatedProducts; let i = index"
-        [product]="product"
-        [reverseLayout]="i % 2 === 1">
-      </app-catalog-item>
-    </ng-container>
+      <!-- Catálogo en Grilla de Dos en Dos (Gran Ancho) -->
+      <div *ngIf="products.length > 0" class="catalog-grid-2col">
+        <app-catalog-item
+          *ngFor="let product of paginatedProducts"
+          [product]="product">
+        </app-catalog-item>
+      </div>
 
-    <!-- ===== PAGINATION ===== -->
-    <div class="pagination-container" *ngIf="totalPages > 1">
-      <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
-        <span class="material-symbols-rounded">chevron_left</span>
-      </button>
+      <!-- ===== PAGINACIÓN ===== -->
+      <div class="pagination-container" *ngIf="totalPages > 1">
+        <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
 
-      <div class="page-numbers">
-        <button 
-          *ngFor="let page of pagesList" 
-          class="page-btn num-btn" 
-          [class.active]="page === currentPage"
-          (click)="changePage(page)">
-          {{ page }}
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pagesList" 
+            class="page-btn num-btn" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+            {{ page }}
+          </button>
+        </div>
+
+        <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+          <span class="material-symbols-rounded">chevron_right</span>
         </button>
       </div>
 
-      <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
-        <span class="material-symbols-rounded">chevron_right</span>
-      </button>
     </div>
   </section>
 

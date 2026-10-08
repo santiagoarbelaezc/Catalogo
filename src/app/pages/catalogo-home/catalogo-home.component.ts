@@ -4,14 +4,14 @@ import { NavbarComponent } from "../../components/shared/navbar/navbar.component
 import { CatalogItemComponent } from "../../components/catalog/catalog-item/catalog-item.component";
 import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { CatalogFilterBarComponent, CatalogFilters } from '../../components/catalog/catalog-filter-bar/catalog-filter-bar.component';
 
 @Component({
   selector: 'app-catalogo-home',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, CatalogItemComponent, CatalogFilterBarComponent],
+  imports: [CommonModule, RouterLink, NavbarComponent, CatalogItemComponent, CatalogFilterBarComponent],
   templateUrl: './catalogo-home.component.html',
   styleUrl: './catalogo-home.component.css'
 })

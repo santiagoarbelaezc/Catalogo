@@ -109,16 +109,19 @@
 
       <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
 
-      <!-- Ver Catálogo Público -->
-      <button
+      <!-- Ver Catálogo Público (Abrir en nueva pestaña para mantener el panel activo) -->
+      <a
+        href="/catalogo"
+        target="_blank"
+        rel="noopener noreferrer"
         class="sidebar-nav-item"
-        (click)="navigateTo('/')"
-        title="Ver Tienda / Catálogo"
+        title="Ver Catálogo Web (Abre en nueva pestaña)"
+        style="text-decoration: none;"
       >
         <span class="material-symbols-rounded sidebar-nav-icon">store</span>
         <span class="sidebar-nav-label-text">Catálogo Web</span>
         <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
-      </button>
+      </a>
 
     </nav>
 

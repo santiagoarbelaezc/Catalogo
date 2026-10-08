@@ -2,127 +2,113 @@
 
 <div class="espumas-page font-sans">
 
-  <!-- ===== HERO HEADER ===== -->
+  <!-- ===== HERO DE ALTO IMPACTO (AZUL CON VERDE MUY CLARO) ===== -->
   <header class="espumas-hero">
+    <!-- Ambient mesh lighting: Azul con Verde muy claro -->
+    <div class="hero-mesh-blob hero-blob-ocean"></div>
+    <div class="hero-mesh-blob hero-blob-mint"></div>
 
-    <!-- Decorative background blobs -->
-    <div class="hero-blob hero-blob-1"></div>
-    <div class="hero-blob hero-blob-2"></div>
-
-    <div class="hero-content">
-      <div class="hero-logo-wrap">
-        <h1 class="hero-title">ESPUMAS</h1>
+    <div class="hero-content-wrap">
+      
+      <!-- Top Badge -->
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span>Línea Industrial & Hogar · Espumas y Plásticos</span>
       </div>
 
-      <p class="hero-subtitle">CONFORT Y CALIDAD DESDE ADENTRO</p>
+      <!-- Main Headline -->
+      <h1 class="hero-headline">
+        ESPUMAS & <span class="headline-gradient">PLÁSTICOS</span>
+      </h1>
 
-      <div class="hero-pill">
-        <span class="material-symbols-rounded" style="font-size:1rem">verified</span>
-        Descanso garantizado
+      <p class="hero-lead">
+        Espumas certificadas en todas las densidades, cortes a medida y lencería para el hogar.
+      </p>
+
+      <!-- Bento Cards: Pilares Espumas -->
+      <div class="hero-bento-grid">
+        <div class="hero-bento-card">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">layers</span>
+            </span>
+          </div>
+          <h3 class="bento-title">Alta Resiliencia</h3>
+          <p class="bento-desc">Densidades D-20 a D-45 con máxima durabilidad.</p>
+        </div>
+
+        <div class="hero-bento-card">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">cut</span>
+            </span>
+          </div>
+          <h3 class="bento-title">Cortes a Medida</h3>
+          <p class="bento-desc">Dimensiones exactas para muebles e industria.</p>
+        </div>
+
+        <div class="hero-bento-card">
+          <div class="bento-card-top">
+            <span class="bento-icon-box">
+              <span class="material-symbols-rounded">bed</span>
+            </span>
+          </div>
+          <h3 class="bento-title">Lencería de Hogar</h3>
+          <p class="bento-desc">Sábanas, protectores y almohadas anatómicas.</p>
+        </div>
       </div>
+
     </div>
-
   </header>
 
-  <!-- ===== MESSAGE QUOTE ===== -->
-  <section class="espumas-quote">
-    <div class="quote-card">
-      <span class="material-symbols-rounded quote-icon">format_quote</span>
-      <p class="quote-text">
-        Proporcionamos las mejores espumas y plásticos innovadores para la industria,
-        garantizando siempre el máximo confort y durabilidad en cada producto.
-      </p>
-    </div>
-  </section>
-
-  <!-- ===== BANNER ===== -->
-  <section class="espumas-banner">
-    <div class="banner-frame">
-      <img
-        src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1770074973/banner_wmjmcg.jpg"
-        alt="Banner Espumas"
-        class="banner-img">
-      <div class="banner-overlay">
-        <span class="banner-badge">
-          <span class="material-symbols-rounded" style="font-size:1rem">star</span>
-          Expertos en descanso
-        </span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ALLIES ===== -->
-  <section class="espumas-allies">
-    <div class="allies-inner">
-
-      <div class="section-label">
-        <span class="material-symbols-rounded" style="font-size:0.9rem">handshake</span>
-        NUESTROS ALIADOS
-      </div>
-      <h2 class="section-title">Marcas que nos respaldan</h2>
-
-      <div class="brands-grid">
-
-        <div class="brand-card">
-          <div class="brand-img-box">
-            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878740/espumas_santafe_k82s21.png" alt="Espumas Santafé" class="brand-img">
-          </div>
-          <span class="brand-name">Espumas Santafé</span>
-        </div>
-
-        <div class="brand-card">
-          <div class="brand-img-box">
-            <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1759878741/espumas_medellin_dd3gcm.png" alt="Espumas Medellín" class="brand-img">
-          </div>
-          <span class="brand-name">Espumas Medellín</span>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== PRODUCTS ===== -->
+  <!-- ===== PRODUCTS (GRAN ANCHO 1600PX, 2 POR FILA) ===== -->
   <section id="espumasplasticos-section" class="espumas-products">
-    <div class="products-header">
-      <div class="section-label">
-        <span class="material-symbols-rounded" style="font-size:0.9rem">inventory_2</span>
-        CATÁLOGO
+    <div class="products-section-container">
+      
+      <div class="products-header">
+        <div class="section-label">
+          <span class="material-symbols-rounded" style="font-size:0.9rem">inventory_2</span>
+          CATÁLOGO DE PRODUCTOS
+        </div>
+        <h2 class="section-title">Nuestra Colección de Espumas & Confort</h2>
+        <p class="section-subtitle">Calidad garantizada para tapicería, hogar y hotelería</p>
       </div>
-      <h2 class="section-title">Nuestros Productos</h2>
-    </div>
 
-    <!-- Filtros -->
-    <app-catalog-filter-bar 
-      [totalProducts]="filteredProducts.length"
-      (filtersChanged)="applyFilters($event)">
-    </app-catalog-filter-bar>
+      <!-- Filtros -->
+      <app-catalog-filter-bar 
+        [totalProducts]="filteredProducts.length"
+        (filtersChanged)="applyFilters($event)">
+      </app-catalog-filter-bar>
 
-    <!-- El ngFor iterará sobre los productos reales obtenidos de la BD -->
-    <app-catalog-item
-      *ngFor="let product of paginatedProducts; let i = index"
-      [product]="product"
-      [reverseLayout]="i % 2 === 1">
-    </app-catalog-item>
+      <!-- Catálogo en Grilla de Dos en Dos (Gran Ancho) -->
+      <div *ngIf="products.length > 0" class="catalog-grid-2col">
+        <app-catalog-item
+          *ngFor="let product of paginatedProducts"
+          [product]="product">
+        </app-catalog-item>
+      </div>
 
-    <!-- ===== PAGINATION ===== -->
-    <div class="pagination-container" *ngIf="totalPages > 1">
-      <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
-        <span class="material-symbols-rounded">chevron_left</span>
-      </button>
+      <!-- ===== PAGINACIÓN ===== -->
+      <div class="pagination-container" *ngIf="totalPages > 1">
+        <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
 
-      <div class="page-numbers">
-        <button 
-          *ngFor="let page of pagesList" 
-          class="page-btn num-btn" 
-          [class.active]="page === currentPage"
-          (click)="changePage(page)">
-          {{ page }}
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pagesList" 
+            class="page-btn num-btn" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+            {{ page }}
+          </button>
+        </div>
+
+        <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+          <span class="material-symbols-rounded">chevron_right</span>
         </button>
       </div>
 
-      <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
-        <span class="material-symbols-rounded">chevron_right</span>
-      </button>
     </div>
   </section>
 

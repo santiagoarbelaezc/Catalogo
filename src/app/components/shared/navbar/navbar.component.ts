@@ -1,18 +1,19 @@
 import { Component, HostListener } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faMapMarkerAlt, faPhone, faStore, faBars, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faMapMarkerAlt, faPhone, faStore, faBars, faTimes, faSearch, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, FontAwesomeModule],
+  imports: [RouterLink, RouterLinkActive, FontAwesomeModule, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  isVisible = true;
-  previousScrollY = 0;
+  isScrolled = false;
   isMobileMenuOpen = false;
 
   // Font Awesome icons
@@ -22,37 +23,20 @@ export class NavbarComponent {
   faBars = faBars;
   faTimes = faTimes;
   faSearch = faSearch;
+  faUserShield = faUserShield;
 
-  constructor() {}
+  constructor(public authService: AuthService) {}
+
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
-  @HostListener('window:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    // Si estamos en el top de la página, mantener visible
-    if (window.scrollY === 0) {
-      this.isVisible = true;
-      return;
-    }
-    // Lógica normal del mouse
-    this.isVisible = event.clientY < 120;
-  }
-
-  @HostListener('window:scroll', ['$event'])
-  onScroll(event: Event) {
-    const currentScroll = window.scrollY;
-    // Si estamos en el top de la página, mostrar navbar
-    if (currentScroll === 0) {
-      this.isVisible = true;
-    } else if (currentScroll > this.previousScrollY) {
-      // Scrolling down, hide navbar
-      this.isVisible = false;
-    } else if (currentScroll < this.previousScrollY) {
-      // Scrolling up, show navbar
-      this.isVisible = true;
-    }
-    this.previousScrollY = currentScroll;
+  @HostListener('window:scroll')
+  onScroll() {
+    this.isScrolled = window.scrollY > 20;
   }
 }
