@@ -56,7 +56,7 @@ export class DashboardAnalyticsComponent implements OnInit {
         position: 'right',
         labels: {
           font: { family: 'Inter Tight', size: 12, weight: '700' },
-          color: '#18181b',
+          color: '#09090b',
           padding: 18,
           usePointStyle: true,
           pointStyleWidth: 10
@@ -66,13 +66,23 @@ export class DashboardAnalyticsComponent implements OnInit {
         backgroundColor: '#09090b',
         titleFont: { family: 'Inter Tight', size: 13, weight: '700' },
         titleColor: '#ffffff',
-        bodyFont: { family: 'Inter Tight', size: 12 },
+        bodyFont: { family: 'Inter Tight', size: 12, weight: '600' },
         bodyColor: '#e4e4e7',
-        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderColor: '#27272a',
         borderWidth: 1,
         padding: 12,
         cornerRadius: 10,
-        boxPadding: 6
+        boxPadding: 6,
+        callbacks: {
+          label: (context: any) => {
+            const val = context.raw || 0;
+            const dataset = context.chart?.data?.datasets?.[0];
+            const dataArr = dataset ? dataset.data : [];
+            const total = dataArr.reduce((a: number, b: number) => a + b, 0);
+            const pct = total > 0 ? Math.round((val / total) * 100) : 0;
+            return ` ${context.label}: ${val} (${pct}%)`;
+          }
+        }
       }
     },
     cutout: '72%'
@@ -83,8 +93,8 @@ export class DashboardAnalyticsComponent implements OnInit {
     datasets: [
       {
         data: [0, 0, 0, 0],
-        backgroundColor: ['#dc2626', '#09090b', '#71717a', '#d4d4d8'],
-        hoverBackgroundColor: ['#b91c1c', '#000000', '#52525b', '#a1a1aa'],
+        backgroundColor: ['#dc2626', '#09090b', '#52525b', '#a1a1aa'],
+        hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#71717a'],
         borderColor: '#ffffff',
         borderWidth: 3,
         hoverOffset: 10
@@ -103,22 +113,26 @@ export class DashboardAnalyticsComponent implements OnInit {
         titleFont: { family: 'Inter Tight', size: 13, weight: '700' },
         titleColor: '#ffffff',
         bodyFont: { family: 'Inter Tight', size: 12, weight: '600' },
-        bodyColor: '#fca5a5',
-        borderColor: 'rgba(255, 255, 255, 0.12)',
+        bodyColor: '#e4e4e7',
+        borderColor: '#27272a',
         borderWidth: 1,
         padding: 12,
-        cornerRadius: 10
+        cornerRadius: 10,
+        displayColors: false,
+        callbacks: {
+          label: (context: any) => ` ${context.raw} productos registrados`
+        }
       }
     },
     scales: {
       x: {
         beginAtZero: true,
-        grid: { color: '#f1f5f9' },
-        ticks: { font: { family: 'Inter Tight', size: 11, weight: '600' }, color: '#71717a' }
+        grid: { color: '#f4f4f5' },
+        ticks: { font: { family: 'Inter Tight', size: 11, weight: '600' }, color: '#71717a', precision: 0 }
       },
       y: {
         grid: { display: false },
-        ticks: { font: { family: 'Inter Tight', size: 12, weight: '700' }, color: '#18181b' }
+        ticks: { font: { family: 'Inter Tight', size: 12, weight: '700' }, color: '#09090b' }
       }
     }
   };
@@ -293,8 +307,8 @@ export class DashboardAnalyticsComponent implements OnInit {
       datasets: [
         {
           data: [plaxti, espumas, distri, otros],
-          backgroundColor: ['#dc2626', '#09090b', '#71717a', '#d4d4d8'],
-          hoverBackgroundColor: ['#b91c1c', '#000000', '#52525b', '#a1a1aa'],
+          backgroundColor: ['#dc2626', '#09090b', '#52525b', '#a1a1aa'],
+          hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#71717a'],
           borderColor: '#ffffff',
           borderWidth: 3,
           hoverOffset: 10
@@ -305,9 +319,13 @@ export class DashboardAnalyticsComponent implements OnInit {
     const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
     const barColors = sortedCats.map((_, index) => {
       if (index === 0) return '#dc2626'; // #1 en Rojo vibrante
-      if (index < 3) return '#09090b';   // #2 y #3 en Negro puro
-      if (index < 6) return '#3f3f46';   // #4 a #6 en Carbón grafito
-      return '#71717a';                  // Resto en Gris pizarra
+      if (index === 1) return '#09090b'; // #2 en Negro puro
+      if (index === 2) return '#18181b'; // #3 en Carbón profundo
+      if (index === 3) return '#27272a'; // #4 en Grafito oscuro
+      if (index === 4) return '#3f3f46'; // #5 en Grafito medio
+      if (index === 5) return '#52525b'; // #6 en Gris zinc
+      if (index === 6) return '#71717a'; // #7 en Gris pizarra
+      return '#a1a1aa';                  // Resto en Gris suave
     });
 
     this.categoryChartData = {

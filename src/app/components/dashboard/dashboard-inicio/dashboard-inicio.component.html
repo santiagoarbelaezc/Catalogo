@@ -197,12 +197,13 @@
     <main class="dash-main animate-fade-in">
 
       <!-- ▸ FILA 1: STAT CARDS -->
+      <!-- ▸ FILA 1: STAT CARDS -->
       <section class="dash-stats-row">
 
         <div class="stat-card stat-card--primary">
           <div class="stat-card-top">
             <span class="stat-card-label">Total Productos</span>
-            <div class="stat-icon-wrap">
+            <div class="stat-icon-wrap stat-icon-wrap--black">
               <span class="material-symbols-rounded">inventory_2</span>
             </div>
           </div>
@@ -213,7 +214,7 @@
         <div class="stat-card stat-card--categories">
           <div class="stat-card-top">
             <span class="stat-card-label">Categorías</span>
-            <div class="stat-icon-wrap stat-icon-wrap--purple">
+            <div class="stat-icon-wrap stat-icon-wrap--red">
               <span class="material-symbols-rounded">category</span>
             </div>
           </div>
@@ -224,22 +225,22 @@
         <div class="stat-card stat-card--modules">
           <div class="stat-card-top">
             <span class="stat-card-label">Módulos</span>
-            <div class="stat-icon-wrap stat-icon-wrap--amber">
+            <div class="stat-icon-wrap stat-icon-wrap--gray">
               <span class="material-symbols-rounded">widgets</span>
             </div>
           </div>
-          <p class="stat-number">4</p>
+          <p class="stat-number">5</p>
           <p class="stat-sub">Secciones del panel</p>
         </div>
 
         <div class="stat-card stat-card--status">
           <div class="stat-card-top">
             <span class="stat-card-label">Estado</span>
-            <div class="stat-icon-wrap stat-icon-wrap--green">
+            <div class="stat-icon-wrap stat-icon-wrap--black">
               <span class="material-symbols-rounded">check_circle</span>
             </div>
           </div>
-          <p class="stat-number stat-number--green">Online</p>
+          <p class="stat-number stat-number--status">Online</p>
           <p class="stat-sub">{{ today | date:'d MMM yyyy · HH:mm' }}</p>
         </div>
 
@@ -265,7 +266,7 @@
           </p>
 
           <div class="bento-date">
-            <span class="material-symbols-rounded" style="font-size:1.15rem">calendar_today</span>
+            <span class="material-symbols-rounded" style="font-size:1.15rem; color:#dc2626;">calendar_today</span>
             <span>{{ formattedDate }}</span>
           </div>
 
@@ -279,7 +280,7 @@
           <p class="bento-section-label">Acceso Rápido</p>
 
           <button (click)="navigateToProducts()" class="quick-btn">
-            <div class="quick-btn-icon">
+            <div class="quick-btn-icon quick-btn-icon--black">
               <span class="material-symbols-rounded">inventory_2</span>
             </div>
             <span class="quick-btn-text">
@@ -289,8 +290,19 @@
             <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
           </button>
 
+          <button (click)="navigateToAnalytics()" class="quick-btn">
+            <div class="quick-btn-icon quick-btn-icon--red">
+              <span class="material-symbols-rounded">analytics</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Analíticas</span>
+              <span class="quick-btn-sub">Diagnóstico y métricas</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
+
           <button (click)="navigateToCategories()" class="quick-btn">
-            <div class="quick-btn-icon">
+            <div class="quick-btn-icon quick-btn-icon--red">
               <span class="material-symbols-rounded">category</span>
             </div>
             <span class="quick-btn-text">
@@ -301,7 +313,7 @@
           </button>
 
           <button (click)="navigateToEspumas()" class="quick-btn">
-            <div class="quick-btn-icon">
+            <div class="quick-btn-icon quick-btn-icon--black">
               <span class="material-symbols-rounded">layers</span>
             </div>
             <span class="quick-btn-text">
@@ -312,7 +324,7 @@
           </button>
 
           <button (click)="navigateToDistricol()" class="quick-btn">
-            <div class="quick-btn-icon">
+            <div class="quick-btn-icon quick-btn-icon--gray">
               <span class="material-symbols-rounded">storefront</span>
             </div>
             <span class="quick-btn-text">
@@ -339,6 +351,19 @@
             <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
           </div>
           <span class="module-deco material-symbols-rounded">inventory_2</span>
+        </button>
+
+        <button (click)="navigateToAnalytics()" class="module-card module-card--accent">
+          <div class="module-icon-wrap module-icon-wrap--red">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">analytics</span>
+          </div>
+          <h3 class="module-title">Reporte y Analíticas</h3>
+          <p class="module-desc">Diagnóstico de calidad, gráficos de distribución y métricas clave en tiempo real.</p>
+          <div class="module-cta module-cta--red">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco module-deco--accent material-symbols-rounded">analytics</span>
         </button>
 
         <button (click)="navigateToCategories()" class="module-card module-card--light">

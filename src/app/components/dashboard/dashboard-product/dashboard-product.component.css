@@ -2706,16 +2706,53 @@
 
 .variant-item-card {
   display: grid;
-  grid-template-columns: 1fr 140px 130px 40px;
+  grid-template-columns: 1.5fr 130px 95px 120px 115px 38px;
   gap: 10px;
-  align-items: center;
+  align-items: end;
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 8px 12px;
+  padding: 10px 12px;
+  transition: all 0.18s ease;
 }
 
-.variant-price-box {
+.variant-item-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.variant-col-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.variant-sku-box,
+.variant-stock-box,
+.variant-name-box,
+.variant-price-box,
+.variant-avail-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.sku-field {
+  font-family: monospace;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.stock-field {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.price-input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
@@ -2733,6 +2770,110 @@
   padding-left: 22px !important;
   font-weight: 700;
   color: #0f172a;
+}
+
+/* Slug & Stock Helpers */
+.input-with-prefix {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-prefix {
+  position: absolute;
+  left: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+  user-select: none;
+  pointer-events: none;
+  font-family: monospace;
+}
+
+.input-prefixed {
+  padding-left: 92px !important;
+  font-family: monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.btn-slug-sync {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.btn-slug-sync:hover {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.stock-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.stock-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 1.1rem;
+  color: #64748b;
+  pointer-events: none;
+}
+
+.stock-input {
+  padding-left: 38px !important;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.field-hint-msg {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin: 3px 0 0 2px;
+}
+
+/* Stock badge and Slug tag in Dashboard Table */
+.stock-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.stock-badge-pill--ok {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+.stock-mini-icon {
+  font-size: 0.85rem;
+}
+
+.slug-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-family: monospace;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #64748b;
+  border: 1px dashed #cbd5e1;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .avail-switch-btn {

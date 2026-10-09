@@ -10,6 +10,8 @@ export interface ProductImage {
 export interface CatalogProduct {
   id: number;
   name: string;               // Nombre del producto
+  slug?: string;              // Slug amigable para URLs y pasarela
+  stock?: number;             // Stock general del producto
   description: string;        // Descripción del producto
   material: string;           // Material del producto
 

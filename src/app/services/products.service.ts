@@ -39,6 +39,17 @@ export class ProductsService {
   }
 
   /**
+   * 📖 Obtener un producto por Slug
+   * GET /api/productos/slug/:slug
+   */
+  getProductBySlug(slug: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/slug/${slug}`).pipe(
+      map(res => res.data ?? res),
+      catchError(err => of(null))
+    );
+  }
+
+  /**
    * 📖 Obtener productos por categoría
    * GET /api/productos/categoria/:category
    */
@@ -99,6 +110,8 @@ export class ProductsService {
 
     // Agregar datos del producto
     formData.append('name', product.name);
+    if (product.slug !== undefined && product.slug !== null) formData.append('slug', product.slug);
+    if (product.stock !== undefined && product.stock !== null) formData.append('stock', product.stock.toString());
     formData.append('description', product.description);
     formData.append('material', product.material);
 

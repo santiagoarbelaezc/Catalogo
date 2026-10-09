@@ -405,6 +405,14 @@
                 </div>
                 <div class="row-meta-wrap">
                   <span class="row-category-text">{{ product.category }}</span>
+                  <span class="meta-dot">·</span>
+                  <span class="stock-badge-pill" [class.stock-badge-pill--ok]="(product.stock !== undefined ? product.stock : 15) > 0">
+                    <span class="material-symbols-rounded stock-mini-icon">inventory_2</span>
+                    {{ product.stock !== undefined ? product.stock : 15 }} u.
+                  </span>
+                  <span *ngIf="product.slug" class="slug-badge-pill" title="Slug: {{ product.slug }}">
+                    /{{ product.slug }}
+                  </span>
                   <span *ngIf="getMinPrice(product) > 0" class="meta-dot">·</span>
                   <span *ngIf="getMinPrice(product) > 0" class="row-price-text">
                     <span class="price-from">Desde</span>
@@ -558,13 +566,41 @@
                 <!-- Nombre Comercial (Full width) -->
                 <div class="form-field-span-full">
                   <label class="modal-field-label">Nombre Comercial <span class="required-star">*</span></label>
-                  <input type="text" formControlName="name"
+                  <input type="text" formControlName="name" (input)="onNameInput()"
                     [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
                     class="modal-input"
                     placeholder="Ej: Plastilina Profesional Moldeable Negra">
                   <p *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="field-error-msg">
                     El nombre es obligatorio (mínimo 3 caracteres).
                   </p>
+                </div>
+
+                <!-- Slug URL (Pasarela / SEO) -->
+                <div class="form-field-col">
+                  <div class="field-label-split">
+                    <label class="modal-field-label">Slug URL (Pasarela / SEO)</label>
+                    <button type="button" (click)="regenerateSlug()" class="btn-ai-pill btn-slug-sync" title="Generar slug desde nombre comercial">
+                      <span class="material-symbols-rounded">sync</span>
+                      <span>Generar</span>
+                    </button>
+                  </div>
+                  <div class="input-with-prefix">
+                    <span class="input-prefix">/productos/</span>
+                    <input type="text" formControlName="slug" class="modal-input input-prefixed" placeholder="nombre-producto">
+                  </div>
+                  <p class="field-hint-msg">Identificador único para URLs directas y pasarela de pago.</p>
+                </div>
+
+                <!-- Stock General -->
+                <div class="form-field-col">
+                  <label class="modal-field-label">Stock Base (Unidades) <span class="required-star">*</span></label>
+                  <div class="stock-input-wrapper">
+                    <span class="material-symbols-rounded stock-icon">inventory_2</span>
+                    <input type="number" formControlName="stock" min="0"
+                      [class.is-invalid]="productForm.get('stock')?.invalid && productForm.get('stock')?.touched"
+                      class="modal-input stock-input" placeholder="15">
+                  </div>
+                  <p class="field-hint-msg">Unidades disponibles para venta (Mínimo sugerido: 15).</p>
                 </div>
 
                 <!-- Línea de Negocio -->
@@ -727,13 +763,26 @@
               <div formArrayName="variants" class="variants-stack">
                 <div *ngFor="let varGroup of variantsArray.controls; let i = index" [formGroupName]="i" class="variant-item-card">
                   <div class="variant-name-box">
-                    <input formControlName="name" placeholder="Nombre (Ej: Paquete x12 u., Rollo 50m, Caja 500g)" class="modal-input modal-input--sm">
+                    <span class="variant-col-label">Presentación</span>
+                    <input formControlName="name" placeholder="Ej: Rollo 50m, 100x190..." class="modal-input modal-input--sm">
+                  </div>
+                  <div class="variant-sku-box">
+                    <span class="variant-col-label">SKU Código</span>
+                    <input formControlName="sku" placeholder="Auto o ej: PLAX-001-01" class="modal-input modal-input--sm sku-field">
+                  </div>
+                  <div class="variant-stock-box">
+                    <span class="variant-col-label">Stock (u.)</span>
+                    <input formControlName="stock" type="number" min="0" placeholder="15" class="modal-input modal-input--sm stock-field">
                   </div>
                   <div class="variant-price-box">
-                    <span class="price-currency-sign">$</span>
-                    <input formControlName="price" type="number" placeholder="0" class="modal-input modal-input--sm price-field">
+                    <span class="variant-col-label">Precio</span>
+                    <div class="price-input-wrapper">
+                      <span class="price-currency-sign">$</span>
+                      <input formControlName="price" type="number" placeholder="0" class="modal-input modal-input--sm price-field">
+                    </div>
                   </div>
                   <div class="variant-avail-box">
+                    <span class="variant-col-label">Estado</span>
                     <label class="avail-switch-btn" [class.is-active]="varGroup.get('available')?.value" title="Disponibilidad">
                       <input type="checkbox" formControlName="available" class="hidden-native">
                       <span class="material-symbols-rounded">{{ varGroup.get('available')?.value ? 'check_circle' : 'cancel' }}</span>

@@ -15,6 +15,8 @@ import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 interface Product {
   id?: number;
   name: string;
+  slug?: string;
+  stock?: number;
   description: string;
   material: string;
   category: string;
@@ -692,6 +694,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
+      slug: [''],
+      stock: [15, [Validators.required, Validators.min(0)]],
       description: ['', [Validators.required, Validators.minLength(3)]],
       material: [''],
       category: ['', [Validators.required]], // Línea de negocio
@@ -707,6 +711,35 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       variants: this.fb.array([]),
       images: this.fb.array([])
     });
+  }
+
+  generateSlug(text: string): string {
+    if (!text) return '';
+    return text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  onNameInput() {
+    if (!this.editingProduct) {
+      const nameVal = this.productForm.get('name')?.value || '';
+      const slugControl = this.productForm.get('slug');
+      if (slugControl && !slugControl.dirty) {
+        slugControl.setValue(this.generateSlug(nameVal));
+      }
+    }
+  }
+
+  regenerateSlug() {
+    const nameVal = this.productForm.get('name')?.value || '';
+    if (nameVal) {
+      this.productForm.get('slug')?.setValue(this.generateSlug(nameVal));
+      this.productForm.get('slug')?.markAsDirty();
+      this.cdr.markForCheck();
+    }
   }
 
   loadProducts() {
@@ -753,11 +786,13 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.colorsArray.removeAt(index);
   }
 
-  addVariant() {
+  addVariant(variant?: any) {
     const variantGroup = this.fb.group({
-      name: ['', Validators.required],
-      available: [true],
-      price: [0, [Validators.min(0)]]
+      name: [variant?.name || '', Validators.required],
+      sku: [variant?.sku || ''],
+      stock: [variant?.stock !== undefined ? variant.stock : 15, [Validators.required, Validators.min(0)]],
+      available: [variant?.available !== undefined ? (variant.available === 1 || variant.available === true) : true],
+      price: [variant?.price !== undefined ? (parseFloat(variant.price) || 0) : 0, [Validators.min(0)]]
     });
     this.variantsArray.push(variantGroup);
   }
@@ -920,6 +955,9 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.editingProduct = null;
     this.activeModalTab = 'general';
     this.productForm.reset({
+      name: '',
+      slug: '',
+      stock: 15,
       category: '',
       category_id: '',
       subcategory_id: '',
@@ -947,6 +985,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     // Batch patch form without triggering multiple separate emissions
     this.productForm.patchValue({
       name: product.name || '',
+      slug: product.slug || this.generateSlug(product.name || ''),
+      stock: product.stock !== undefined ? product.stock : 15,
       description: product.description || '',
       material: product.material || '',
       category: product.category || '',
@@ -973,12 +1013,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.variantsArray.clear({ emitEvent: false });
     if (product.variants && product.variants.length > 0) {
       product.variants.forEach((variant: any) => {
-        const variantGroup = this.fb.group({
-          name: [variant.name, Validators.required],
-          available: [variant.available === 1 || variant.available === true],
-          price: [variant.price ? parseFloat(variant.price) : 0, [Validators.min(0)]]
-        });
-        this.variantsArray.push(variantGroup, { emitEvent: false });
+        this.addVariant(variant);
       });
     }
 
@@ -1074,13 +1109,18 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   }
 
   private createProduct(productData: any) {
+    const rawSlug = productData.slug ? productData.slug.trim() : '';
     const normalizedData = {
       ...productData,
+      slug: rawSlug !== '' ? this.generateSlug(rawSlug) : this.generateSlug(productData.name || ''),
+      stock: parseInt(productData.stock, 10) >= 0 ? parseInt(productData.stock, 10) : 15,
       primaryFileIndex: this.primaryFileIndex,
       isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
       isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
+        sku: v.sku ? v.sku.trim() : '',
+        stock: parseInt(v.stock, 10) >= 0 ? parseInt(v.stock, 10) : 15,
         available: v.available === 1 || v.available === true,
         price: parseFloat(v.price) || 0
       })),
@@ -1112,13 +1152,18 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   }
 
   private updateProduct(id: number, productData: any) {
+    const rawSlug = productData.slug ? productData.slug.trim() : '';
     const normalizedData = {
       ...productData,
+      slug: rawSlug !== '' ? this.generateSlug(rawSlug) : this.generateSlug(productData.name || ''),
+      stock: parseInt(productData.stock, 10) >= 0 ? parseInt(productData.stock, 10) : 15,
       primaryFileIndex: this.primaryFileIndex,
       isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
       isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
+        sku: v.sku ? v.sku.trim() : '',
+        stock: parseInt(v.stock, 10) >= 0 ? parseInt(v.stock, 10) : 15,
         available: v.available === 1 || v.available === true,
         price: parseFloat(v.price) || 0
       })),

@@ -344,7 +344,7 @@
             <div class="report-charts-grid">
               <div class="chart-container-card">
                 <h4 class="chart-card-title">
-                  <span class="material-symbols-rounded text-slate-500">pie_chart</span>
+                  <span class="material-symbols-rounded">pie_chart</span>
                   Distribución por Línea de Negocio
                 </h4>
                 <div style="height:270px; position:relative;">
@@ -353,7 +353,7 @@
               </div>
               <div class="chart-container-card">
                 <h4 class="chart-card-title">
-                  <span class="material-symbols-rounded text-slate-500">bar_chart</span>
+                  <span class="material-symbols-rounded">bar_chart</span>
                   Top 10 Categorías con más Productos
                 </h4>
                 <div style="height:270px; position:relative;">
@@ -411,10 +411,10 @@
                 class="action-card"
                 [class.action-card--active]="activeActionCard === 'description'"
               >
-                <div class="action-card-icon action-card-icon--rose">
+                <div class="action-card-icon action-card-icon--red">
                   <span class="material-symbols-rounded">description</span>
                 </div>
-                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingDesc }}</div>
+                <div class="action-card-val action-card-val--red">{{ filteredLineStats.missingDesc }}</div>
                 <div class="action-card-name">Sin Descripción</div>
                 <div class="action-card-hint">Requieren texto informativo</div>
               </button>
@@ -425,10 +425,10 @@
                 class="action-card"
                 [class.action-card--active]="activeActionCard === 'images'"
               >
-                <div class="action-card-icon action-card-icon--rose">
+                <div class="action-card-icon action-card-icon--red">
                   <span class="material-symbols-rounded">image</span>
                 </div>
-                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingImg }}</div>
+                <div class="action-card-val action-card-val--red">{{ filteredLineStats.missingImg }}</div>
                 <div class="action-card-name">Sin Imágenes</div>
                 <div class="action-card-hint">Requieren fotografía</div>
               </button>
@@ -439,10 +439,10 @@
                 class="action-card"
                 [class.action-card--active]="activeActionCard === 'variants'"
               >
-                <div class="action-card-icon action-card-icon--amber">
+                <div class="action-card-icon action-card-icon--dark">
                   <span class="material-symbols-rounded">inventory_2</span>
                 </div>
-                <div class="action-card-val text-amber-500">{{ filteredLineStats.missingVars }}</div>
+                <div class="action-card-val action-card-val--dark">{{ filteredLineStats.missingVars }}</div>
                 <div class="action-card-name">Sin Variantes</div>
                 <div class="action-card-hint">Sin medidas o referencias</div>
               </button>
@@ -453,10 +453,10 @@
                 class="action-card"
                 [class.action-card--active]="activeActionCard === 'price'"
               >
-                <div class="action-card-icon action-card-icon--rose">
+                <div class="action-card-icon action-card-icon--red">
                   <span class="material-symbols-rounded">sell</span>
                 </div>
-                <div class="action-card-val text-rose-500">{{ filteredLineStats.missingPrice }}</div>
+                <div class="action-card-val action-card-val--red">{{ filteredLineStats.missingPrice }}</div>
                 <div class="action-card-name">Sin Precio</div>
                 <div class="action-card-hint">Variantes con precio en $0</div>
               </button>
@@ -498,8 +498,8 @@
             </div>
 
             <div *ngIf="activeActionCard && problemProducts.length === 0" class="empty-problems-banner animate-fade-in">
-              <span class="material-symbols-rounded text-emerald-500" style="font-size: 3.5rem;">check_circle</span>
-              <p style="color:#059669; font-weight:800; font-size:1.1rem; margin-top:8px;">¡Excelente! No hay productos con esta observación</p>
+              <span class="material-symbols-rounded" style="font-size: 3.5rem; color: #09090b;">check_circle</span>
+              <p style="color:#09090b; font-weight:800; font-size:1.1rem; margin-top:8px;">¡Excelente! No hay productos con esta observación</p>
             </div>
 
           </div>
@@ -529,22 +529,22 @@
                 </div>
                 <div class="cat-kpi">
                   <p class="cat-kpi-label">Con Imagen</p>
-                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('images') }}</p>
+                  <p class="cat-kpi-val">{{ getCategoryCount('images') }}</p>
                   <p class="cat-kpi-sub">productos</p>
                 </div>
                 <div class="cat-kpi">
                   <p class="cat-kpi-label">Con Descripción</p>
-                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('description') }}</p>
+                  <p class="cat-kpi-val">{{ getCategoryCount('description') }}</p>
                   <p class="cat-kpi-sub">productos</p>
                 </div>
                 <div class="cat-kpi">
                   <p class="cat-kpi-label">Con Variantes</p>
-                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('variants') }}</p>
+                  <p class="cat-kpi-val">{{ getCategoryCount('variants') }}</p>
                   <p class="cat-kpi-sub">productos</p>
                 </div>
                 <div class="cat-kpi">
                   <p class="cat-kpi-label">Con Precio</p>
-                  <p class="cat-kpi-val text-emerald-600">{{ getCategoryCount('price') }}</p>
+                  <p class="cat-kpi-val">{{ getCategoryCount('price') }}</p>
                   <p class="cat-kpi-sub">productos</p>
                 </div>
               </div>
