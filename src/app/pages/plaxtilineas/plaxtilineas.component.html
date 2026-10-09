@@ -61,7 +61,109 @@
     </div>
   </header>
 
-  <!-- ===== ALLIES SECTION (SHOWCASE ESTRUCTURADO DE MARCAS) ===== -->
+  <!-- ===== PRODUCTS SECTION (GRAN ANCHO 1600PX, 2 POR FILA) ===== -->
+  <section id="plaxtilineas-section" class="plax-products">
+    <div class="products-section-container">
+
+      <!-- Menú de Categorías & Subcategorías Horizontal (Justo debajo del Hero) -->
+      <div class="plax-horizontal-menu">
+        <div class="categories-row">
+          <button 
+            (click)="selectCategory(null)" 
+            class="category-pill"
+            [class.active]="selectedCategoryId === null">
+            Ver todas
+          </button>
+
+          <button 
+            (click)="toggleCategoriesMenu()" 
+            class="category-pill toggle-menu-btn"
+            [class.active]="showCategoriesMenu">
+            <span class="material-symbols-rounded text-slate-400" style="font-size:1.1rem">menu</span>
+            Buscar por categoría
+            <span class="material-symbols-rounded text-slate-400" style="font-size:1.1rem">
+              {{ showCategoriesMenu ? 'expand_less' : 'expand_more' }}
+            </span>
+          </button>
+
+          <ng-container *ngIf="showCategoriesMenu">
+            <button 
+              *ngFor="let cat of categoriesList"
+              (click)="selectCategory(cat.id)" 
+              class="category-pill"
+              [class.active]="selectedCategoryId === cat.id">
+              {{ cat.name }}
+              <span class="count-badge">({{ getProductCount(cat.id) }})</span>
+            </button>
+          </ng-container>
+        </div>
+        
+        <!-- Fila de Subcategorías -->
+        <div *ngIf="selectedCategoryId !== null && getActiveCategorySubcategories().length > 0" class="subcategories-row">
+          <button 
+            (click)="selectSubcategory(null)"
+            class="subcategory-pill"
+            [class.active]="selectedSubcategoryId === null">
+            Toda la categoría
+          </button>
+          <button 
+            *ngFor="let sub of getActiveCategorySubcategories()"
+            (click)="selectSubcategory(sub.id)"
+            class="subcategory-pill"
+            [class.active]="selectedSubcategoryId === sub.id">
+            {{ sub.name }}
+            <span class="count-badge">({{ getSubproductCount(selectedCategoryId, sub.id) }})</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Buscador por nombre y barra de filtros (igual que en Espumas y Districol) -->
+      <app-catalog-filter-bar 
+        [totalProducts]="filteredProducts.length"
+        (filtersChanged)="applyFilters($event)">
+      </app-catalog-filter-bar>
+
+      <!-- Products Content (Gran Ancho) -->
+      <div class="products-list-container">
+        <!-- Catálogo en Grilla de Dos en Dos -->
+        <div *ngIf="filteredProducts.length > 0" class="catalog-grid-2col">
+          <app-catalog-item
+            *ngFor="let product of paginatedProducts"
+            [product]="product">
+          </app-catalog-item>
+        </div>
+        
+        <div *ngIf="filteredProducts.length === 0" class="empty-products-state">
+          <span class="material-symbols-rounded">inventory_2</span>
+          <p>No se encontraron productos en esta categoría o filtro.</p>
+        </div>
+      </div>
+
+      <!-- ===== PAGINACIÓN ===== -->
+      <div class="pagination-container" *ngIf="totalPages > 1">
+        <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+          <span class="material-symbols-rounded">chevron_left</span>
+        </button>
+
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of pagesList" 
+            class="page-btn num-btn" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+            {{ page }}
+          </button>
+        </div>
+
+        <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+          <span class="material-symbols-rounded">chevron_right</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== ALLIES SECTION (NUESTRAS MARCAS ABAJO CON EL FOOTER) ===== -->
   <section class="plax-allies">
     <div class="allies-container">
       <div class="allies-header">
@@ -115,111 +217,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== PRODUCTS SECTION (GRAN ANCHO 1600PX, 2 POR FILA) ===== -->
-  <section id="plaxtilineas-section" class="plax-products">
-    <div class="products-section-container">
-      
-      <div class="products-header">
-        <div class="section-label">
-          <span class="material-symbols-rounded" style="font-size:0.9rem">architecture</span>
-          CATÁLOGO INDUSTRIAL
-        </div>
-        <h2 class="section-title">Productos Plaxtilineas</h2>
-        <p class="section-subtitle">Selecciona por categoría o busca tu referencia</p>
-      </div>
-
-      <!-- Menú de Categorías & Subcategorías Horizontal -->
-      <div class="plax-horizontal-menu">
-        <div class="categories-row">
-          <button 
-            (click)="selectCategory(null)" 
-            class="category-pill"
-            [class.active]="selectedCategoryId === null">
-            Ver todas
-          </button>
-
-          <button 
-            (click)="toggleCategoriesMenu()" 
-            class="category-pill toggle-menu-btn"
-            [class.active]="showCategoriesMenu">
-            <span class="material-symbols-rounded text-slate-400" style="font-size:1.1rem">menu</span>
-            Buscar por categoría
-            <span class="material-symbols-rounded text-slate-400" style="font-size:1.1rem">
-              {{ showCategoriesMenu ? 'expand_less' : 'expand_more' }}
-            </span>
-          </button>
-
-          <ng-container *ngIf="showCategoriesMenu">
-            <button 
-              *ngFor="let cat of categoriesList"
-              (click)="selectCategory(cat.id)" 
-              class="category-pill"
-              [class.active]="selectedCategoryId === cat.id">
-              {{ cat.name }}
-              <span class="count-badge">({{ getProductCount(cat.id) }})</span>
-            </button>
-          </ng-container>
-        </div>
-        
-        <!-- Fila de Subcategorías -->
-        <div *ngIf="selectedCategoryId !== null && getActiveCategorySubcategories().length > 0" class="subcategories-row">
-          <button 
-            (click)="selectSubcategory(null)"
-            class="subcategory-pill"
-            [class.active]="selectedSubcategoryId === null">
-            Toda la categoría
-          </button>
-          <button 
-            *ngFor="let sub of getActiveCategorySubcategories()"
-            (click)="selectSubcategory(sub.id)"
-            class="subcategory-pill"
-            [class.active]="selectedSubcategoryId === sub.id">
-            {{ sub.name }}
-            <span class="count-badge">({{ getSubproductCount(selectedCategoryId, sub.id) }})</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Products Content (Gran Ancho) -->
-      <div class="products-list-container">
-        <!-- Catálogo en Grilla de Dos en Dos -->
-        <div *ngIf="filteredProducts.length > 0" class="catalog-grid-2col">
-          <app-catalog-item
-            *ngFor="let product of paginatedProducts"
-            [product]="product">
-          </app-catalog-item>
-        </div>
-        
-        <div *ngIf="filteredProducts.length === 0" class="empty-products-state">
-          <span class="material-symbols-rounded">inventory_2</span>
-          <p>No se encontraron productos en esta categoría o filtro.</p>
-        </div>
-      </div>
-
-      <!-- ===== PAGINACIÓN ===== -->
-      <div class="pagination-container" *ngIf="totalPages > 1">
-        <button class="page-btn prev-btn" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
-          <span class="material-symbols-rounded">chevron_left</span>
-        </button>
-
-        <div class="page-numbers">
-          <button 
-            *ngFor="let page of pagesList" 
-            class="page-btn num-btn" 
-            [class.active]="page === currentPage"
-            (click)="changePage(page)">
-            {{ page }}
-          </button>
-        </div>
-
-        <button class="page-btn next-btn" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
-          <span class="material-symbols-rounded">chevron_right</span>
-        </button>
-      </div>
-
     </div>
   </section>
 

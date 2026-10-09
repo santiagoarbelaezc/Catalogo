@@ -15,6 +15,13 @@ export interface AiCategoryResponse {
   message?: string;
 }
 
+export interface AiSkuResponse {
+  success: boolean;
+  sku?: string;
+  skus?: string[];
+  message?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -32,6 +39,15 @@ export class AiService {
       name, 
       description,
       categories
+    });
+  }
+
+  generateSku(name: string, category?: string, variantName?: string, variants?: any[]): Observable<AiSkuResponse> {
+    return this.http.post<AiSkuResponse>(`${this.apiUrl}/ia/generar-sku`, {
+      name,
+      category,
+      variant_name: variantName,
+      variants
     });
   }
 }
