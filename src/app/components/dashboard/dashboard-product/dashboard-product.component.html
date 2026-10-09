@@ -754,10 +754,18 @@
                     <p class="modal-group-sub">Define los formatos de venta del producto con sus respectivos precios.</p>
                   </div>
                 </div>
-                <button type="button" (click)="addVariant()" class="btn-sub-action">
-                  <span class="material-symbols-rounded">add</span>
-                  <span>Agregar Presentación</span>
-                </button>
+                <div class="modal-actions-inline">
+                  <button type="button" (click)="generateAiSkus()" [disabled]="isGeneratingSkus || variantsArray.length === 0" class="btn-ai-pill btn-ai-pill--large" title="Generar códigos SKU inteligentes con IA">
+                    <span class="material-symbols-rounded icon-spin" [class.is-spinning]="isGeneratingSkus">
+                      {{ isGeneratingSkus ? 'refresh' : 'auto_awesome' }}
+                    </span>
+                    <span>{{ isGeneratingSkus ? 'Generando SKUs...' : 'Generar SKUs con IA' }}</span>
+                  </button>
+                  <button type="button" (click)="addVariant()" class="btn-sub-action">
+                    <span class="material-symbols-rounded">add</span>
+                    <span>Agregar Presentación</span>
+                  </button>
+                </div>
               </div>
 
               <div formArrayName="variants" class="variants-stack">
@@ -767,7 +775,14 @@
                     <input formControlName="name" placeholder="Ej: Rollo 50m, 100x190..." class="modal-input modal-input--sm">
                   </div>
                   <div class="variant-sku-box">
-                    <span class="variant-col-label">SKU Código</span>
+                    <div class="variant-sku-head">
+                      <span class="variant-col-label">SKU Código</span>
+                      <button type="button" (click)="generateSkuForVariant(i)" [disabled]="isGeneratingSingleSkuIndex === i" class="btn-ai-mini-icon" title="Generar SKU con IA para esta presentación">
+                        <span class="material-symbols-rounded icon-spin" [class.is-spinning]="isGeneratingSingleSkuIndex === i">
+                          {{ isGeneratingSingleSkuIndex === i ? 'refresh' : 'auto_awesome' }}
+                        </span>
+                      </button>
+                    </div>
                     <input formControlName="sku" placeholder="Auto o ej: PLAX-001-01" class="modal-input modal-input--sm sku-field">
                   </div>
                   <div class="variant-stock-box">

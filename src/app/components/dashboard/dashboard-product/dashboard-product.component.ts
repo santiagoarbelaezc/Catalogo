@@ -55,6 +55,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   isGeneratingDescription = false;
   isSuggestingCategory = false;
+  isGeneratingSkus = false;
+  isGeneratingSingleSkuIndex: number | null = null;
 
   // === Filters ===
   searchTerm = '';
@@ -394,6 +396,87 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       error: (err) => {
         this.toastService.error('Error al solicitar sugerencia de categoría.');
         this.isSuggestingCategory = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  generateAiSkus() {
+    const name = this.productForm.get('name')?.value;
+    const category = this.productForm.get('category')?.value || '';
+
+    if (!name || name.trim() === '') {
+      this.toastService.warning('Por favor, ingresa primero el nombre comercial del producto.');
+      return;
+    }
+
+    if (this.variantsArray.length === 0) {
+      this.toastService.warning('Agrega al menos una variante para generarle su código SKU.');
+      return;
+    }
+
+    this.isGeneratingSkus = true;
+    this.cdr.markForCheck();
+
+    const variantsData = this.variantsArray.controls.map((ctrl, i) => ({
+      name: ctrl.get('name')?.value || `Variante ${i + 1}`
+    }));
+
+    this.aiService.generateSku(name, category, undefined, variantsData).subscribe({
+      next: (res) => {
+        if (res.success && res.skus && res.skus.length > 0) {
+          res.skus.forEach((sku, idx) => {
+            if (this.variantsArray.at(idx)) {
+              this.variantsArray.at(idx).get('sku')?.setValue(sku);
+              this.variantsArray.at(idx).get('sku')?.markAsDirty();
+            }
+          });
+          this.toastService.success('Códigos SKU generados exitosamente con IA.');
+        } else {
+          this.toastService.error(res.message || 'No se pudieron generar los SKUs.');
+        }
+        this.isGeneratingSkus = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toastService.error('Error al conectar con el Asistente IA para generar SKUs.');
+        this.isGeneratingSkus = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  generateSkuForVariant(index: number) {
+    const name = this.productForm.get('name')?.value;
+    const category = this.productForm.get('category')?.value || '';
+    const variantCtrl = this.variantsArray.at(index);
+
+    if (!variantCtrl) return;
+
+    if (!name || name.trim() === '') {
+      this.toastService.warning('Por favor, ingresa el nombre comercial del producto.');
+      return;
+    }
+
+    const variantName = variantCtrl.get('name')?.value || `Presentación ${index + 1}`;
+    this.isGeneratingSingleSkuIndex = index;
+    this.cdr.markForCheck();
+
+    this.aiService.generateSku(name, category, variantName).subscribe({
+      next: (res) => {
+        if (res.success && res.sku) {
+          variantCtrl.get('sku')?.setValue(res.sku);
+          variantCtrl.get('sku')?.markAsDirty();
+          this.toastService.success(`SKU generado: ${res.sku}`);
+        } else {
+          this.toastService.error(res.message || 'No se pudo generar el SKU.');
+        }
+        this.isGeneratingSingleSkuIndex = null;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.toastService.error('Error al generar el SKU para esta presentación.');
+        this.isGeneratingSingleSkuIndex = null;
         this.cdr.markForCheck();
       }
     });
