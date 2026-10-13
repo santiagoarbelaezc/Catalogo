@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+const REMEMBERED_EMAIL_KEY = 'plax_remembered_email';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,8 +19,20 @@ export class LoginComponent implements OnInit {
   loading = signal(false);
   showPassword = signal(false);
 
+  /** Email guardado de la sesión anterior */
+  rememberedEmail = signal<string | null>(null);
+  /** Modo recordado: solo muestra el campo de contraseña */
+  isRememberedMode = signal(false);
+
   togglePasswordVisibility() {
     this.showPassword.update(val => !val);
+  }
+
+  /** Cambia a otra cuenta (muestra el campo email de nuevo) */
+  switchAccount() {
+    this.isRememberedMode.set(false);
+    this.loginForm.patchValue({ email: '', password: '' });
+    this.loginError.set(null);
   }
 
   constructor(
@@ -35,6 +49,18 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
+      return;
+    }
+
+    // Verificar si hay un email recordado
+    const saved = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+    if (saved) {
+      this.rememberedEmail.set(saved);
+      this.isRememberedMode.set(true);
+      this.loginForm.patchValue({ email: saved });
+      // En modo recordado el email ya es válido; solo se requiere contraseña
+      this.loginForm.get('email')?.clearValidators();
+      this.loginForm.get('email')?.updateValueAndValidity();
     }
   }
 
@@ -43,14 +69,18 @@ export class LoginComponent implements OnInit {
       this.loading.set(true);
       this.loginError.set(null);
 
-      const { email, password } = this.loginForm.value;
+      const email = this.isRememberedMode()
+        ? this.rememberedEmail()!
+        : this.loginForm.value.email;
+      const { password } = this.loginForm.value;
 
       this.authService.login({ email, password }).subscribe({
         next: (response) => {
           this.loading.set(false);
           if (response.success) {
+            // Guardar el email para la próxima vez
+            localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
             console.log('Login exitoso:', response.data.user);
-            // Redirigir al dashboard o página principal
             this.router.navigate(['/dashboard']);
           }
         },
@@ -80,3 +110,4 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 }
+

@@ -10,51 +10,22 @@
   font-family: "Inter Tight", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: #f8fafc;
   min-height: 100vh;
-  padding-top: 92px; /* Subido unos píxeles más cerca del navbar */
+  padding-top: 104px;
 }
 
-/* ===== HERO DE ALTO IMPACTO (COMPACTO Y MENOS ALTO) ===== */
+/* ===== HERO DE ALTO IMPACTO (MINIMALISTA FONDO BLANCO & TONOS NEGROS) ===== */
 .home-hero {
   position: relative;
-  background: #080c14; /* Deep obsidian */
-  color: #fff;
-  padding: 1.6rem 1.5rem 1.6rem; /* Subido más arriba */
+  background: #ffffff;
+  color: #09090b;
+  padding: 2.25rem 1.5rem 2.25rem;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #e4e4e7;
 }
 
-/* Ambient Mesh Blobs */
+/* Ocultar mesh blobs / degradados para estetica minimalista pura */
 .hero-mesh-blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(90px);
-  pointer-events: none;
-  opacity: 0.22;
-}
-
-.hero-blob-cyan {
-  width: 400px;
-  height: 400px;
-  background: #0284c7;
-  top: -120px;
-  left: -80px;
-}
-
-.hero-blob-emerald {
-  width: 380px;
-  height: 380px;
-  background: #059669;
-  bottom: -120px;
-  right: -50px;
-}
-
-.hero-blob-indigo {
-  width: 300px;
-  height: 300px;
-  background: #4f46e5;
-  top: 25%;
-  left: 45%;
-  opacity: 0.12;
+  display: none;
 }
 
 .hero-content-wrap {
@@ -66,61 +37,62 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 /* Bento Badge */
 .hero-badge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(12px);
-  padding: 4px 14px;
+  gap: 8px;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  padding: 5px 15px;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
-  color: #e2e8f0;
-  letter-spacing: 0.3px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  color: #18181b;
+  letter-spacing: 0.35px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .hero-badge-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
+  background: #09090b;
+  box-shadow: none;
 }
 
 /* Headline */
 .hero-headline {
   margin: 0;
-  font-size: clamp(1.9rem, 3.5vw, 2.75rem);
+  font-size: clamp(2rem, 3.6vw, 2.85rem);
   font-weight: 900;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   line-height: 1.05;
-  color: #ffffff;
+  color: #09090b;
 }
 
 .headline-gradient {
-  background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  color: #09090b;
+  font-weight: 900;
 }
 
 .hero-lead {
-  max-width: 650px;
+  max-width: 680px;
   margin: 0;
   font-size: 0.95rem;
-  color: #94a3b8;
-  line-height: 1.4;
-  font-weight: 500;
+  color: #52525b;
+  line-height: 1.45;
+  font-weight: 450;
 }
 
 .hero-lead strong {
-  color: #ffffff;
+  color: #09090b;
   font-weight: 700;
 }
 
@@ -129,7 +101,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
+  gap: 1.1rem;
   margin-top: 0.75rem;
 }
 
@@ -137,83 +109,109 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
   border-radius: 16px;
-  padding: 1rem 1.25rem;
-  text-align: left;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 1.25rem 1.4rem;
+  text-align: center;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .hero-bento-card:hover {
   transform: translateY(-3px);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+  background: #ffffff;
+  border-color: #09090b;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.03);
 }
 
-.bento-card-plax:hover { border-color: rgba(56, 189, 248, 0.4); }
-.bento-card-districol:hover { border-color: rgba(45, 212, 191, 0.4); }
-.bento-card-espumas:hover { border-color: rgba(52, 211, 153, 0.4); }
+.bento-card-plax:hover,
+.bento-card-districol:hover,
+.bento-card-espumas:hover {
+  border-color: #09090b;
+}
 
 .bento-card-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.75rem;
+  position: relative;
 }
 
 .bento-icon-box {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #09090b;
+  border: 1px solid #09090b;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.hero-bento-card:hover .bento-icon-box {
+  background: #18181b;
 }
 
 .bento-arrow {
-  color: #64748b;
-  font-size: 1.1rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #a1a1aa;
+  font-size: 1.15rem;
   transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .hero-bento-card:hover .bento-arrow {
   transform: translate(2px, -2px);
-  color: #ffffff;
+  color: #09090b;
 }
 
 .bento-card-info {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  text-align: center;
 }
 
 .bento-title {
-  margin: 0 0 0.2rem 0;
+  margin: 0 0 0.25rem 0;
   font-size: 1.05rem;
   font-weight: 800;
-  color: #ffffff;
+  color: #09090b;
   letter-spacing: -0.02em;
+  text-align: center;
 }
 
 .bento-desc {
   margin: 0;
-  font-size: 0.8rem;
-  color: #94a3b8;
-  line-height: 1.35;
+  font-size: 0.82rem;
+  color: #52525b;
+  line-height: 1.4;
+  text-align: center;
 }
 
 .bento-link-label {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  color: #38bdf8;
-  letter-spacing: 0.3px;
+  color: #09090b;
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: gap 0.2s ease;
+  text-align: center;
+}
+
+.hero-bento-card:hover .bento-link-label {
+  gap: 8px;
 }
 
 /* Trust Pillars Strip */
@@ -222,24 +220,32 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
 }
 
 .stat-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 7px;
+  padding: 6px 15px;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #3f3f46;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.stat-pill:hover {
+  border-color: #09090b;
+  color: #09090b;
+  background: #fafafa;
 }
 
 .stat-pill .material-symbols-rounded {
-  color: #10b981;
+  color: #09090b;
   font-size: 1rem;
 }
 
