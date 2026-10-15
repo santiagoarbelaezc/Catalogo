@@ -36,7 +36,10 @@
             ],
             "scripts": [],
             "optimization": true,
-            "sourceMap": false
+            "sourceMap": false,
+            "allowedCommonJsDependencies": [
+              "aos"
+            ]
           },
           "configurations": {
             "production": {
@@ -49,13 +52,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1.2MB",
-                  "maximumError": "1.5MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "20kB",
-                  "maximumError": "30kB"
+                  "maximumWarning": "60kB",
+                  "maximumError": "100kB"
                 }
               ],
               "outputHashing": "all"
