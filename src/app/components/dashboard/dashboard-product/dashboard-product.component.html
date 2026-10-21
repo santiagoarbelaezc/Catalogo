@@ -406,7 +406,10 @@
                 <div class="row-meta-wrap">
                   <span class="row-category-text">{{ product.category }}</span>
                   <span class="meta-dot">·</span>
-                  <span class="stock-badge-pill" [class.stock-badge-pill--ok]="(product.stock !== undefined ? product.stock : 15) > 0">
+                  <span class="stock-badge-pill"
+                        [class.stock-badge-pill--ok]="(product.stock !== undefined ? product.stock : 15) > 0"
+                        [class.stock-actualizado-anim]="isStockRecentlyUpdated(product.id)"
+                        [attr.data-product-id]="product.id">
                     <span class="material-symbols-rounded stock-mini-icon">inventory_2</span>
                     {{ product.stock !== undefined ? product.stock : 15 }} u.
                   </span>

@@ -7,6 +7,7 @@ import { ProductsService } from '../../../services/products.service';
 import { ToastService } from '../../../services/toast.service';
 import { CategoriesService, Category, Subcategory } from '../../../services/categories.service';
 import { AiService } from '../../../services/ai.service';
+import { RealtimeStockService, StockUpdateEvent } from '../../../services/realtime-stock.service';
 import { Subscription, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BaseChartDirective } from 'ng2-charts';
@@ -217,6 +218,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   };
   // =============================
 
+  recentlyUpdatedStockIds: Set<number> = new Set<number>();
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -226,10 +228,15 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     private categoriesService: CategoriesService,
     private aiService: AiService,
     private toastService: ToastService,
+    private realtimeStockService: RealtimeStockService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
     this.productForm = this.createForm();
+  }
+
+  isStockRecentlyUpdated(productId: number | undefined): boolean {
+    return productId !== undefined && this.recentlyUpdatedStockIds.has(productId);
   }
 
   ngOnInit() {
@@ -255,6 +262,44 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     this.loadProducts();
     this.loadCategories();
+    this.initRealtimeStock();
+  }
+
+  private initRealtimeStock(): void {
+    this.realtimeStockService.connect();
+
+    const stockSub = this.realtimeStockService.stockUpdate$.subscribe({
+      next: (event: StockUpdateEvent) => {
+        if (!event || !event.productId) return;
+
+        // Actualizar el stock en el listado de productos en memoria
+        const targetProduct = this.products.find(p => p.id === event.productId);
+        if (targetProduct) {
+          const oldStock = targetProduct.stock;
+          targetProduct.stock = event.newStock;
+
+          // Registrar para animación visual de pulso verde
+          this.recentlyUpdatedStockIds.add(event.productId);
+          this.calculateStats();
+          this.cdr.markForCheck();
+
+          // Retirar clase de animación tras 2.5 segundos
+          setTimeout(() => {
+            this.recentlyUpdatedStockIds.delete(event.productId);
+            this.cdr.markForCheck();
+          }, 2500);
+
+          // Si el modal de edición de este producto está abierto, sincronizar el formulario
+          if (this.editingProduct && this.editingProduct.id === event.productId) {
+            this.productForm.get('stock')?.setValue(event.newStock);
+            this.editingProduct.stock = event.newStock;
+            this.cdr.markForCheck();
+          }
+        }
+      }
+    });
+
+    this.subscriptions.push(stockSub);
   }
 
   allCategories: Category[] = [];
@@ -317,6 +362,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.realtimeStockService.disconnect();
     this.subscriptions.forEach(sub => sub.unsubscribe());
     this.searchSubject.complete();
   }
