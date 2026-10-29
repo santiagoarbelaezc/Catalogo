@@ -7,7 +7,7 @@
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
   # 1. Enrutar todas las peticiones del Backend (/api/* o endpoints de API) al puente seguro
-  #    El código real y el .env viven FUERA de public_html en la carpeta privada "backend php"
+  #    El código real y el .env viven FUERA de public_html en la carpeta privada "backend_php"
   RewriteRule ^api(/.*)?$ api-bridge.php [QSA,L]
   RewriteRule ^(health|auth|productos|categorias|subcategorias|ia|backup|inventario|integraciones)(/.*)?$ api-bridge.php [QSA,L]
 

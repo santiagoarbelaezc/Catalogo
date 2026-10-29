@@ -4,7 +4,7 @@
  * Ubicación en servidor: public_html/api-bridge.php
  *
  * Este archivo NO contiene credenciales, lógica de negocio ni configuración.
- * Su única función es delegar la ejecución a la carpeta privada "backend php"
+ * Su única función es delegar la ejecución a la carpeta privada "backend_php"
  * ubicada FUERA de public_html (inaccesible directamente desde internet).
  */
 
@@ -16,15 +16,13 @@ $baseDirs = array_values(array_unique(array_filter([
 ])));
 
 $folderNames = [
-    'backend php',
     'backend_php',
-    'backend-php',
     'api',
 ];
 
 $backendEntry = null;
 
-// Priorizar siempre la carpeta privada "backend php" sobre cualquier otra en todos los niveles superiores
+// Priorizar siempre la carpeta privada "backend_php" sobre cualquier otra en todos los niveles superiores
 foreach ($folderNames as $folder) {
     foreach ($baseDirs as $baseDir) {
         $candidate = $baseDir . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . 'index.php';
@@ -40,7 +38,7 @@ if ($backendEntry === null) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Error de configuración: No se encontró el directorio privado "backend php" fuera de public_html.'
+        'message' => 'Error de configuración: No se encontró el directorio privado "backend_php" fuera de public_html.'
     ], JSON_UNESCAPED_UNICODE);
     exit();
 }
