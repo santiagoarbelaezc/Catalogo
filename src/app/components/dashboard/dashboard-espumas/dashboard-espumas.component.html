@@ -73,7 +73,7 @@
           <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
           <span class="sidebar-nav-label-text">Secciones</span>
           <div class="sidebar-dropdown-controls">
-            <span class="dropdown-count-tag">3</span>
+            <span class="dropdown-count-tag">4</span>
             <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
               <span class="material-symbols-rounded">expand_more</span>
             </div>
@@ -113,6 +113,17 @@
             <span class="submenu-dot"></span>
             <span class="material-symbols-rounded submenu-icon">storefront</span>
             <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCamascotas()"
+            title="Categorías Camascotas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">pets</span>
+            <span class="sidebar-nav-label-text">Camascotas</span>
           </button>
         </div>
       </div>

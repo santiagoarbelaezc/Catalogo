@@ -5,7 +5,7 @@ import { CatalogItemComponent } from "../../components/catalog/catalog-item/cata
 import { ProductsService } from '../../services/products.service';
 import { CatalogProduct } from '../../models/product.model';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-
+import { ThemeService } from '../../services/theme.service';
 import { CatalogFilterBarComponent, CatalogFilters } from '../../components/catalog/catalog-filter-bar/catalog-filter-bar.component';
 
 @Component({
@@ -33,10 +33,14 @@ export class CatalogoHomeComponent implements OnInit {
   constructor(
     private productsService: ProductsService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit(): void {
+    // El Home siempre inicia con el tema oscuro
+    this.themeService.setDarkMode(true);
+
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {

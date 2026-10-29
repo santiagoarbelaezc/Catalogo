@@ -37,6 +37,7 @@ export class DashboardAnalyticsComponent implements OnInit {
     plaxtilineas: 0,
     espumas: 0,
     districol: 0,
+    camascotas: 0,
     otros: 0,
     missingDescription: 0,
     missingImages: 0,
@@ -89,12 +90,12 @@ export class DashboardAnalyticsComponent implements OnInit {
   };
   public lineChartType: ChartType = 'doughnut';
   public lineChartData: ChartData<'doughnut'> = {
-    labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
+    labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Camascotas', 'Otros'],
     datasets: [
       {
-        data: [0, 0, 0, 0],
-        backgroundColor: ['#dc2626', '#09090b', '#52525b', '#a1a1aa'],
-        hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#71717a'],
+        data: [0, 0, 0, 0, 0],
+        backgroundColor: ['#dc2626', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
+        hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#18181b', '#71717a'],
         borderColor: '#ffffff',
         borderWidth: 3,
         hoverOffset: 10
@@ -212,6 +213,10 @@ export class DashboardAnalyticsComponent implements OnInit {
     this.router.navigate(['/dashboard/districol']);
   }
 
+  navigateToCamascotas(): void {
+    this.router.navigate(['/dashboard/camascotas']);
+  }
+
   openWebCatalog(): void {
     window.open('/catalogo', '_blank');
   }
@@ -260,7 +265,7 @@ export class DashboardAnalyticsComponent implements OnInit {
 
   calculateStats(): void {
     let missingDesc = 0, missingImg = 0, missingPrice = 0, missingVars = 0;
-    let plaxti = 0, espumas = 0, distri = 0, otros = 0;
+    let plaxti = 0, espumas = 0, distri = 0, camascotas = 0, otros = 0;
     let complete = 0;
     const catCounts: { [key: string]: number } = {};
 
@@ -280,6 +285,7 @@ export class DashboardAnalyticsComponent implements OnInit {
       if (cat === 'Plaxtilineas') plaxti++;
       else if (cat === 'Espumas') espumas++;
       else if (cat === 'Districol') distri++;
+      else if (cat === 'Camascotas') camascotas++;
       else otros++;
 
       const catName = p.category_name || 'Sin Categoría';
@@ -292,6 +298,7 @@ export class DashboardAnalyticsComponent implements OnInit {
       plaxtilineas: plaxti,
       espumas,
       districol: distri,
+      camascotas,
       otros,
       missingDescription: missingDesc,
       missingImages: missingImg,
@@ -303,12 +310,12 @@ export class DashboardAnalyticsComponent implements OnInit {
 
     // Actualizar Gráficos (Monocromático: Rojo, Gris, Negro)
     this.lineChartData = {
-      labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
+      labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Camascotas', 'Otros'],
       datasets: [
         {
-          data: [plaxti, espumas, distri, otros],
-          backgroundColor: ['#dc2626', '#09090b', '#52525b', '#a1a1aa'],
-          hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#71717a'],
+          data: [plaxti, espumas, distri, camascotas, otros],
+          backgroundColor: ['#dc2626', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
+          hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#18181b', '#71717a'],
           borderColor: '#ffffff',
           borderWidth: 3,
           hoverOffset: 10

@@ -73,7 +73,7 @@
           <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
           <span class="sidebar-nav-label-text">Secciones</span>
           <div class="sidebar-dropdown-controls">
-            <span class="dropdown-count-tag">3</span>
+            <span class="dropdown-count-tag">4</span>
             <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
               <span class="material-symbols-rounded">expand_more</span>
             </div>
@@ -113,6 +113,17 @@
             <span class="submenu-dot"></span>
             <span class="material-symbols-rounded submenu-icon">storefront</span>
             <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCamascotas()"
+            title="Categorías Camascotas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">pets</span>
+            <span class="sidebar-nav-label-text">Camascotas</span>
           </button>
         </div>
       </div>
@@ -288,6 +299,17 @@
             <p class="prod-stat-num">{{ statsGlobal.districol }}</p>
             <p class="prod-stat-sub">{{ statsGlobal.total > 0 ? (statsGlobal.districol / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
           </div>
+
+          <div class="prod-stat-card prod-stat-card--camascotas" (click)="onBrandChange('Camascotas')" style="cursor: pointer;">
+            <div class="prod-stat-top">
+              <span class="prod-stat-label">Camascotas</span>
+              <div class="prod-stat-icon prod-stat-icon--slate">
+                <span class="material-symbols-rounded">pets</span>
+              </div>
+            </div>
+            <p class="prod-stat-num">{{ statsGlobal.camascotas }}</p>
+            <p class="prod-stat-sub">{{ statsGlobal.total > 0 ? (statsGlobal.camascotas / statsGlobal.total * 100 | number:'1.0-0') : 0 }}% del catálogo</p>
+          </div>
         </section>
 
         <!-- ── CONTROLS CARD: TABS DE MARCA + FILTROS ── -->
@@ -313,6 +335,11 @@
               <span class="brand-dot dot--districol"></span>
               <span>Districol</span>
               <span class="tab-badge">{{ statsGlobal.districol }}</span>
+            </button>
+            <button (click)="onBrandChange('Camascotas')" class="brand-tab-pill brand-tab-pill--camascotas" [class.is-active]="filterBrand === 'Camascotas'">
+              <span class="brand-dot dot--camascotas"></span>
+              <span>Camascotas</span>
+              <span class="tab-badge">{{ statsGlobal.camascotas }}</span>
             </button>
           </div>
 
@@ -617,6 +644,7 @@
                       <option value="Plaxtilineas">Plaxtilineas</option>
                       <option value="Espumas">Espumas y Plásticos</option>
                       <option value="Districol">Districol</option>
+                      <option value="Camascotas">Camascotas</option>
                     </select>
                     <span class="material-symbols-rounded select-caret">expand_more</span>
                   </div>
