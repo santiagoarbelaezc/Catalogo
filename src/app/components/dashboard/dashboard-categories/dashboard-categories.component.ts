@@ -105,6 +105,10 @@ export class DashboardCategoriesComponent implements OnInit {
     this.router.navigate(['/dashboard/districol']);
   }
 
+  navigateToCamascotas(): void {
+    this.router.navigate(['/dashboard/camascotas']);
+  }
+
   openWebCatalog(): void {
     window.open('/catalogo', '_blank');
   }

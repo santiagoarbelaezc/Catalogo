@@ -14,7 +14,7 @@
   --border-hover: #cbd5e1;
   --text-main: #0f172a;
   --text-muted: #64748b;
-  --brand-accent: #0284c7;
+  --brand-accent: #111111;
 }
 
 /* ── Shell global ── */
@@ -350,13 +350,13 @@
 }
 
 .sidebar-submenu-item--active .submenu-dot {
-  background: #38bdf8 !important;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+  background: #ffffff !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
   transform: scale(1.4);
 }
 
 .sidebar-submenu-item--active .submenu-icon {
-  color: #38bdf8 !important;
+  color: #ffffff !important;
   opacity: 1 !important;
 }
 
@@ -518,7 +518,7 @@
 .dash-brand {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #111111;
   letter-spacing: -0.02em;
 }
 
@@ -532,7 +532,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   cursor: pointer;
-  color: #475569;
+  color: #111111;
   transition: all 0.18s ease;
   padding: 0;
 }
@@ -664,12 +664,12 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: #0f172a;
+  background: #111111;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 .page-title-icon .material-symbols-rounded {
@@ -682,7 +682,7 @@
   gap: 6px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748b;
+  color: #666666;
   margin-bottom: 2px;
 }
 
@@ -697,18 +697,18 @@
 }
 
 .breadcrumb-sep {
-  color: #cbd5e1;
+  color: #999999;
 }
 
 .breadcrumb-current {
-  color: #0f172a;
+  color: #111111;
   font-weight: 700;
 }
 
 .page-title {
   font-size: 1.45rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #111111;
   letter-spacing: -0.025em;
   margin: 0;
   line-height: 1.2;

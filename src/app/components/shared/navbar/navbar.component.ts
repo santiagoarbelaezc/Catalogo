@@ -7,6 +7,7 @@ import { faMapMarkerAlt, faPhone, faStore, faBars, faTimes, faSearch, faUserShie
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { ProductDetailService } from '../../../services/product-detail.service';
+import { ThemeService } from '../../../services/theme.service';
 import { CatalogProduct } from '../../../models/product.model';
 
 @Component({
@@ -39,6 +40,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     public authService: AuthService,
+    public themeService: ThemeService,
     private productsService: ProductsService,
     private productDetailService: ProductDetailService,
     private router: Router,
@@ -52,6 +54,10 @@ export class NavbarComponent implements OnInit {
 
   get isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   loadProducts(): void {

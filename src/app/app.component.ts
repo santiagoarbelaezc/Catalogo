@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { ToastContainerComponent } from './components/shared/toast-container/toast-container.component';
 import { ProductDetailComponent } from './components/catalog/product-detail/product-detail.component';
 import { ProductDetailService } from './services/product-detail.service';
+import { ThemeService } from './services/theme.service';
 import AOS from 'aos';
 
 @Component({
@@ -16,7 +17,10 @@ import AOS from 'aos';
 export class AppComponent implements OnInit {
   title = 'Catalogo';
 
-  constructor(public detailService: ProductDetailService) {}
+  constructor(
+    public detailService: ProductDetailService,
+    public themeService: ThemeService
+  ) {}
 
   ngOnInit() {
     AOS.init({

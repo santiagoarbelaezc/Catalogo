@@ -73,7 +73,7 @@
           <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
           <span class="sidebar-nav-label-text">Secciones</span>
           <div class="sidebar-dropdown-controls">
-            <span class="dropdown-count-tag">3</span>
+            <span class="dropdown-count-tag">4</span>
             <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
               <span class="material-symbols-rounded">expand_more</span>
             </div>
@@ -113,6 +113,17 @@
             <span class="submenu-dot"></span>
             <span class="material-symbols-rounded submenu-icon">storefront</span>
             <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCamascotas()"
+            title="Categorías Camascotas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">pets</span>
+            <span class="sidebar-nav-label-text">Camascotas</span>
           </button>
         </div>
       </div>
@@ -229,7 +240,7 @@
               <span class="material-symbols-rounded">widgets</span>
             </div>
           </div>
-          <p class="stat-number">5</p>
+          <p class="stat-number">6</p>
           <p class="stat-sub">Secciones del panel</p>
         </div>
 
@@ -333,6 +344,17 @@
             </span>
             <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
           </button>
+
+          <button (click)="navigateToCamascotas()" class="quick-btn">
+            <div class="quick-btn-icon quick-btn-icon--black">
+              <span class="material-symbols-rounded">pets</span>
+            </div>
+            <span class="quick-btn-text">
+              <span class="quick-btn-title">Camascotas</span>
+              <span class="quick-btn-sub">Categorías de la línea</span>
+            </span>
+            <span class="material-symbols-rounded quick-btn-arrow">chevron_right</span>
+          </button>
         </div>
 
       </section>
@@ -403,6 +425,19 @@
             <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
           </div>
           <span class="module-deco module-deco--light material-symbols-rounded">storefront</span>
+        </button>
+
+        <button (click)="navigateToCamascotas()" class="module-card module-card--light">
+          <div class="module-icon-wrap module-icon-wrap--light">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">pets</span>
+          </div>
+          <h3 class="module-title">Categorías Camascotas</h3>
+          <p class="module-desc">Administra las categorías y subcategorías de la línea Camascotas.</p>
+          <div class="module-cta module-cta--dark">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco module-deco--light material-symbols-rounded">pets</span>
         </button>
 
       </section>

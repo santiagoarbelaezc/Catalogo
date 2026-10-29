@@ -1,4 +1,4 @@
-/* ===== PALETA NOCHE FRÍA ===== */
+/* ===== PALETA NOCHE FRÍA & VARIABLES DE TEMA (CLARO / OSCURO) ===== */
 :root {
   /* Palette - Tonos Noche Fría */
   --color-negro: #121212;        /* Negro frío profundo */
@@ -51,4 +51,40 @@
   --transition-medium: 300ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== TOKENS DEL CATÁLOGO PÚBLICO (MODO CLARO POR DEFECTO) ===== */
+  --cat-bg-page: #f8fafc;
+  --cat-bg-surface: #ffffff;
+  --cat-bg-elevated: #fafafa;
+  --cat-bg-muted: #f1f5f9;
+  --cat-bg-hover: #f1f5f9;
+  --cat-text-primary: #09090b;
+  --cat-text-secondary: #52525b;
+  --cat-text-muted: #64748b;
+  --cat-border: #e4e4e7;
+  --cat-border-subtle: #eef2f6;
+  --cat-border-hover: #09090b;
+  --cat-accent-inv-bg: #09090b;
+  --cat-accent-inv-text: #ffffff;
+  --cat-card-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+  --cat-card-shadow-hover: 0 16px 32px -6px rgba(15, 23, 42, 0.08);
+}
+
+/* ===== TOKENS DEL CATÁLOGO PÚBLICO (MODO OSCURO) ===== */
+body.dark-theme {
+  --cat-bg-page: #09090b;
+  --cat-bg-surface: #121215;
+  --cat-bg-elevated: #18181c;
+  --cat-bg-muted: #1f1f24;
+  --cat-bg-hover: #27272a;
+  --cat-text-primary: #f8fafc;
+  --cat-text-secondary: #a1a1aa;
+  --cat-text-muted: #94a3b8;
+  --cat-border: #27272a;
+  --cat-border-subtle: #1f1f24;
+  --cat-border-hover: #10b981;
+  --cat-accent-inv-bg: #f8fafc;
+  --cat-accent-inv-text: #09090b;
+  --cat-card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  --cat-card-shadow-hover: 0 18px 36px -6px rgba(0, 0, 0, 0.65);
 }

@@ -1,4 +1,4 @@
-/* ===== CATALOG ITEM - COMPACT UNIFORM-HEIGHT CARD (SINGLE SQUARE IMAGE) ===== */
+/* ===== CATALOG ITEM - COMPACT UNIFORM-HEIGHT CARD (CLARO & OSCURO) ===== */
 
 :host {
   display: block;
@@ -16,14 +16,15 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #ffffff;
+  background: var(--cat-bg-surface, #ffffff);
   border-radius: 20px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+  border: 1px solid var(--cat-border, #e2e8f0);
+  box-shadow: var(--cat-card-shadow, 0 4px 16px -2px rgba(15, 23, 42, 0.04));
   overflow: hidden;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.25s ease;
+              border-color 0.25s ease,
+              background 0.25s ease;
   font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
   cursor: pointer;
@@ -31,8 +32,8 @@
 
 .catalog-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 32px -6px rgba(15, 23, 42, 0.08);
-  border-color: #cbd5e1;
+  box-shadow: var(--cat-card-shadow-hover, 0 16px 32px -6px rgba(15, 23, 42, 0.08));
+  border-color: var(--cat-border-hover, #cbd5e1);
 }
 
 /* Dual-pane layout on wide screens (>= 980px) */
@@ -45,12 +46,12 @@
 
   .card-media {
     border-bottom: none !important;
-    border-right: 1px solid #eef2f6;
+    border-right: 1px solid var(--cat-border-subtle, #eef2f6);
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 260px;
-    background: #f8fafc;
+    background: var(--cat-bg-elevated, #f8fafc);
   }
 
   .main-image-wrap {
@@ -69,8 +70,8 @@
 .card-media {
   position: relative;
   width: 100%;
-  background: #f8fafc;
-  border-bottom: 1px solid #eef2f6;
+  background: var(--cat-bg-elevated, #f8fafc);
+  border-bottom: 1px solid var(--cat-border-subtle, #eef2f6);
 }
 
 .badges-overlay {
@@ -103,9 +104,15 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+:host-context(body.dark-theme) .cat-pill {
+  background: rgba(18, 18, 21, 0.92);
+  border-color: rgba(39, 39, 42, 0.9);
+  color: #f8fafc;
+}
+
 .cat-pill .material-symbols-rounded {
   font-size: 0.78rem;
-  color: #065f46;
+  color: #10b981;
 }
 
 .photo-count-pill {
@@ -131,7 +138,7 @@
   aspect-ratio: 1 / 1 !important;
   overflow: hidden;
   position: relative;
-  background: #f8fafc;
+  background: var(--cat-bg-elevated, #f8fafc);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,7 +163,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #cbd5e1;
+  color: var(--cat-text-muted, #cbd5e1);
 }
 
 .no-img-state .material-symbols-rounded {
@@ -184,8 +191,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: #ffffff;
-  color: #0f172a;
+  background: var(--cat-bg-surface, #ffffff);
+  color: var(--cat-text-primary, #0f172a);
   font-size: 0.76rem;
   font-weight: 700;
   padding: 6px 14px;
@@ -201,7 +208,7 @@
 
 .quick-view-badge .material-symbols-rounded {
   font-size: 0.9rem;
-  color: #065f46;
+  color: #10b981;
 }
 
 /* ===== CARD BODY (COMPACTO Y MISMO TAMAÑO) ===== */
@@ -211,14 +218,15 @@
   flex-direction: column;
   height: 100%;
   gap: 0.75rem;
-  background: #ffffff;
+  background: var(--cat-bg-surface, #ffffff);
+  transition: background 0.25s ease;
 }
 
 /* Línea Minimalista */
 .card-divider {
   width: 100%;
   height: 1px;
-  background: #f1f5f9;
+  background: var(--cat-border-subtle, #f1f5f9);
   border: none;
   margin: 0;
 }
@@ -235,7 +243,7 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: 800;
-  color: #0f172a;
+  color: var(--cat-text-primary, #0f172a);
   line-height: 1.35;
   letter-spacing: -0.02em;
   height: 3.25rem; /* Exactamente 2 líneas para simetría */
@@ -247,7 +255,7 @@
 }
 
 .catalog-card:hover .product-title {
-  color: #065f46;
+  color: #10b981;
 }
 
 .price-badge-wrap {
@@ -259,14 +267,14 @@
 .price-val {
   font-size: 1.45rem;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--cat-text-primary, #0f172a);
   letter-spacing: -0.5px;
 }
 
 .price-tax-label {
   font-size: 0.7rem;
   font-weight: 700;
-  color: #64748b;
+  color: var(--cat-text-muted, #64748b);
   letter-spacing: 0.5px;
 }
 
@@ -281,7 +289,7 @@
 .product-description {
   margin: 0;
   font-size: 0.85rem;
-  color: #64748b;
+  color: var(--cat-text-secondary, #64748b);
   line-height: 1.45;
   height: 2.5rem; /* Exactamente 2 líneas */
   display: -webkit-box;
@@ -303,9 +311,9 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  color: #475569;
+  background: var(--cat-bg-elevated, #f8fafc);
+  border: 1px solid var(--cat-border, #e2e8f0);
+  color: var(--cat-text-secondary, #475569);
   font-size: 0.72rem;
   font-weight: 600;
   padding: 2px 8px;
@@ -314,7 +322,7 @@
 
 .spec-pill .material-symbols-rounded {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--cat-text-muted, #64748b);
 }
 
 .color-dot {
@@ -345,9 +353,9 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #000000;
-  color: #ffffff;
-  border: 1.5px solid #000000;
+  background: var(--cat-accent-inv-bg, #000000);
+  color: var(--cat-accent-inv-text, #ffffff);
+  border: 1.5px solid var(--cat-accent-inv-bg, #000000);
   border-radius: 12px;
   padding: 9px 16px;
   font-size: 0.82rem;
@@ -357,8 +365,7 @@
 }
 
 .btn-detail-view:hover {
-  background: #1e293b;
-  border-color: #1e293b;
+  opacity: 0.9;
   transform: translateY(-1px);
 }
 
@@ -372,9 +379,9 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #f8fafc;
+  background: var(--cat-bg-elevated, #f8fafc);
   border: 1.5px solid #065f46;
-  color: #065f46;
+  color: #10b981;
   border-radius: 12px;
   padding: 9px 14px;
   font-size: 0.82rem;

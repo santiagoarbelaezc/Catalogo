@@ -1,0 +1,594 @@
+<!-- ═══════════════════════════════════════════════
+     DASHBOARD CATEGORÍAS — CAMASCOTAS
+     ═══════════════════════════════════════════════ -->
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
+
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
+
+    <!-- Logo / Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">
+        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      </div>
+      <span class="sidebar-brand-text">Plaxtilineas</span>
+    </div>
+
+    <!-- Toggle button flotante en el borde -->
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <!-- Inicio -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard')"
+        title="Inicio"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+      </button>
+
+      <!-- Inventario -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateToProducts()"
+        title="Inventario de Productos"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+      </button>
+
+      <!-- Analíticas -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateToAnalytics()"
+        title="Analíticas y Reportes"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
+        <span class="sidebar-nav-label-text">Analíticas</span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <!-- Menú Desplegable: Secciones -->
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger sidebar-dropdown-trigger--open"
+          (click)="toggleSectionsDropdown()"
+          [title]="sectionsDropdownOpen ? 'Cerrar secciones' : 'Abrir secciones'"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">4</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
+        </button>
+
+        <!-- Subitems desplegables -->
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToCategories()"
+            title="Categorías Plaxtilineas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToEspumas()"
+            title="Espumas y Plásticos"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item"
+            (click)="navigateToDistricol()"
+            title="Categorías Districol"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+
+          <button
+            type="button"
+            class="sidebar-submenu-item sidebar-submenu-item--active"
+            (click)="navigateToCamascotas()"
+            title="Categorías Camascotas"
+          >
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">pets</span>
+            <span class="sidebar-nav-label-text">Camascotas</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <!-- Ver Catálogo Web -->
+      <a
+        href="/catalogo"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="sidebar-nav-item"
+        title="Ver Catálogo Web (Abre en nueva pestaña)"
+        style="text-decoration: none;"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
+      </a>
+
+    </nav>
+
+    <!-- Spacer -->
+    <div class="sidebar-spacer"></div>
+
+    <!-- User card at bottom -->
+    <div class="sidebar-user-card">
+      <div class="sidebar-avatar">MM</div>
+      <div class="sidebar-user-info">
+        <span class="sidebar-username">Mateo Moreno</span>
+        <span class="sidebar-role">Administrador</span>
+      </div>
+    </div>
+
+    <!-- Logout -->
+    <button (click)="logout()" class="sidebar-logout">
+      <span class="material-symbols-rounded" style="font-size:1.1rem">logout</span>
+      <span class="sidebar-nav-label-text">Cerrar sesión</span>
+    </button>
+
+  </aside>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
+
+    <!-- ── TOP HEADER ── -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <button
+          class="header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
+        </button>
+        <div>
+          <span class="dash-brand">Panel de Administración</span>
+        </div>
+      </div>
+
+      <div class="dash-header-right">
+        <div class="dash-status-pill">
+          <span class="dash-status-dot"></span>
+          <span>Sistema Activo</span>
+        </div>
+        <div class="dash-user-chip">
+          <div class="dash-avatar-mini">MM</div>
+          <span>Mateo Moreno</span>
+        </div>
+        <button (click)="logout()" class="dash-logout-btn">
+          <span class="material-symbols-rounded" style="font-size:1.05rem">logout</span>
+          Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- ── MAIN BODY ── -->
+    <main class="cat-main animate-fade-in">
+
+      <!-- ── PAGE TOP BAR ── -->
+      <section class="page-top-bar">
+        <div class="page-top-left">
+          <div class="page-title-icon">
+            <span class="material-symbols-rounded">pets</span>
+          </div>
+          <div>
+            <div class="page-breadcrumb">
+              <span (click)="navigateTo('/dashboard')" class="breadcrumb-link">Dashboard</span>
+              <span class="breadcrumb-sep">/</span>
+              <span (click)="toggleSectionsDropdown()" class="breadcrumb-link">Secciones</span>
+              <span class="breadcrumb-sep">/</span>
+              <span class="breadcrumb-current">Camascotas</span>
+            </div>
+            <h1 class="page-title">Categorías Camascotas</h1>
+          </div>
+        </div>
+
+        <div class="page-top-actions">
+          <button (click)="loadCategories()" class="btn-action-icon" title="Recargar categorías">
+            <span class="material-symbols-rounded" [class.spin-animate]="isLoadingCategories">sync</span>
+          </button>
+
+          <div class="header-count-badge">
+            <span class="count-num">{{ categories.length }}</span>
+            <span class="count-label">categorías principales</span>
+          </div>
+
+          <div *ngIf="selectedCategory" class="header-count-badge">
+            <span class="count-num">{{ subcategories.length }}</span>
+            <span class="count-label">subcategorías activas</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── WORKSPACE 2-COLUMN GRID ── -->
+      <div class="cat-workspace-grid">
+
+        <!-- ── COLUMNA 1: CATEGORÍAS PRINCIPALES ── -->
+        <div class="cat-card">
+          <!-- Card Header -->
+          <div class="cat-card-header">
+            <div class="cat-card-title-group">
+              <div class="cat-card-icon-pill">
+                <span class="material-symbols-rounded">pets</span>
+              </div>
+              <h2 class="cat-card-title">Categorías Principales</h2>
+            </div>
+            <span class="cat-counter-chip">{{ categories.length }} en total</span>
+          </div>
+
+          <!-- Quick Add Input -->
+          <div class="cat-add-bar">
+            <div class="cat-input-group">
+              <input
+                type="text"
+                [(ngModel)]="newCategoryName"
+                placeholder="Nombre de nueva categoría..."
+                (keyup.enter)="addCategory()"
+                class="cat-text-input"
+              >
+              <button
+                (click)="addCategory()"
+                [disabled]="!newCategoryName.trim()"
+                class="cat-btn-primary"
+              >
+                <span class="material-symbols-rounded" style="font-size:1.15rem">add</span>
+                <span>Añadir</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Filter Bar -->
+          <div class="cat-search-bar">
+            <div class="cat-search-wrapper">
+              <span class="material-symbols-rounded cat-search-icon">search</span>
+              <input
+                type="text"
+                [(ngModel)]="searchCategory"
+                (ngModelChange)="updateCategoriesView()"
+                placeholder="Buscar categoría..."
+                class="cat-search-input"
+              >
+              <button
+                *ngIf="searchCategory"
+                (click)="clearSearchCategory()"
+                class="cat-search-clear"
+                title="Limpiar búsqueda"
+              >
+                <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Categories List Body -->
+          <div class="cat-list-scroll">
+            <!-- Loading -->
+            <div *ngIf="isLoadingCategories" class="cat-loading-state">
+              <div class="loading-spinner"></div>
+              <span>Cargando categorías...</span>
+            </div>
+
+            <!-- Empty Search Results -->
+            <div *ngIf="!isLoadingCategories && groupedCategories.length === 0 && searchCategory" class="cat-empty-panel">
+              <div class="cat-empty-icon-box">
+                <span class="material-symbols-rounded">search_off</span>
+              </div>
+              <h3 class="cat-empty-title">Sin resultados</h3>
+              <p class="cat-empty-desc">No se encontró ninguna categoría con el término "{{ searchCategory }}".</p>
+            </div>
+
+            <!-- Empty Categories -->
+            <div *ngIf="!isLoadingCategories && categories.length === 0 && !searchCategory" class="cat-empty-panel">
+              <div class="cat-empty-icon-box">
+                <span class="material-symbols-rounded">folder_open</span>
+              </div>
+              <h3 class="cat-empty-title">No hay categorías</h3>
+              <p class="cat-empty-desc">Crea tu primera categoría principal en el campo de arriba.</p>
+            </div>
+
+            <!-- Alphabet Grouped Categories -->
+            <div *ngFor="let group of groupedCategories" class="cat-group animate-fade-in">
+              <div class="cat-letter-header">{{ group.letter }}</div>
+
+              <div
+                *ngFor="let cat of group.categories"
+                (click)="selectCategory(cat)"
+                class="cat-item-row"
+                [class.cat-item-row--active]="selectedCategory?.id === cat.id"
+              >
+                <div class="cat-item-left">
+                  <div class="cat-item-badge-icon">
+                    <span class="material-symbols-rounded" style="font-size:1.1rem">folder</span>
+                  </div>
+                  <span class="cat-item-name">{{ cat.name }}</span>
+                </div>
+
+                <div class="cat-item-right">
+                  <!-- Actions -->
+                  <div class="cat-item-actions">
+                    <button
+                      (click)="confirmEdit('category', cat.id!, cat.name, $event)"
+                      class="cat-row-btn"
+                      title="Editar categoría"
+                    >
+                      <span class="material-symbols-rounded" style="font-size:1.05rem">edit</span>
+                    </button>
+                    <button
+                      (click)="confirmDelete('category', cat.id!, cat.name, $event)"
+                      class="cat-row-btn cat-row-btn--delete"
+                      title="Eliminar categoría"
+                    >
+                      <span class="material-symbols-rounded" style="font-size:1.05rem">delete</span>
+                    </button>
+                  </div>
+
+                  <span class="material-symbols-rounded cat-item-chevron">chevron_right</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── COLUMNA 2: SUBCATEGORÍAS ── -->
+        <div class="cat-card">
+          <!-- Card Header -->
+          <div class="cat-card-header">
+            <div class="cat-card-title-group">
+              <div class="cat-card-icon-pill">
+                <span class="material-symbols-rounded">list_alt</span>
+              </div>
+              <h2 class="cat-card-title">Subcategorías</h2>
+              <span *ngIf="selectedCategory" class="cat-card-subtitle-chip" [title]="selectedCategory.name">
+                de {{ selectedCategory.name }}
+              </span>
+            </div>
+
+            <span *ngIf="selectedCategory" class="cat-counter-chip">
+              {{ filteredSubcategories.length }} activas
+            </span>
+          </div>
+
+          <!-- Empty Category Selection Placeholder -->
+          <div *ngIf="!selectedCategory" class="cat-empty-panel">
+            <div class="cat-empty-icon-box">
+              <span class="material-symbols-rounded">touch_app</span>
+            </div>
+            <h3 class="cat-empty-title">Selecciona una categoría</h3>
+            <p class="cat-empty-desc">
+              Haz clic en cualquier categoría principal del panel izquierdo para explorar y administrar sus subcategorías.
+            </p>
+          </div>
+
+          <!-- Subcategories Content When Selected -->
+          <ng-container *ngIf="selectedCategory">
+            <!-- Quick Add Subcategory -->
+            <div class="cat-add-bar">
+              <div class="cat-input-group">
+                <input
+                  type="text"
+                  [(ngModel)]="newSubcategoryName"
+                  [placeholder]="'Nueva subcategoría en ' + selectedCategory.name + '...'"
+                  (keyup.enter)="addSubcategory()"
+                  class="cat-text-input"
+                >
+                <button
+                  (click)="addSubcategory()"
+                  [disabled]="!newSubcategoryName.trim()"
+                  class="cat-btn-primary"
+                >
+                  <span class="material-symbols-rounded" style="font-size:1.15rem">add</span>
+                  <span>Añadir</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Search Subcategory -->
+            <div class="cat-search-bar">
+              <div class="cat-search-wrapper">
+                <span class="material-symbols-rounded cat-search-icon">search</span>
+                <input
+                  type="text"
+                  [(ngModel)]="searchSubcategory"
+                  (ngModelChange)="updateSubcategoriesView()"
+                  placeholder="Buscar subcategoría..."
+                  class="cat-search-input"
+                >
+                <button
+                  *ngIf="searchSubcategory"
+                  (click)="clearSearchSubcategory()"
+                  class="cat-search-clear"
+                  title="Limpiar búsqueda"
+                >
+                  <span class="material-symbols-rounded" style="font-size:1.1rem">close</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Subcategories List -->
+            <div class="cat-list-scroll">
+              <!-- Loading -->
+              <div *ngIf="isLoadingSubcategories" class="cat-loading-state">
+                <div class="loading-spinner"></div>
+                <span>Cargando subcategorías...</span>
+              </div>
+
+              <!-- Empty Search Results -->
+              <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && searchSubcategory" class="cat-empty-panel">
+                <div class="cat-empty-icon-box">
+                  <span class="material-symbols-rounded">search_off</span>
+                </div>
+                <h3 class="cat-empty-title">Sin resultados</h3>
+                <p class="cat-empty-desc">No se encontraron subcategorías para "{{ searchSubcategory }}".</p>
+              </div>
+
+              <!-- Empty Subcategories in Category -->
+              <div *ngIf="!isLoadingSubcategories && filteredSubcategories.length === 0 && !searchSubcategory" class="cat-empty-panel">
+                <div class="cat-empty-icon-box">
+                  <span class="material-symbols-rounded">format_list_bulleted</span>
+                </div>
+                <h3 class="cat-empty-title">No hay subcategorías</h3>
+                <p class="cat-empty-desc">Esta categoría no tiene subcategorías aún. Agrega una arriba.</p>
+              </div>
+
+              <!-- Subcategory Item Rows -->
+              <div *ngFor="let sub of filteredSubcategories" class="subcat-item-row animate-fade-in">
+                <div class="subcat-dot" style="background:#10b981;"></div>
+                <span class="subcat-item-name">{{ sub.name }}</span>
+
+                <div class="cat-item-actions" style="opacity:1;">
+                  <button
+                    (click)="confirmEdit('subcategory', sub.id!, sub.name)"
+                    class="cat-row-btn"
+                    title="Editar subcategoría"
+                  >
+                    <span class="material-symbols-rounded" style="font-size:1.05rem">edit</span>
+                  </button>
+                  <button
+                    (click)="confirmDelete('subcategory', sub.id!, sub.name)"
+                    class="cat-row-btn cat-row-btn--delete"
+                    title="Eliminar subcategoría"
+                  >
+                    <span class="material-symbols-rounded" style="font-size:1.05rem">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE CONFIRMACIÓN DE ELIMINACIÓN
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showDeleteModal" class="cat-modal-backdrop animate-fade-in" (click)="cancelDelete()">
+    <div class="cat-modal-card" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--danger">
+          <span class="material-symbols-rounded">warning</span>
+        </div>
+        <h2 class="cat-modal-title">¿Eliminar {{ deleteTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}?</h2>
+        <p class="cat-modal-desc">
+          Estás a punto de eliminar <strong style="color:#0f172a;">"{{ deleteTargetName }}"</strong>.
+          <span *ngIf="deleteTargetType === 'category'" style="display:block; margin-top:6px; color:#ef4444; font-weight:600;">
+            ¡Esta acción también eliminará permanentemente todas sus subcategorías asociadas!
+          </span>
+          Esta acción no se puede deshacer.
+        </p>
+      </div>
+      <div class="cat-modal-footer">
+        <button (click)="cancelDelete()" class="cat-modal-btn-cancel">
+          Cancelar
+        </button>
+        <button (click)="executeDelete()" class="cat-modal-btn-delete">
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE EDICIÓN
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showEditModal" class="cat-modal-backdrop animate-fade-in" (click)="cancelEditModal()">
+    <div class="cat-modal-card" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--info">
+          <span class="material-symbols-rounded">edit_square</span>
+        </div>
+        <h2 class="cat-modal-title">Editar {{ editTargetType === 'category' ? 'Categoría' : 'Subcategoría' }}</h2>
+        <p class="cat-modal-desc">Modifica el nombre para actualizarlo en todo el catálogo.</p>
+
+        <div class="cat-modal-form">
+          <label class="cat-modal-label">Nombre</label>
+          <input
+            type="text"
+            [(ngModel)]="editTargetNewName"
+            (keyup.enter)="executeEdit()"
+            class="cat-modal-input"
+            placeholder="Escribe el nuevo nombre..."
+            autofocus
+          >
+        </div>
+      </div>
+      <div class="cat-modal-footer">
+        <button (click)="cancelEditModal()" class="cat-modal-btn-cancel">
+          Cancelar
+        </button>
+        <button
+          (click)="executeEdit()"
+          [disabled]="!editTargetNewName.trim() || editTargetNewName.trim() === editTargetOldName.trim()"
+          class="cat-modal-btn-save"
+        >
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MODAL DE VALIDACIÓN DE DUPLICADOS
+       ═══════════════════════════════════════════════ -->
+  <div *ngIf="showValidationModal" class="cat-modal-backdrop animate-fade-in" (click)="showValidationModal = false">
+    <div class="cat-modal-card cat-modal-card--sm" (click)="$event.stopPropagation()">
+      <div class="cat-modal-body">
+        <div class="cat-modal-icon-badge cat-modal-icon-badge--warning">
+          <span class="material-symbols-rounded">error</span>
+        </div>
+        <h2 class="cat-modal-title">Acción no permitida</h2>
+        <p class="cat-modal-desc">{{ validationMessage }}</p>
+      </div>
+      <div class="cat-modal-footer" style="justify-content: center;">
+        <button (click)="showValidationModal = false" class="cat-modal-btn-save" style="width: 100%;">
+          Entendido
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+

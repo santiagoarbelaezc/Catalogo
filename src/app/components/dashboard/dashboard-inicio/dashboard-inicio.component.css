@@ -498,7 +498,7 @@
 .dash-brand {
   font-size: 1.05rem;
   font-weight: 800;
-  color: #0f172a;
+  color: #111111;
   letter-spacing: -0.02em;
 }
 
@@ -512,7 +512,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   cursor: pointer;
-  color: #475569;
+  color: #111111;
   transition: all 0.18s ease;
   padding: 0;
 }

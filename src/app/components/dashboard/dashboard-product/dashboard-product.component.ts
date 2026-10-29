@@ -103,6 +103,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   navigateToCategories()  { this.router.navigate(['/dashboard/categorias']); }
   navigateToEspumas()     { this.router.navigate(['/dashboard/espumas']); }
   navigateToDistricol()   { this.router.navigate(['/dashboard/districol']); }
+  navigateToCamascotas()  { this.router.navigate(['/dashboard/camascotas']); }
   openWebCatalog()        { window.open('/catalogo', '_blank'); }
 
   get userInitials(): string {
@@ -137,6 +138,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     plaxtilineas: 0,
     espumas: 0,
     districol: 0,
+    camascotas: 0,
     otros: 0,
     missingDescription: 0,
     missingImages: 0,
@@ -587,7 +589,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   calculateStats() {
     let missingDesc = 0, missingImg = 0, missingPrice = 0, missingVars = 0;
-    let plaxti = 0, espumas = 0, distri = 0, otros = 0;
+    let plaxti = 0, espumas = 0, distri = 0, camascotas = 0, otros = 0;
     let complete = 0;
     const catCounts: { [key: string]: number } = {};
 
@@ -607,6 +609,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       if (cat === 'Plaxtilineas') plaxti++;
       else if (cat === 'Espumas') espumas++;
       else if (cat === 'Districol') distri++;
+      else if (cat === 'Camascotas') camascotas++;
       else otros++;
 
       const catName = p.category_name || 'Sin Categoría';
@@ -615,7 +618,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     const total = this.products.length;
     this.statsGlobal = {
-      total, plaxtilineas: plaxti, espumas, districol: distri, otros,
+      total, plaxtilineas: plaxti, espumas, districol: distri, camascotas, otros,
       missingDescription: missingDesc, missingImages: missingImg,
       missingPrice, missingVariants: missingVars,
       complete, completePct: total > 0 ? Math.round((complete / total) * 100) : 0
@@ -627,8 +630,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     };
 
     this.lineChartData = {
-      labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Otros'],
-      datasets: [ { data: [plaxti, espumas, distri, otros], backgroundColor: ['#059669', '#2563eb', '#b45309', '#94a3b8'], borderWidth: 0, hoverOffset: 8 } ]
+      labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Camascotas', 'Otros'],
+      datasets: [ { data: [plaxti, espumas, distri, camascotas, otros], backgroundColor: ['#059669', '#2563eb', '#b45309', '#7c3aed', '#94a3b8'], borderWidth: 0, hoverOffset: 8 } ]
     };
 
     const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);

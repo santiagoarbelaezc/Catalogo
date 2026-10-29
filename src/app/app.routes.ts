@@ -3,6 +3,7 @@ import { CatalogoHomeComponent } from './pages/catalogo-home/catalogo-home.compo
 import { DistricolComponent } from './pages/districol/districol.component';
 import { EspumasplasticosComponent } from './pages/espumasplasticos/espumasplasticos.component';
 import { PlaxtilineasComponent } from './pages/plaxtilineas/plaxtilineas.component';
+import { CamascotasComponent } from './pages/camascotas/camascotas.component';
 import { CatalogoPrintComponent } from './pages/catalogo-print/catalogo-print.component';
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardInicioComponent } from './components/dashboard/dashboard-inicio/dashboard-inicio.component';
@@ -10,6 +11,7 @@ import { DashboardProductComponent } from './components/dashboard/dashboard-prod
 import { DashboardCategoriesComponent } from './components/dashboard/dashboard-categories/dashboard-categories.component';
 import { DashboardEspumasComponent } from './components/dashboard/dashboard-espumas/dashboard-espumas.component';
 import { DashboardDistricolComponent } from './components/dashboard/dashboard-districol/dashboard-districol.component';
+import { DashboardCamascotasComponent } from './components/dashboard/dashboard-camascotas/dashboard-camascotas.component';
 import { DashboardAnalyticsComponent } from './components/dashboard/dashboard-analytics/dashboard-analytics.component';
 import { authGuard } from './guards/auth.guard';
 import { ProductDetailComponent } from './components/catalog/product-detail/product-detail.component';
@@ -25,11 +27,13 @@ export const routes: Routes = [
   { path: 'dashboard/categorias', component: DashboardCategoriesComponent, canActivate: [authGuard] },
   { path: 'dashboard/espumas', component: DashboardEspumasComponent, canActivate: [authGuard] },
   { path: 'dashboard/districol', component: DashboardDistricolComponent, canActivate: [authGuard] },
+  { path: 'dashboard/camascotas', component: DashboardCamascotasComponent, canActivate: [authGuard] },
   { path: 'catalogo', component: CatalogoHomeComponent },
   { path: 'catalogo-home', redirectTo: '/catalogo', pathMatch: 'full' },
   { path: 'districol', component: DistricolComponent },
   { path: 'espumasplasticos', component: EspumasplasticosComponent },
   { path: 'plaxtilineas', component: PlaxtilineasComponent },
+  { path: 'camascotas', component: CamascotasComponent },
   { path: 'producto/:id', component: ProductDetailComponent },
   { path: 'catalogo-print', component: CatalogoPrintComponent },
   { path: 'unauthorized', component: UnauthorizedComponent },

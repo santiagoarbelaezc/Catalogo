@@ -1,3 +1,12 @@
+/* Fuente local de iconos Material Symbols Rounded (sin dependencia de red externa) */
+@font-face {
+  font-family: 'Material Symbols Rounded';
+  font-style: normal;
+  font-weight: 100 700;
+  font-display: block;
+  src: url('/assets/fonts/MaterialSymbolsRounded.woff2') format('woff2');
+}
+
 /* Declarar fuentes locales personalizadas (legacy / PDF) */
 @font-face {
   font-family: 'Fashion Fetish Light';
