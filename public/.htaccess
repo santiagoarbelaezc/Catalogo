@@ -2,27 +2,60 @@
   RewriteEngine On
   RewriteBase /
 
-  # 1. Si el archivo o directorio existe físicamente, servirlo y detener.
+  # 0. Pasar cabecera Authorization a PHP (necesario en Hostinger / Apache / LiteSpeed con PHP-FPM)
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+  # 1. Enrutar todas las peticiones del Backend (/api/* o endpoints de API) al puente seguro
+  #    El código real y el .env viven FUERA de public_html en la carpeta privada "backend php"
+  RewriteRule ^api(/.*)?$ api-bridge.php [QSA,L]
+  RewriteRule ^(health|auth|productos|categorias|subcategorias|ia|backup|inventario|integraciones)(/.*)?$ api-bridge.php [QSA,L]
+
+  # 2. Si el archivo o directorio existe físicamente, servirlo y detener.
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
-  # 2. Prevenir que archivos estáticos faltantes devuelvan index.html
+  # 3. Prevenir que archivos estáticos faltantes devuelvan index.html
   # Esto asegura que el navegador no confunda estilos o scripts con HTML
   RewriteCond %{REQUEST_URI} !\.(css|js|map|png|jpg|jpeg|gif|svg|ico|ttf|woff|woff2|eot|json)$ [NC]
 
-  # 3. Reescribir todas las demás rutas (rutas de Angular) a index.html
+  # 4. Reescribir todas las demás rutas (rutas de Angular) a index.html
   RewriteRule ^ index.html [L]
 </IfModule>
+
+# Headers de seguridad HTTP
+<IfModule mod_headers.c>
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always unset X-Powered-By
+  Header always unset Server
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# Bloqueo de métodos HTTP no usados (permite GET, POST, PUT, DELETE, OPTIONS)
+<LimitExcept GET POST PUT DELETE OPTIONS>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</LimitExcept>
 
 # Habilitar compresión GZIP
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript application/json image/svg+xml
 </IfModule>
 
-# Cache-Control (Mejora tiempos de carga y SEO - Core Web Vitals)
+# Cache-Control (Mejora tiempos de carga y SEO - Core Web Vitals, sin cachear respuestas JSON/SSE de la API)
 <IfModule mod_expires.c>
   ExpiresActive On
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType text/event-stream "access plus 0 seconds"
   ExpiresByType image/jpg "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/gif "access plus 1 year"
