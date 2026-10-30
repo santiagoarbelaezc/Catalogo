@@ -119,8 +119,14 @@ export class ProductsService {
     if (product.category_id !== undefined && product.category_id !== null) formData.append('category_id', product.category_id.toString());
     if (product.subcategory_id !== undefined && product.subcategory_id !== null) formData.append('subcategory_id', product.subcategory_id.toString());
     if (product.options !== undefined && product.options !== null) formData.append('options', product.options);
-    if (product.isNew !== undefined && product.isNew !== null) formData.append('isNew', product.isNew.toString());
-    if (product.isFeatured !== undefined && product.isFeatured !== null) formData.append('isFeatured', product.isFeatured.toString());
+    if (product.isNew !== undefined && product.isNew !== null) {
+      const isNewVal = (product.isNew === 1 || product.isNew === '1' || product.isNew === true || product.isNew === 'true') ? '1' : '0';
+      formData.append('isNew', isNewVal);
+    }
+    if (product.isFeatured !== undefined && product.isFeatured !== null) {
+      const isFeaturedVal = (product.isFeatured === 1 || product.isFeatured === '1' || product.isFeatured === true || product.isFeatured === 'true') ? '1' : '0';
+      formData.append('isFeatured', isFeaturedVal);
+    }
     if (product.marca !== undefined && product.marca !== null) formData.append('marca', product.marca);
     if (product.gramaje !== undefined && product.gramaje !== null) formData.append('gramaje', product.gramaje);
     if (product.brandIconUrl !== undefined && product.brandIconUrl !== null) formData.append('brandIconUrl', product.brandIconUrl);

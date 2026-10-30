@@ -719,9 +719,9 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
     // Filter by status
     if (this.filterStatus === 'new') {
-      result = result.filter(p => p.isNew === true || p.isNew === 1);
+      result = result.filter(p => p.isNew === true || p.isNew === 1 || p.isNew === '1');
     } else if (this.filterStatus === 'featured') {
-      result = result.filter(p => p.isFeatured === true || p.isFeatured === 1);
+      result = result.filter(p => p.isFeatured === true || p.isFeatured === 1 || p.isFeatured === '1');
     }
 
     // Apply sorting
@@ -834,7 +834,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       category_id: [''],
       subcategory_id: [''],
       options: [''],
-      isNew: [true],
+      isNew: [false],
       isFeatured: [false],
       marca: [''],
       gramaje: [''],
@@ -843,6 +843,28 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       variants: this.fb.array([]),
       images: this.fb.array([])
     });
+  }
+
+  toggleIsNew(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const current = !!this.productForm.get('isNew')?.value;
+    this.productForm.patchValue({ isNew: !current });
+    this.productForm.get('isNew')?.markAsDirty();
+    this.cdr.markForCheck();
+  }
+
+  toggleIsFeatured(event?: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    const current = !!this.productForm.get('isFeatured')?.value;
+    this.productForm.patchValue({ isFeatured: !current });
+    this.productForm.get('isFeatured')?.markAsDirty();
+    this.cdr.markForCheck();
   }
 
   generateSlug(text: string): string {
@@ -883,7 +905,11 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       next: (response) => {
         // Fallback or exact
         const data = response.data !== undefined ? response.data : response;
-        this.products = data || [];
+        this.products = (data || []).map((p: any) => ({
+          ...p,
+          isNew: p.isNew === 1 || p.isNew === '1' || p.isNew === true || p.isNew === 'true',
+          isFeatured: p.isFeatured === 1 || p.isFeatured === '1' || p.isFeatured === true || p.isFeatured === 'true',
+        }));
         this.calculateStats(); // CALCULAR ESTADÍSTICAS AQUÍ
         this.isLoading = false;
         this.cdr.markForCheck();
@@ -1093,7 +1119,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       category: '',
       category_id: '',
       subcategory_id: '',
-      isNew: true,
+      isNew: false,
       isFeatured: false
     }, { emitEvent: false });
     this.subcategories = [];
@@ -1125,8 +1151,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       category_id: product.category_id || '',
       subcategory_id: product.subcategory_id || '',
       options: product.options || '',
-      isNew: product.isNew === 1 || product.isNew === true,
-      isFeatured: product.isFeatured === 1 || product.isFeatured === true,
+      isNew: product.isNew === 1 || product.isNew === '1' || product.isNew === true || product.isNew === 'true',
+      isFeatured: product.isFeatured === 1 || product.isFeatured === '1' || product.isFeatured === true || product.isFeatured === 'true',
       marca: product.marca || '',
       gramaje: product.gramaje || '',
       brandIconUrl: product.brandIconUrl || ''
@@ -1247,8 +1273,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       slug: rawSlug !== '' ? this.generateSlug(rawSlug) : this.generateSlug(productData.name || ''),
       stock: parseInt(productData.stock, 10) >= 0 ? parseInt(productData.stock, 10) : 15,
       primaryFileIndex: this.primaryFileIndex,
-      isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
-      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
+      isNew: (productData.isNew === 1 || productData.isNew === '1' || productData.isNew === true || productData.isNew === 'true') ? 1 : 0,
+      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === '1' || productData.isFeatured === true || productData.isFeatured === 'true') ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
         sku: v.sku ? v.sku.trim() : '',
@@ -1290,8 +1316,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       slug: rawSlug !== '' ? this.generateSlug(rawSlug) : this.generateSlug(productData.name || ''),
       stock: parseInt(productData.stock, 10) >= 0 ? parseInt(productData.stock, 10) : 15,
       primaryFileIndex: this.primaryFileIndex,
-      isNew: (productData.isNew === 1 || productData.isNew === true) ? 1 : 0,
-      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === true) ? 1 : 0,
+      isNew: (productData.isNew === 1 || productData.isNew === '1' || productData.isNew === true || productData.isNew === 'true') ? 1 : 0,
+      isFeatured: (productData.isFeatured === 1 || productData.isFeatured === '1' || productData.isFeatured === true || productData.isFeatured === 'true') ? 1 : 0,
       variants: productData.variants.map((v: any) => ({
         ...v,
         sku: v.sku ? v.sku.trim() : '',

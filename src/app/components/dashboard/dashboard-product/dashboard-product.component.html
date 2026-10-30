@@ -428,7 +428,7 @@
               <div class="row-main-col">
                 <div class="row-title-wrap">
                   <span class="row-product-title">{{ product.name }}</span>
-                  <span *ngIf="product.isNew" class="badge-new-pill">Nuevo</span>
+                  <span *ngIf="product.isNew === true || product.isNew === 1 || product.isNew === '1'" class="badge-new-pill">Nuevo</span>
                 </div>
                 <div class="row-meta-wrap">
                   <span class="row-category-text">{{ product.category }}</span>
