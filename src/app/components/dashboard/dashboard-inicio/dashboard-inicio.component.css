@@ -898,8 +898,8 @@
 ══════════════════════ */
 .dash-modules-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .module-card {
@@ -914,6 +914,7 @@
   display: flex;
   flex-direction: column;
   gap: 7px;
+  min-height: 180px;
 }
 
 .module-card:hover {
@@ -1028,12 +1029,6 @@
 /* ══════════════════════
    RESPONSIVE
 ══════════════════════ */
-@media (max-width: 1400px) {
-  .dash-modules-row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 1280px) {
   .dash-bento-grid {
     grid-template-columns: 1fr 320px;
