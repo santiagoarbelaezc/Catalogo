@@ -12,7 +12,7 @@ env:
 
 jobs:
   build-and-deploy:
-    name: Build Angular + Deploy to Hostinger
+    name: Build Angular + Deploy to Hostinger (SSH Password)
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -68,15 +68,14 @@ jobs:
           ls -lh dist/catalogo/browser/
 
       # ─────────────────────────────────────────────
-      # 6. Configurar SSH
+      # 6. Instalar sshpass y registrar host conocido
       # ─────────────────────────────────────────────
-      - name: 🔑 Configurar SSH
+      - name: 🔑 Configurar acceso SSH
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          ssh-keyscan -p "${{ secrets.SSH_PORT }}" -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       # ─────────────────────────────────────────────
@@ -84,17 +83,19 @@ jobs:
       #    Se preservan carpetas del servidor (.well-known para SSL, cgi-bin)
       # ─────────────────────────────────────────────
       - name: 📤 Sincronizar build al servidor
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ${{ env.DEPLOY_PATH }}"
+          sshpass -e ssh -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "mkdir -p ${{ env.DEPLOY_PATH }}"
 
-          rsync -avz --delete \
+          sshpass -e rsync -avz --delete \
             --exclude='.git/' \
             --exclude='.well-known/' \
             --exclude='cgi-bin/' \
             --exclude='error_docs/' \
-            -e "ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519" \
+            -e "ssh -p ${{ secrets.SSH_PORT }}" \
             dist/catalogo/browser/ \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/"
 
       # ─────────────────────────────────────────────
       # 8. Verificar que el frontend sirve correctamente
@@ -110,6 +111,6 @@ jobs:
             exit 1
           fi
 
-      - name: 🧹 Limpiar clave SSH
+      - name: 🧹 Limpiar configuración SSH
         if: always()
         run: rm -rf ~/.ssh
