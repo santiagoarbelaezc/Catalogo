@@ -44,9 +44,12 @@ export class CatalogoHomeComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
-          // Mostrar solo productos con precio válido (> 0) y ordenar por nombre A-Z
+          // Mostrar exclusivamente productos de Plaxtilineas con precio válido (> 0)
           this.products = products
-            .filter((product: any) => this.productsService.hasValidPrice(product))
+            .filter((product: any) =>
+              product.category === 'Plaxtilineas' &&
+              this.productsService.hasValidPrice(product)
+            )
             .sort((a, b) => a.name.localeCompare(b.name));
           this.applyFilters(this.currentFilters);
         }
@@ -142,7 +145,9 @@ export class CatalogoHomeComponent implements OnInit {
   }
 
   goToPrint(): void {
-    const url = this.router.serializeUrl(this.router.createUrlTree(['/catalogo-print']));
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/catalogo-print'], { queryParams: { brand: 'Plaxtilineas' } })
+    );
     window.open(url, '_blank');
   }
 }

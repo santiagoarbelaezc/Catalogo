@@ -37,27 +37,18 @@
   <div class="navbar-main">
     <div class="navbar-container">
 
-      <!-- LEFT: Brand Logo / Home link -->
-      <a routerLink="/catalogo" class="brand-link" title="Ir al Catálogo General">
-        <div class="brand-emblem">
-          <span class="material-symbols-rounded">storefront</span>
-        </div>
-        <div class="brand-text-block">
-          <div class="brand-title-wrap">
-            <span class="brand-name">PLAXTI<span class="brand-name-accent">LINEAS</span></span>
-            <span class="brand-dot"></span>
-          </div>
-          <span class="brand-tagline">Catálogo Oficial</span>
-        </div>
+      <!-- LEFT: Official Plaxtilineas Logo -->
+      <a routerLink="/catalogo" class="brand-link" title="Ir al Catálogo Plaxtilíneas">
+        <img
+          src="assets/logos/logo-blanco-invertido.png"
+          alt="Plaxtilíneas"
+          class="navbar-official-logo"
+        />
       </a>
 
       <!-- CENTER: Brand Navigation Pills -->
       <div class="nav-pills-row">
         <a routerLink="/catalogo" routerLinkActive="pill-active" [routerLinkActiveOptions]="{exact: true}" class="nav-pill">
-          <span class="pill-dot"></span>
-          <span>General</span>
-        </a>
-        <a routerLink="/plaxtilineas" routerLinkActive="pill-active" class="nav-pill">
           <span class="pill-dot"></span>
           <span>Plaxtilineas</span>
         </a>

@@ -1,46 +1,163 @@
-<div class="print-page-header">
-  <div>
-    <div class="brand-name">{{ brandName }}</div>
-    <div class="catalog-label">Catálogo de productos</div>
+<!-- Barra de progreso de precarga (Solo en pantalla, oculta al imprimir PDF) -->
+<div class="print-preload-banner no-print" *ngIf="isAutoScrolling">
+  <div class="preload-info">
+    <span class="preload-dot"></span>
+    <span>
+      Cargando todas las imágenes del catálogo para el PDF...
+      <strong>{{ secondsRemaining }}s</strong> ({{ scrollProgress }}%)
+    </span>
   </div>
-  <div class="print-date">{{ currentDate }}</div>
+
+  <div class="preload-actions">
+    <div class="preload-track">
+      <div class="preload-fill" [style.width.%]="scrollProgress"></div>
+    </div>
+    <button type="button" class="preload-skip-btn" (click)="triggerPrint()">
+      Imprimir ahora
+    </button>
+  </div>
 </div>
 
-<div class="products-print-grid">
-  <div class="product-print-card" *ngFor="let product of products">
-    
-    <img 
-      class="card-image" 
-      [src]="product.images[0].url" 
-      [alt]="product.name"
-      *ngIf="product.images && product.images.length > 0"
-    />
-    <div class="card-image" style="background:#f4f4f4;" *ngIf="!product.images || product.images.length === 0"></div>
+<!-- ══════════════════════════════════════════════════
+     HOJA 1: PORTADA COMPLETA CON DEGRADADO INSTITUCIONAL
+     ══════════════════════════════════════════════════ -->
+<section class="print-cover-page" [ngClass]="'header--' + brandKey">
+  <img
+    src="assets/logos/isotipo-plaxtilineas.png"
+    alt=""
+    aria-hidden="true"
+    class="cover-watermark"
+  />
 
-    <div class="card-body">
-      <div class="card-brand">{{ product.marca || product.category }}</div>
-      <h2 class="card-name">{{ product.name }}</h2>
-      <p class="card-description" *ngIf="product.description">{{ product.description }}</p>
+  <div class="cover-top-row">
+    <span class="cover-pill">
+      <span class="cover-pill-dot"></span>
+      CATÁLOGO OFICIAL • {{ currentDate | uppercase }}
+    </span>
+    <span class="cover-pill">
+      {{ products.length }} PRODUCTOS VIGENTES
+    </span>
+  </div>
 
-      <div class="card-divider"></div>
-
-      <div *ngIf="product.material">
-        <div class="meta-label">Material</div>
-        <div class="meta-value">{{ product.material }}</div>
-      </div>
-
-      <div *ngIf="product.variants && product.variants.length > 0">
-        <div class="meta-label">Opciones</div>
-        <div class="flex flex-wrap gap-1 mt-1">
-          <span class="variant-pill" *ngFor="let v of product.variants">{{ v.name }}</span>
-        </div>
-      </div>
+  <div class="cover-center">
+    <div class="cover-logo-wrap">
+      <img
+        src="assets/logos/logo-blanco-invertido.png"
+        alt="Plaxtilíneas"
+        class="cover-logo"
+      />
     </div>
 
-  </div>
-</div>
+    <span class="cover-kicker">PORTAFOLIO COMERCIAL</span>
+    <h1 class="cover-title">{{ brandName }}</h1>
+    <p class="cover-subtitle">
+      Catálogo oficial de productos, especificaciones técnicas, variantes disponibles y precios vigentes en COP.
+    </p>
 
-<div class="print-page-footer">
-  <span>{{ brandName }}</span>
-  <span>{{ products.length }} productos</span>
-</div>
+    <div class="cover-metrics-row">
+      <div class="cover-metric-card">
+        <span class="cover-metric-val">{{ products.length }}</span>
+        <span class="cover-metric-label">Referencias</span>
+      </div>
+      <div class="cover-metric-card">
+        <span class="cover-metric-val">{{ productPages.length }}</span>
+        <span class="cover-metric-label">Páginas de Catálogo</span>
+      </div>
+      <div class="cover-metric-card">
+        <span class="cover-metric-val">COP</span>
+        <span class="cover-metric-label">Precios Oficiales</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-bottom-bar">
+    <span>Cra 19 # 19-35 Armenia, Quindío</span>
+    <span>WhatsApp: +57 300 668 0125</span>
+    <span>www.plaxtilineas.com</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     HOJAS DE PRODUCTOS (9 PRODUCTOS POR HOJA — 3x3)
+     ══════════════════════════════════════════════════ -->
+<section
+  class="print-sheet-page"
+  *ngFor="let pageProducts of productPages; let pageIdx = index; let isLast = last"
+  [class.is-last-page]="isLast"
+>
+  <!-- Cabecera compacta de cada hoja -->
+  <header class="sheet-header" [ngClass]="'sheet-header--' + brandKey">
+    <div class="sheet-header-left">
+      <span class="sheet-brand-pill">{{ brandName }}</span>
+      <span class="sheet-header-title">Catálogo Oficial de Productos</span>
+    </div>
+    <div class="sheet-header-right">
+      <span>{{ currentDate }}</span>
+      <span class="sheet-page-tag">Página {{ pageIdx + 1 }} de {{ productPages.length }}</span>
+    </div>
+  </header>
+
+  <!-- Grilla organizada 3x3 (9 productos por página) -->
+  <div class="products-print-grid">
+    <article class="product-print-card" *ngFor="let product of pageProducts">
+
+      <div class="card-media">
+        <span class="card-brand-pill">{{ (product.category || product.marca || brandName) | uppercase }}</span>
+
+        <img
+          class="card-image"
+          [src]="product.images[0].url"
+          [alt]="product.name"
+          loading="eager"
+          decoding="async"
+          *ngIf="product.images && product.images.length > 0"
+        />
+        <div class="card-image card-image--empty" *ngIf="!product.images || product.images.length === 0">
+          Sin imagen
+        </div>
+
+        <span class="card-variants-badge" *ngIf="getProductVariants(product).length > 1">
+          {{ getProductVariants(product).length }} variantes
+        </span>
+      </div>
+
+      <div class="card-body">
+        <div class="card-meta-row">
+          <span class="card-cat">{{ (product.category_name || product.subcategory_name || 'GENERAL') | uppercase }}</span>
+          <span class="card-mat" *ngIf="product.material">{{ product.material }}</span>
+        </div>
+
+        <h2 class="card-name">{{ product.name }}</h2>
+
+        <p class="card-description" *ngIf="product.description">{{ product.description }}</p>
+
+        <div class="card-variants" *ngIf="getProductVariants(product).length > 0">
+          <span class="variant-pill" *ngFor="let v of getProductVariants(product).slice(0, 3)">
+            {{ v.name }}
+          </span>
+          <span class="variant-pill variant-pill--more" *ngIf="getProductVariants(product).length > 3">
+            +{{ getProductVariants(product).length - 3 }}
+          </span>
+        </div>
+
+        <div class="card-spacer"></div>
+
+        <div class="card-footer">
+          <div class="price-wrap" *ngIf="getProductMinPrice(product) > 0">
+            <span class="price-label">
+              {{ getProductVariants(product).length > 1 ? 'DESDE' : 'PRECIO OFICIAL' }}
+            </span>
+            <span class="price-val">{{ formatPrice(getProductMinPrice(product)) }}</span>
+          </div>
+        </div>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Pie compacto de cada hoja -->
+  <footer class="sheet-footer">
+    <span>Plaxtilíneas • Cra 19 # 19-35 Armenia, Quindío • WhatsApp: +57 300 668 0125</span>
+    <span>{{ brandName }} — Pág. {{ pageIdx + 1 }} / {{ productPages.length }}</span>
+  </footer>
+</section>
