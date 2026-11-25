@@ -108,7 +108,10 @@ export class EspumasplasticosComponent implements OnInit {
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
           this.products = products
-            .filter((product: any) => product.category === 'Espumas')
+            .filter((product: any) =>
+              product.category === 'Espumas' &&
+              this.productsService.hasValidPrice(product)
+            )
             .sort((a, b) => a.name.localeCompare(b.name));
           this.applyFilters(this.currentFilters);
         }

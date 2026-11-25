@@ -1,227 +1,223 @@
-<div class="login-shell">
+<div class="login-split-screen">
 
-  <!-- ── Main Split Card ── -->
-  <div class="login-split-card">
+  <!-- ══════════════════════════════════════════
+       COLUMNA IZQUIERDA: IDENTIDAD EDITORIAL
+       ══════════════════════════════════════════ -->
+  <section class="login-left-panel bento-welcome">
+    <!-- Isotipo en marca de agua -->
+    <img
+      src="assets/logos/isotipo-plaxtilineas.png"
+      alt=""
+      aria-hidden="true"
+      class="bento-watermark"
+    />
 
-    <!-- ══════════════════════════════════════════
-         SECCIÓN 1: Showcase / Brand (Dark Dashboard Style)
-         ══════════════════════════════════════════ -->
-    <div class="login-section-showcase">
+    <!-- Header superior con logo blanco invertido y botón regresar -->
+    <header class="left-panel-header">
+      <a routerLink="/catalogo" class="left-logo-link" title="Ir al Catálogo Público">
+        <img
+          src="assets/logos/logo-blanco-invertido.png"
+          alt="Plaxtilíneas"
+          class="left-brand-logo"
+        />
+      </a>
 
-      <!-- Top brand header -->
-      <div class="showcase-brand-header">
-        <div class="showcase-brand">
-          <div class="showcase-logo">
-            <span class="material-symbols-rounded">storefront</span>
-          </div>
-          <div class="showcase-brand-info">
-            <span class="showcase-brand-name">Plaxtilíneas</span>
-            <span class="showcase-brand-role">Panel Administrativo</span>
-          </div>
+      <a routerLink="/catalogo" class="btn-back-translucent" title="Volver al Catálogo">
+        <span class="material-symbols-rounded">arrow_back</span>
+        <span>Regresar</span>
+      </a>
+    </header>
+
+    <!-- Cuerpo Editorial -->
+    <div class="left-panel-body">
+      <h1 class="left-hero-title">
+        Gestión inteligente de <span class="title-mint-accent">productos</span> y distribución.
+      </h1>
+
+      <p class="left-hero-desc">
+        Administra de forma unificada el inventario comercial de Plaxtilíneas, Espumas,
+        Districol y Camascotas con sincronización continua y control en tiempo real.
+      </p>
+
+      <div class="bento-pills-row">
+        <div class="bento-action-pill">
+          <span class="material-symbols-rounded">inventory_2</span>
+          <span>Catálogo Centralizado</span>
         </div>
-
-        <div class="showcase-status-badge">
-          <span class="status-pulse-dot"></span>
-          <span>Online</span>
+        <div class="bento-action-pill">
+          <span class="material-symbols-rounded">account_tree</span>
+          <span>4 Líneas Comerciales</span>
         </div>
-      </div>
-
-      <!-- Central Hero Content -->
-      <div class="showcase-body">
-        <div class="showcase-tag">
-          <span class="material-symbols-rounded">shield_person</span>
-          <span>Acceso Privado</span>
+        <div class="bento-action-pill">
+          <span class="material-symbols-rounded">analytics</span>
+          <span>Analíticas & Stock</span>
         </div>
-
-        <h2 class="showcase-heading">
-          Gestión inteligente de productos, catálogos y distribución.
-        </h2>
-
-        <p class="showcase-description">
-          Administra de forma unificada el inventario comercial de Plaxtilíneas,
-          Espumas y Districol con sincronización continua y análisis en tiempo real.
-        </p>
-
-        <!-- Bento mini feature cards -->
-        <div class="showcase-bento-list">
-          <div class="showcase-bento-item">
-            <div class="bento-item-icon">
-              <span class="material-symbols-rounded">inventory_2</span>
-            </div>
-            <div class="bento-item-text">
-              <span class="bento-item-title">Catálogo Centralizado</span>
-              <span class="bento-item-desc">Actualización ágil de productos, variantes y stock</span>
-            </div>
-          </div>
-
-          <div class="showcase-bento-item">
-            <div class="bento-item-icon">
-              <span class="material-symbols-rounded">folder_open</span>
-            </div>
-            <div class="bento-item-text">
-              <span class="bento-item-title">Múltiples Secciones</span>
-              <span class="bento-item-desc">Módulos especializados para Plaxtilíneas, Espumas y Districol</span>
-            </div>
-          </div>
-
-          <div class="showcase-bento-item">
-            <div class="bento-item-icon">
-              <span class="material-symbols-rounded">analytics</span>
-            </div>
-            <div class="bento-item-text">
-              <span class="bento-item-title">Analíticas & Métricas</span>
-              <span class="bento-item-desc">Seguimiento y control de la actividad comercial</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Showcase Footer -->
-      <div class="showcase-footer">
-        <span class="material-symbols-rounded">verified_user</span>
-        <span>Conexión cifrada • Plataforma v2.4</span>
       </div>
     </div>
 
+    <!-- Footer inferior -->
+    <footer class="left-panel-footer">
+      <span class="pulse-green-dot"></span>
+      <span>Armenia, Quindío • Plataforma Administrativa Segura</span>
+    </footer>
+  </section>
 
-    <!-- ══════════════════════════════════════════
-         SECCIÓN 2: Formulario (Colores Blancos & Elegante)
-         ══════════════════════════════════════════ -->
-    <div class="login-section-form">
+  <!-- ══════════════════════════════════════════
+       COLUMNA DERECHA: FORMULARIO DARK MINIMAL
+       ══════════════════════════════════════════ -->
+  <section class="login-right-panel">
+    <div class="right-form-wrapper">
 
-      <!-- Top link to return -->
-      <div class="form-header-bar">
-        <a routerLink="/catalogo" class="form-back-btn" title="Volver a la tienda pública">
-          <span class="material-symbols-rounded">arrow_back</span>
-          <span>Volver al Catálogo</span>
-        </a>
+      <!-- Cabecera del formulario -->
+      <div class="form-heading-block">
+        <span class="form-kicker">PANEL DE ADMINISTRACIÓN</span>
+
+        @if (isRememberedMode()) {
+          <h2 class="form-main-title">Bienvenido de nuevo</h2>
+          <p class="form-main-subtitle">
+            Ingresa tu contraseña autorizada para continuar al panel de control.
+          </p>
+        } @else {
+          <h2 class="form-main-title">Iniciar Sesión</h2>
+          <p class="form-main-subtitle">
+            Accede con tus credenciales corporativas para gestionar el catálogo.
+          </p>
+        }
       </div>
 
-      <div class="form-main-content">
-        <!-- Title & Subtitle -->
-        <div class="form-intro">
-          <span class="form-kicker">Panel de Control</span>
-          @if (isRememberedMode()) {
-            <h1 class="form-title">Bienvenido de nuevo</h1>
-            <p class="form-subtitle">
-              Ingresa tu contraseña para continuar.
-            </p>
-          } @else {
-            <h1 class="form-title">Iniciar Sesión</h1>
-            <p class="form-subtitle">
-              Ingresa con tu correo y contraseña autorizados para ingresar a la administración.
-            </p>
-          }
-        </div>
+      <!-- Formulario -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form-stack" autocomplete="off">
 
-        <!-- Form fields -->
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form-inner" autocomplete="off">
-
-          <!-- Modo recordado: chip de cuenta -->
-          @if (isRememberedMode()) {
-            <div class="remembered-account-chip">
-              <div class="account-avatar">
-                <span class="material-symbols-rounded">person</span>
-              </div>
-              <div class="account-info">
-                <span class="account-label">Accediendo como</span>
-                <span class="account-email">{{ rememberedEmail() }}</span>
-              </div>
-              <button type="button" class="account-switch-btn" (click)="switchAccount()" title="Usar otra cuenta">
-                <span class="material-symbols-rounded">swap_horiz</span>
-              </button>
+        @if (isRememberedMode()) {
+          <div class="remembered-account-chip">
+            <div class="account-avatar">
+              <span class="material-symbols-rounded">person</span>
             </div>
-          } @else {
-            <!-- Email -->
-            <div class="form-group">
-              <label class="form-label" for="login-email">
-                Correo Electrónico
-              </label>
-              <div class="form-input-container">
-                <span class="form-input-icon material-symbols-rounded">mail</span>
-                <input
-                  id="login-email"
-                  type="email"
-                  formControlName="email"
-                  class="form-input"
-                  [class.form-input--has-error]="email!.invalid && email!.touched"
-                  placeholder="ejemplo@plaxtilineas.com"
-                  autocomplete="username">
-              </div>
-              @if (email!.invalid && email!.touched) {
-                <p class="form-feedback-error">
-                  <span class="material-symbols-rounded">info</span>
-                  @if (email?.errors?.['required']) { El correo es obligatorio }
-                  @if (email?.errors?.['email'])    { Ingresa un correo electrónico válido }
-                </p>
-              }
+            <div class="account-info">
+              <span class="account-label">ACCEDIENDO COMO</span>
+              <span class="account-email">{{ rememberedEmail() }}</span>
             </div>
-          }
-
-          <!-- Contraseña -->
-          <div class="form-group">
-            <div class="form-label-row">
-              <label class="form-label" for="login-password">
-                Contraseña
-              </label>
-            </div>
-            <div class="form-input-container">
-              <span class="form-input-icon material-symbols-rounded">lock</span>
+            <button type="button" class="account-switch-btn" (click)="switchAccount()" title="Usar otra cuenta">
+              <span class="material-symbols-rounded">swap_horiz</span>
+            </button>
+          </div>
+        } @else {
+          <div class="field-group">
+            <label class="field-label" for="login-email">Correo Electrónico</label>
+            <div class="input-icon-wrap">
+              <span class="material-symbols-rounded input-left-icon">mail</span>
               <input
-                id="login-password"
-                [type]="showPassword() ? 'text' : 'password'"
-                formControlName="password"
-                class="form-input form-input--password"
-                [class.form-input--has-error]="password?.invalid && password?.touched"
-                placeholder="••••••••••••"
-                autocomplete="current-password">
-              <button
-                type="button"
-                class="form-eye-toggle"
-                (click)="togglePasswordVisibility()"
-                [title]="showPassword() ? 'Ocultar contraseña' : 'Ver contraseña'"
-                aria-label="Alternar visibilidad de contraseña">
-                <span class="material-symbols-rounded">
-                  {{ showPassword() ? 'visibility' : 'visibility_off' }}
-                </span>
-              </button>
+                id="login-email"
+                type="email"
+                formControlName="email"
+                class="input-minimal input-minimal--with-icon"
+                [class.input-minimal--error]="email!.invalid && email!.touched"
+                placeholder="ejemplo@plaxtilineas.com"
+                autocomplete="username"
+              />
             </div>
-            @if (password?.invalid && password?.touched) {
-              <p class="form-feedback-error">
+            @if (email!.invalid && email!.touched) {
+              <p class="field-error-text">
                 <span class="material-symbols-rounded">info</span>
-                @if (password?.errors?.['required'])  { La contraseña es obligatoria }
-                @if (password?.errors?.['minlength']) { Debe contener al menos 6 caracteres }
+                @if (email?.errors?.['required']) { El correo es obligatorio }
+                @if (email?.errors?.['email']) { Ingresa un correo electrónico válido }
               </p>
             }
           </div>
+        }
 
-          <!-- General Error Banner -->
-          @if (loginError()) {
-            <div class="form-error-alert" role="alert">
-              <span class="material-symbols-rounded alert-icon">error</span>
-              <div class="alert-text">{{ loginError() }}</div>
-            </div>
+        <div class="field-group">
+          <label class="field-label" for="login-password">Contraseña</label>
+          <div class="input-icon-wrap">
+            <span class="material-symbols-rounded input-left-icon">lock</span>
+            <input
+              id="login-password"
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              class="input-minimal input-minimal--with-icon input-minimal--with-eye"
+              [class.input-minimal--error]="password?.invalid && password?.touched"
+              placeholder="••••••••••••"
+              autocomplete="current-password"
+            />
+            <button
+              type="button"
+              class="password-eye-btn"
+              (click)="togglePasswordVisibility()"
+              [title]="showPassword() ? 'Ocultar contraseña' : 'Ver contraseña'"
+              aria-label="Alternar visibilidad de contraseña"
+            >
+              <span class="material-symbols-rounded">
+                {{ showPassword() ? 'visibility' : 'visibility_off' }}
+              </span>
+            </button>
+          </div>
+          @if (password?.invalid && password?.touched) {
+            <p class="field-error-text">
+              <span class="material-symbols-rounded">info</span>
+              @if (password?.errors?.['required']) { La contraseña es obligatoria }
+              @if (password?.errors?.['minlength']) { Debe contener al menos 6 caracteres }
+            </p>
           }
+        </div>
 
-          <!-- Submit Button -->
-          <button
-            type="submit"
-            class="form-submit-btn"
-            [disabled]="loading() || loginForm.invalid">
-            @if (loading()) {
-              <span class="btn-spinner"></span>
-              <span>Validando credenciales...</span>
-            } @else {
-              <span>Acceder al Panel</span>
-              <span class="material-symbols-rounded btn-arrow">arrow_forward</span>
-            }
-          </button>
+        @if (loginError()) {
+          <div class="auth-error-banner" role="alert">
+            <span class="material-symbols-rounded">error</span>
+            <span>{{ loginError() }}</span>
+          </div>
+        }
 
-        </form>
+        <button
+          type="submit"
+          class="btn-primary-black"
+          [disabled]="loading() || loginForm.invalid"
+        >
+          @if (loading()) {
+            <span class="btn-spinner"></span>
+            <span>Validando credenciales...</span>
+          } @else {
+            <span>Acceder al Panel</span>
+            <span class="material-symbols-rounded">arrow_forward</span>
+          }
+        </button>
+
+      </form>
+
+      <div class="right-panel-security-note">
+        <span class="material-symbols-rounded">verified_user</span>
+        <span>Conexión cifrada • Acceso exclusivo para personal autorizado</span>
       </div>
 
     </div>
-
-  </div>
+  </section>
 
 </div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA DE ÉXITO INMERSIVA
+     ══════════════════════════════════════════ -->
+@if (loginSuccess()) {
+  <div class="success-fullscreen-overlay">
+    <div class="success-glass-card">
+      <img
+        src="assets/logos/logo-blanco-invertido.png"
+        alt="Plaxtilíneas"
+        class="success-logo"
+      />
+
+      <div class="success-svg-wrap">
+        <svg viewBox="0 0 64 64" class="success-check-svg">
+          <circle cx="32" cy="32" r="28" class="svg-circle" />
+          <path d="M20 33 L28 41 L45 24" class="svg-check" />
+        </svg>
+      </div>
+
+      <h3 class="success-title">Acceso Autorizado</h3>
+      <p class="success-subtitle">Cargando tu panel administrativo...</p>
+
+      <div class="success-progress-track">
+        <div class="success-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,545 @@
+<div class="dash-shell" [class.sidebar-collapsed]="!sidebarExpanded">
+
+  <!-- ═══ SIDEBAR IZQUIERDO ═══ -->
+  <aside class="dash-sidebar">
+
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-full">
+        <img src="assets/logos/logo-blanco-invertido.png" alt="Plaxtilíneas" class="sidebar-brand-logo">
+        <span class="sidebar-admin-pill">ADMIN</span>
+      </div>
+      <div class="sidebar-brand-collapsed-box">
+        <img src="assets/logos/isotipo-plaxtilineas.png" alt="Plaxtilíneas" class="sidebar-brand-isotipo">
+      </div>
+    </div>
+
+    <button
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [title]="sidebarExpanded ? 'Colapsar menú lateral' : 'Expandir menú lateral'"
+      aria-label="Alternar menú lateral"
+    >
+      <span class="material-symbols-rounded">
+        {{ sidebarExpanded ? 'chevron_left' : 'chevron_right' }}
+      </span>
+    </button>
+
+    <nav class="sidebar-nav">
+      <p class="sidebar-nav-label">Navegación</p>
+
+      <button class="sidebar-nav-item" (click)="navigateTo('/dashboard')" title="Inicio">
+        <span class="material-symbols-rounded sidebar-nav-icon">dashboard</span>
+        <span class="sidebar-nav-label-text">Inicio</span>
+      </button>
+
+      <button class="sidebar-nav-item" (click)="navigateToProducts()" title="Inventario de Productos">
+        <span class="material-symbols-rounded sidebar-nav-icon">inventory_2</span>
+        <span class="sidebar-nav-label-text">Inventario</span>
+      </button>
+
+      <button class="sidebar-nav-item" (click)="navigateToAnalytics()" title="Analíticas y Reportes">
+        <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
+        <span class="sidebar-nav-label-text">Analíticas</span>
+      </button>
+
+      <button class="sidebar-nav-item sidebar-nav-item--active" (click)="navigateTo('/dashboard/arbol-categorias')" title="Árbol de Categorías">
+        <span class="material-symbols-rounded sidebar-nav-icon">account_tree</span>
+        <span class="sidebar-nav-label-text">Árbol Categorías</span>
+        <span class="sidebar-nav-active-dot"></span>
+      </button>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
+
+      <div class="sidebar-dropdown-group" [class.is-open]="sectionsDropdownOpen">
+        <button
+          type="button"
+          class="sidebar-nav-item sidebar-dropdown-trigger"
+          [class.sidebar-dropdown-trigger--open]="sectionsDropdownOpen"
+          (click)="toggleSectionsDropdown()"
+        >
+          <span class="material-symbols-rounded sidebar-nav-icon">folder_open</span>
+          <span class="sidebar-nav-label-text">Secciones</span>
+          <div class="sidebar-dropdown-controls">
+            <span class="dropdown-count-tag">4</span>
+            <div class="dropdown-chevron-pill" [class.is-rotated]="sectionsDropdownOpen">
+              <span class="material-symbols-rounded">expand_more</span>
+            </div>
+          </div>
+        </button>
+
+        <div class="sidebar-submenu" *ngIf="sectionsDropdownOpen">
+          <button type="button" class="sidebar-submenu-item" (click)="navigateToCategories()">
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">category</span>
+            <span class="sidebar-nav-label-text">Plaxtilineas</span>
+          </button>
+          <button type="button" class="sidebar-submenu-item" (click)="navigateToEspumas()">
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">layers</span>
+            <span class="sidebar-nav-label-text">Espumas y Plásticos</span>
+          </button>
+          <button type="button" class="sidebar-submenu-item" (click)="navigateToDistricol()">
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">storefront</span>
+            <span class="sidebar-nav-label-text">Districol</span>
+          </button>
+          <button type="button" class="sidebar-submenu-item" (click)="navigateToCamascotas()">
+            <span class="submenu-dot"></span>
+            <span class="material-symbols-rounded submenu-icon">pets</span>
+            <span class="sidebar-nav-label-text">Camascotas</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="sidebar-nav-label" style="margin-top: 14px;">Acceso Externo</p>
+
+      <a href="/catalogo" target="_blank" rel="noopener noreferrer" class="sidebar-nav-item" style="text-decoration: none;">
+        <span class="material-symbols-rounded sidebar-nav-icon">store</span>
+        <span class="sidebar-nav-label-text">Catálogo Web</span>
+        <span class="material-symbols-rounded" style="font-size: 0.95rem; opacity: 0.5;">open_in_new</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-nav-item sidebar-nav-item--danger" (click)="logout()" title="Cerrar Sesión">
+        <span class="material-symbols-rounded sidebar-nav-icon">logout</span>
+        <span class="sidebar-nav-label-text">Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+  <div class="dash-content">
+
+    <!-- Topbar -->
+    <header class="dash-header tree-topbar">
+      <div class="tree-topbar-left">
+        <button
+          type="button"
+          class="tree-header-toggle-btn"
+          (click)="toggleSidebar()"
+          [title]="sidebarExpanded ? 'Ocultar menú lateral' : 'Mostrar menú lateral'"
+          aria-label="Alternar menú lateral"
+        >
+          <span class="material-symbols-rounded">
+            {{ sidebarExpanded ? 'menu_open' : 'menu' }}
+          </span>
+        </button>
+
+        <div class="tree-header-icon">
+          <span class="material-symbols-rounded">account_tree</span>
+        </div>
+
+        <div class="topbar-title-group">
+          <span class="topbar-kicker">Jerarquía de Catálogo</span>
+          <h1 class="topbar-title">Árbol de Categorías y Subcategorías</h1>
+        </div>
+      </div>
+
+      <div class="tree-topbar-right">
+        <div class="tree-summary-pill">
+          <span class="material-symbols-rounded">category</span>
+          <span><strong>{{ allNodes.length }}</strong> categorías</span>
+        </div>
+
+        <button type="button" class="tree-refresh-btn" (click)="loadTreeData()" [disabled]="isLoading">
+          <span class="material-symbols-rounded" [class.spin-icon]="isLoading">sync</span>
+          <span>Actualizar</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="tree-main">
+
+      <!-- Pestañas de Líneas -->
+      <div class="tree-brand-tabs">
+        <button
+          *ngFor="let tab of brandTabs"
+          type="button"
+          class="tree-brand-tab"
+          [class.is-active]="selectedBrand === tab.key"
+          (click)="selectBrand(tab.key)"
+        >
+          <span>{{ tab.label }}</span>
+          <span class="tree-tab-badge">{{ getBrandCount(tab.key) }}</span>
+        </button>
+      </div>
+
+      <!-- Barra de Controles (Buscador, Orden, Filtros, Toggle Vista) -->
+      <section class="tree-controls-bar">
+        <div class="tree-search-box">
+          <span class="material-symbols-rounded tree-search-icon">search</span>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="resetPage()"
+            placeholder="Buscar por categoría o subcategoría..."
+            class="tree-search-input"
+          />
+        </div>
+
+        <div class="tree-controls-right">
+          <label class="tree-sort-wrap">
+            <span class="tree-sort-label">Ordenar:</span>
+            <select [(ngModel)]="sortBy" (ngModelChange)="resetPage()" class="tree-sort-select">
+              <option value="az">Nombre: A a Z</option>
+              <option value="za">Nombre: Z a A</option>
+              <option value="sub_desc">Más subcategorías</option>
+              <option value="prod_desc">Más productos</option>
+            </select>
+          </label>
+
+          <button
+            type="button"
+            class="tree-filter-pill"
+            [class.is-active]="onlyWithProducts"
+            (click)="onlyWithProducts = !onlyWithProducts; resetPage()"
+          >
+            <span class="material-symbols-rounded">check_circle</span>
+            <span>Con Productos</span>
+          </button>
+
+          <button
+            type="button"
+            class="tree-filter-pill"
+            [class.is-active]="onlyWithSubcategories"
+            (click)="onlyWithSubcategories = !onlyWithSubcategories; resetPage()"
+          >
+            <span class="material-symbols-rounded">account_tree</span>
+            <span>Con Subcategorías</span>
+          </button>
+
+          <div class="tree-view-toggle">
+            <button
+              type="button"
+              class="tree-view-btn"
+              [class.is-active]="viewMode === 'cards'"
+              (click)="viewMode = 'cards'"
+              title="Vista de tarjetas"
+            >
+              <span class="material-symbols-rounded">grid_view</span>
+            </button>
+            <button
+              type="button"
+              class="tree-view-btn"
+              [class.is-active]="viewMode === 'tree'"
+              (click)="viewMode = 'tree'"
+              title="Vista de árbol expandible"
+            >
+              <span class="material-symbols-rounded">account_tree</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contador -->
+      <div class="tree-results-meta">
+        Mostrando <strong>{{ filteredNodes.length }}</strong> de <strong>{{ totalMatchingBrandCount }}</strong> categorías
+        <span *ngIf="selectedBrand">{{ selectedBrand }}</span>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="tree-loading-box">
+        <div class="tree-spinner"></div>
+        <p>Cargando árbol de categorías y subcategorías...</p>
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!isLoading && filteredNodes.length === 0" class="tree-empty-box">
+        <span class="material-symbols-rounded">account_tree</span>
+        <p class="tree-empty-title">No se encontraron categorías</p>
+        <p class="tree-empty-sub">Prueba ajustando el buscador o los filtros activos.</p>
+      </div>
+
+      <!-- ═══ VISTA TARJETAS (3 COLUMNAS) ═══ -->
+      <div *ngIf="!isLoading && viewMode === 'cards' && filteredNodes.length > 0" class="tree-cards-grid">
+        <article
+          *ngFor="let node of paginatedNodes"
+          class="tree-cat-card"
+          (click)="openDetailModal(node)"
+        >
+          <div class="tree-card-top">
+            <span class="tree-line-badge">{{ node.brand | uppercase }}</span>
+            <span class="tree-id-badge">#{{ node.id }}</span>
+          </div>
+
+          <div class="tree-card-title-row">
+            <div class="tree-cat-icon-box">
+              <span class="material-symbols-rounded">category</span>
+            </div>
+            <h3 class="tree-cat-name">{{ node.name }}</h3>
+          </div>
+
+          <div class="tree-metrics-row">
+            <span class="tree-metric-pill tree-metric-pill--sub">
+              <span class="material-symbols-rounded">account_tree</span>
+              <strong>{{ node.subcategories.length }}</strong>
+              {{ node.subcategories.length === 1 ? 'subcategoría' : 'subcategorías' }}
+            </span>
+
+            <span class="tree-metric-pill tree-metric-pill--prod">
+              <span class="material-symbols-rounded">check_circle</span>
+              <strong>{{ node.visibleProductsCount }}</strong>
+              en vitrina
+            </span>
+          </div>
+
+          <!-- Chips de vista previa de subcategorías -->
+          <div class="tree-sub-chips" *ngIf="node.subcategories.length > 0">
+            <span class="tree-sub-chip" *ngFor="let sub of node.subcategories.slice(0, 3)">
+              {{ sub.name }}
+            </span>
+            <span class="tree-sub-chip tree-sub-chip--more" *ngIf="node.subcategories.length > 3">
+              +{{ node.subcategories.length - 3 }}
+            </span>
+          </div>
+
+          <div class="tree-card-spacer"></div>
+
+          <div class="tree-card-footer">
+            <button type="button" class="tree-inv-btn" (click)="goToInventory(node, $event)">
+              <span class="material-symbols-rounded">inventory_2</span>
+              <span>Inventario</span>
+            </button>
+
+            <button type="button" class="tree-detail-link" (click)="openDetailModal(node, $event)">
+              <span>Detalle</span>
+              <span class="material-symbols-rounded">arrow_forward</span>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <!-- ═══ VISTA ÁRBOL EXPANDIBLE ═══ -->
+      <div *ngIf="!isLoading && viewMode === 'tree' && filteredNodes.length > 0" class="tree-list-stack">
+        <div *ngFor="let node of paginatedNodes" class="tree-branch-card">
+          <div class="tree-branch-header" (click)="toggleNodeExpand(node)">
+            <div class="tree-branch-left">
+              <span class="material-symbols-rounded tree-expand-icon">
+                {{ node.expanded ? 'expand_more' : 'chevron_right' }}
+              </span>
+              <span class="tree-line-badge">{{ node.brand | uppercase }}</span>
+              <span class="tree-id-badge">#{{ node.id }}</span>
+              <span class="tree-branch-name">{{ node.name }}</span>
+            </div>
+
+            <div class="tree-branch-right">
+              <span class="tree-metric-pill tree-metric-pill--sub">
+                {{ node.subcategories.length }} subcategorías
+              </span>
+              <span class="tree-metric-pill tree-metric-pill--prod">
+                {{ node.totalProductsCount }} productos
+              </span>
+              <button type="button" class="tree-inv-btn" (click)="goToInventory(node, $event)">
+                <span class="material-symbols-rounded">inventory_2</span>
+                <span>Inventario</span>
+              </button>
+              <button type="button" class="tree-detail-link" (click)="openDetailModal(node, $event)">
+                <span>Detalle</span>
+                <span class="material-symbols-rounded">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="tree-branch-children" *ngIf="node.expanded">
+            <div *ngIf="node.subcategories.length === 0" class="tree-no-children">
+              Esta categoría no tiene subcategorías registradas.
+            </div>
+
+            <div *ngFor="let sub of node.subcategories" class="tree-leaf-row">
+              <div class="tree-leaf-left">
+                <span class="tree-leaf-connector"></span>
+                <span class="tree-id-badge">#{{ sub.id }}</span>
+                <span class="tree-leaf-name">{{ sub.name }}</span>
+              </div>
+              <span class="tree-leaf-count">
+                {{ getSubcategoryProductCount(node, sub.id) }} productos
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PAGINACIÓN ═══ -->
+      <div *ngIf="!isLoading && totalPages > 1" class="tree-pagination-card">
+        <div class="tree-pagination-info">
+          Página <strong>{{ currentPage }}</strong> / {{ totalPages }}
+          <span class="tree-pagination-total">({{ filteredNodes.length }} categorías)</span>
+        </div>
+
+        <div class="tree-pagination-controls">
+          <button
+            type="button"
+            class="tree-page-step-btn"
+            (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            title="Página anterior"
+          >
+            <span class="material-symbols-rounded">chevron_left</span>
+          </button>
+
+          <div class="tree-page-numbers">
+            <button
+              type="button"
+              *ngFor="let page of pageNumbers"
+              class="tree-page-num-btn"
+              [class.is-active]="page === currentPage"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </div>
+
+          <button
+            type="button"
+            class="tree-page-step-btn"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            title="Página siguiente"
+          >
+            <span class="material-symbols-rounded">chevron_right</span>
+          </button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ═══ MODAL DE DETALLE DE CATEGORÍA ═══ -->
+<div *ngIf="selectedNode" class="tree-modal-overlay" (click)="$event.target === $event.currentTarget && closeDetailModal()">
+  <div class="tree-modal-card" role="dialog" aria-modal="true">
+
+    <!-- Header -->
+    <div class="tree-modal-header">
+      <div class="tree-modal-title-group">
+        <div class="tree-modal-icon">
+          <span class="material-symbols-rounded">category</span>
+        </div>
+        <div>
+          <div class="tree-modal-badges">
+            <span class="tree-line-badge">{{ selectedNode.brand | uppercase }}</span>
+            <span class="tree-official-id">ID Oficial: #{{ selectedNode.id }}</span>
+          </div>
+          <h2 class="tree-modal-title">{{ selectedNode.name }}</h2>
+        </div>
+      </div>
+      <button type="button" class="tree-modal-close" (click)="closeDetailModal()" aria-label="Cerrar">
+        <span class="material-symbols-rounded">close</span>
+      </button>
+    </div>
+
+    <!-- Body scrollable -->
+    <div class="tree-modal-body">
+
+      <!-- 3 Tarjetas KPI -->
+      <div class="tree-kpi-grid">
+        <div class="tree-kpi-card">
+          <span class="tree-kpi-label">SUBCATEGORÍAS</span>
+          <strong class="tree-kpi-value">{{ selectedNode.subcategories.length }}</strong>
+          <span class="tree-kpi-sub">Familias técnicas registradas</span>
+        </div>
+
+        <div class="tree-kpi-card">
+          <span class="tree-kpi-label">PRODUCTOS EN TIENDA</span>
+          <strong class="tree-kpi-value">{{ selectedNode.totalProductsCount }}</strong>
+          <span class="tree-kpi-sub">{{ selectedNode.visibleProductsCount }} visibles con precio</span>
+        </div>
+
+        <div class="tree-kpi-card">
+          <span class="tree-kpi-label">FECHA CREACIÓN</span>
+          <strong class="tree-kpi-value tree-kpi-value--date">{{ formatDate(selectedNode.created_at) }}</strong>
+          <span class="tree-kpi-sub">Registro en base central</span>
+        </div>
+      </div>
+
+      <!-- Tabla de Subcategorías -->
+      <div class="tree-modal-section">
+        <div class="tree-section-heading">
+          <span class="material-symbols-rounded">account_tree</span>
+          <span>SUBCATEGORÍAS DE {{ selectedNode.name | uppercase }}</span>
+          <span class="tree-count-circle">{{ selectedNode.subcategories.length }}</span>
+        </div>
+
+        <div *ngIf="selectedNode.subcategories.length === 0" class="tree-modal-empty">
+          No hay subcategorías registradas para esta categoría.
+        </div>
+
+        <div *ngIf="selectedNode.subcategories.length > 0" class="tree-subtable-wrap">
+          <table class="tree-subtable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>NOMBRE SUBCATEGORÍA</th>
+                <th>CATEGORÍA PADRE</th>
+                <th>FECHA REGISTRO</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let sub of selectedNode.subcategories">
+                <td><span class="tree-id-badge">#{{ sub.id }}</span></td>
+                <td class="tree-subtable-name">{{ sub.name }}</td>
+                <td>{{ selectedNode.name }} (ID {{ selectedNode.id }})</td>
+                <td>{{ formatDate(sub.created_at || selectedNode.created_at) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Productos de la Categoría -->
+      <div class="tree-modal-section">
+        <div class="tree-section-heading">
+          <span class="material-symbols-rounded">inventory_2</span>
+          <span>PRODUCTOS DE {{ selectedNode.name | uppercase }}</span>
+          <span class="tree-count-circle">{{ selectedNode.products.length }}</span>
+        </div>
+
+        <div *ngIf="selectedNode.products.length === 0" class="tree-modal-empty">
+          No hay productos asociados a esta categoría todavía.
+        </div>
+
+        <div *ngIf="selectedNode.products.length > 0" class="tree-modal-products-grid">
+          <div *ngFor="let prod of selectedNode.products" class="tree-mini-prod-card">
+            <div class="tree-mini-prod-img-wrap">
+              <img *ngIf="prod.images && prod.images.length > 0; else miniNoImg" [src]="prod.images[0].url" [alt]="prod.name" class="tree-mini-prod-img" />
+              <ng-template #miniNoImg>
+                <span class="material-symbols-rounded">image</span>
+              </ng-template>
+            </div>
+            <div class="tree-mini-prod-info">
+              <p class="tree-mini-prod-name">{{ prod.name }}</p>
+              <div class="tree-mini-prod-bottom">
+                <span class="tree-mini-prod-price" *ngIf="getProductMinPrice(prod) > 0">
+                  {{ getProductMinPrice(prod) | currency:'USD':'symbol':'1.0-0' }}
+                </span>
+                <span class="tree-mini-prod-noprice" *ngIf="getProductMinPrice(prod) <= 0">
+                  Sin precio
+                </span>
+                <span class="tree-mini-prod-vars" *ngIf="prod.variants && prod.variants.length > 1">
+                  {{ prod.variants.length }} variantes
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="tree-modal-footer">
+      <button type="button" class="tree-cta-inventory-btn" (click)="goToInventory(selectedNode)">
+        <span class="material-symbols-rounded">inventory_2</span>
+        <span>VER PRODUCTOS EN INVENTARIO</span>
+      </button>
+      <button type="button" class="tree-modal-close-btn" (click)="closeDetailModal()">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>
+

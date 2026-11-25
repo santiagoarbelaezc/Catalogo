@@ -198,7 +198,10 @@ export class PlaxtilineasComponent implements OnInit {
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
           this.products = products
-            .filter((product: any) => product.category === 'Plaxtilineas')
+            .filter((product: any) =>
+              product.category === 'Plaxtilineas' &&
+              this.productsService.hasValidPrice(product)
+            )
             .sort((a, b) => a.name.localeCompare(b.name));
           this.buildCategoryMenu();
           this.applyFilters(this.currentFilters);

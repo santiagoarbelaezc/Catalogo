@@ -6,10 +6,13 @@
 
     <!-- Logo / Brand -->
     <div class="sidebar-brand">
-      <div class="sidebar-logo">
-        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      <div class="sidebar-brand-full">
+        <img src="assets/logos/logo-blanco-invertido.png" alt="Plaxtilíneas" class="sidebar-brand-logo">
+        <span class="sidebar-admin-pill">ADMIN</span>
       </div>
-      <span class="sidebar-brand-text">Plaxtilineas</span>
+      <div class="sidebar-brand-collapsed-box">
+        <img src="assets/logos/isotipo-plaxtilineas.png" alt="Plaxtilíneas" class="sidebar-brand-isotipo">
+      </div>
     </div>
 
     <!-- Toggle button flotante en el borde -->
@@ -57,6 +60,16 @@
       >
         <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
         <span class="sidebar-nav-label-text">Analíticas</span>
+      </button>
+
+      <!-- Árbol de Categorías -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard/arbol-categorias')"
+        title="Árbol de Categorías y Subcategorías"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">account_tree</span>
+        <span class="sidebar-nav-label-text">Árbol Categorías</span>
       </button>
 
       <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
@@ -262,28 +275,43 @@
 
         <!-- HERO de bienvenida (siempre con datos reales) -->
         <div class="bento-welcome">
-          <div class="bento-badge">
-            <span class="bento-badge-dot"></span>
-            {{ greeting }}
+          <img src="assets/logos/isotipo-plaxtilineas.png" alt="" aria-hidden="true" class="bento-welcome-watermark">
+
+          <div class="bento-welcome-top">
+            <div class="bento-badge">
+              <span class="bento-badge-dot"></span>
+              {{ greeting }}
+            </div>
+
+            <h2 class="bento-title">
+              Bienvenido,<br>
+              <span class="bento-username">Mateo Moreno!</span>
+            </h2>
+
+            <p class="bento-desc">
+              Gestión centralizada de catálogo, inventario y productos del Grupo Plaxtilíneas.
+            </p>
           </div>
 
-          <h2 class="bento-title">
-            Bienvenido,<br>
-            <span class="bento-username">Mateo Moreno!</span>
-          </h2>
+          <div class="bento-welcome-bottom">
+            <div class="bento-date">
+              <span class="material-symbols-rounded" style="font-size:1.1rem;">calendar_today</span>
+              <span>{{ formattedDate }}</span>
+            </div>
 
-          <p class="bento-desc">
-            Gestión centralizada de catálogo, inventario y productos del Grupo Plaxtilineas.
-          </p>
+            <div class="bento-actions-row">
+              <button type="button" (click)="navigateToProducts()" class="bento-cta-white">
+                <span class="material-symbols-rounded" style="font-size:1.1rem;">inventory_2</span>
+                <span>Gestionar Inventario</span>
+                <span class="material-symbols-rounded" style="font-size:1.05rem;">arrow_forward</span>
+              </button>
 
-          <div class="bento-date">
-            <span class="material-symbols-rounded" style="font-size:1.15rem; color:#dc2626;">calendar_today</span>
-            <span>{{ formattedDate }}</span>
+              <button type="button" (click)="navigateTo('/dashboard/arbol-categorias')" class="bento-cta-glass">
+                <span class="material-symbols-rounded" style="font-size:1.1rem;">account_tree</span>
+                <span>Árbol de Categorías</span>
+              </button>
+            </div>
           </div>
-
-          <!-- Decorativos -->
-          <div class="bento-circle bento-circle--1"></div>
-          <div class="bento-circle bento-circle--2"></div>
         </div>
 
         <!-- ACCESO RÁPIDO -->
@@ -386,6 +414,19 @@
             <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
           </div>
           <span class="module-deco module-deco--accent material-symbols-rounded">analytics</span>
+        </button>
+
+        <button (click)="navigateTo('/dashboard/arbol-categorias')" class="module-card module-card--light">
+          <div class="module-icon-wrap module-icon-wrap--light">
+            <span class="material-symbols-rounded" style="font-size:1.5rem">account_tree</span>
+          </div>
+          <h3 class="module-title">Árbol de Categorías</h3>
+          <p class="module-desc">Explora la jerarquía de líneas, categorías, subcategorías y productos asociados.</p>
+          <div class="module-cta module-cta--dark">
+            Entrar al módulo
+            <span class="material-symbols-rounded" style="font-size:1rem">arrow_forward</span>
+          </div>
+          <span class="module-deco material-symbols-rounded">account_tree</span>
         </button>
 
         <button (click)="navigateToCategories()" class="module-card module-card--light">

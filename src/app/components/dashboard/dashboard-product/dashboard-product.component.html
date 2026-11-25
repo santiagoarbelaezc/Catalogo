@@ -6,10 +6,13 @@
 
     <!-- Logo / Brand -->
     <div class="sidebar-brand">
-      <div class="sidebar-logo">
-        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      <div class="sidebar-brand-full">
+        <img src="assets/logos/logo-blanco-invertido.png" alt="Plaxtilíneas" class="sidebar-brand-logo">
+        <span class="sidebar-admin-pill">ADMIN</span>
       </div>
-      <span class="sidebar-brand-text">Plaxtilineas</span>
+      <div class="sidebar-brand-collapsed-box">
+        <img src="assets/logos/isotipo-plaxtilineas.png" alt="Plaxtilíneas" class="sidebar-brand-isotipo">
+      </div>
     </div>
 
     <!-- Toggle button flotante en el borde -->
@@ -57,6 +60,16 @@
       >
         <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
         <span class="sidebar-nav-label-text">Analíticas</span>
+      </button>
+
+      <!-- Árbol de Categorías -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard/arbol-categorias')"
+        title="Árbol de Categorías y Subcategorías"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">account_tree</span>
+        <span class="sidebar-nav-label-text">Árbol Categorías</span>
       </button>
 
       <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
@@ -256,7 +269,7 @@
 
         <!-- ── STATS CARDS ROW ── -->
         <section class="prod-stats-grid">
-          <div class="prod-stat-card prod-stat-card--total">
+          <div class="prod-stat-card prod-stat-card--total" (click)="onBrandChange('')" style="cursor: pointer;">
             <div class="prod-stat-top">
               <span class="prod-stat-label">Total Catálogo</span>
               <div class="prod-stat-icon prod-stat-icon--slate">
@@ -270,8 +283,8 @@
           <div class="prod-stat-card prod-stat-card--plax" (click)="onBrandChange('Plaxtilineas')" style="cursor: pointer;">
             <div class="prod-stat-top">
               <span class="prod-stat-label">Plaxtilineas</span>
-              <div class="prod-stat-icon prod-stat-icon--emerald">
-                <span class="material-symbols-rounded">category</span>
+              <div class="prod-stat-icon prod-stat-icon--plax">
+                <img src="assets/logos/isotipo-plaxtilineas.png" alt="Plaxtilineas" class="stat-brand-logo">
               </div>
             </div>
             <p class="prod-stat-num">{{ statsGlobal.plaxtilineas }}</p>
@@ -281,8 +294,8 @@
           <div class="prod-stat-card prod-stat-card--espumas" (click)="onBrandChange('Espumas')" style="cursor: pointer;">
             <div class="prod-stat-top">
               <span class="prod-stat-label">Espumas y Plásticos</span>
-              <div class="prod-stat-icon prod-stat-icon--blue">
-                <span class="material-symbols-rounded">layers</span>
+              <div class="prod-stat-icon prod-stat-icon--espumas">
+                <img src="https://res.cloudinary.com/doxdjiyvi/image/upload/v1792788733/logo-grande_qauprn.png" alt="Espumas y Plásticos" class="stat-brand-logo">
               </div>
             </div>
             <p class="prod-stat-num">{{ statsGlobal.espumas }}</p>
@@ -292,8 +305,8 @@
           <div class="prod-stat-card prod-stat-card--districol" (click)="onBrandChange('Districol')" style="cursor: pointer;">
             <div class="prod-stat-top">
               <span class="prod-stat-label">Districol</span>
-              <div class="prod-stat-icon prod-stat-icon--amber">
-                <span class="material-symbols-rounded">storefront</span>
+              <div class="prod-stat-icon prod-stat-icon--districol">
+                <img src="https://res.cloudinary.com/doxdjiyvi/image/upload/v1792869466/logo-distri2_y5pmuc.png" alt="Districol" class="stat-brand-logo">
               </div>
             </div>
             <p class="prod-stat-num">{{ statsGlobal.districol }}</p>
@@ -303,8 +316,8 @@
           <div class="prod-stat-card prod-stat-card--camascotas" (click)="onBrandChange('Camascotas')" style="cursor: pointer;">
             <div class="prod-stat-top">
               <span class="prod-stat-label">Camascotas</span>
-              <div class="prod-stat-icon prod-stat-icon--slate">
-                <span class="material-symbols-rounded">pets</span>
+              <div class="prod-stat-icon prod-stat-icon--camascotas">
+                <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1793305282/logocama_kn9emz.png" alt="Camascotas" class="stat-brand-logo">
               </div>
             </div>
             <p class="prod-stat-num">{{ statsGlobal.camascotas }}</p>
@@ -322,22 +335,22 @@
               <span class="tab-badge">{{ products.length }}</span>
             </button>
             <button (click)="onBrandChange('Plaxtilineas')" class="brand-tab-pill brand-tab-pill--plax" [class.is-active]="filterBrand === 'Plaxtilineas'">
-              <span class="brand-dot dot--plax"></span>
+              <img src="assets/logos/isotipo-plaxtilineas.png" alt="" class="tab-brand-logo">
               <span>Plaxtilineas</span>
               <span class="tab-badge">{{ statsGlobal.plaxtilineas }}</span>
             </button>
             <button (click)="onBrandChange('Espumas')" class="brand-tab-pill brand-tab-pill--espumas" [class.is-active]="filterBrand === 'Espumas'">
-              <span class="brand-dot dot--espumas"></span>
+              <img src="https://res.cloudinary.com/doxdjiyvi/image/upload/v1792788733/logo-grande_qauprn.png" alt="" class="tab-brand-logo">
               <span>Espumas</span>
               <span class="tab-badge">{{ statsGlobal.espumas }}</span>
             </button>
             <button (click)="onBrandChange('Districol')" class="brand-tab-pill brand-tab-pill--districol" [class.is-active]="filterBrand === 'Districol'">
-              <span class="brand-dot dot--districol"></span>
+              <img src="https://res.cloudinary.com/doxdjiyvi/image/upload/v1792869466/logo-distri2_y5pmuc.png" alt="" class="tab-brand-logo">
               <span>Districol</span>
               <span class="tab-badge">{{ statsGlobal.districol }}</span>
             </button>
             <button (click)="onBrandChange('Camascotas')" class="brand-tab-pill brand-tab-pill--camascotas" [class.is-active]="filterBrand === 'Camascotas'">
-              <span class="brand-dot dot--camascotas"></span>
+              <img src="https://res.cloudinary.com/dsv1gdgya/image/upload/v1793305282/logocama_kn9emz.png" alt="" class="tab-brand-logo">
               <span>Camascotas</span>
               <span class="tab-badge">{{ statsGlobal.camascotas }}</span>
             </button>
@@ -366,6 +379,7 @@
                   <option value="">Cualquier estado</option>
                   <option value="new">Nuevo Lanzamiento</option>
                   <option value="featured">Destacado Premium</option>
+                  <option value="no_price">No visibles (Sin precio)</option>
                 </select>
                 <span class="material-symbols-rounded select-arrow">expand_more</span>
               </div>
@@ -381,22 +395,25 @@
                 </select>
                 <span class="material-symbols-rounded select-arrow">expand_more</span>
               </div>
+
+              <!-- Toggle Vista Tarjetas / Tabla -->
+              <div class="view-mode-toggle" role="group" aria-label="Modo de vista">
+                <button type="button" class="view-mode-btn" [class.is-active]="viewMode === 'cards'" (click)="viewMode = 'cards'" title="Vista en tarjetas (4 columnas)">
+                  <span class="material-symbols-rounded">grid_view</span>
+                  <span>Tarjetas</span>
+                </button>
+                <button type="button" class="view-mode-btn" [class.is-active]="viewMode === 'table'" (click)="viewMode = 'table'" title="Vista en tabla">
+                  <span class="material-symbols-rounded">view_list</span>
+                  <span>Tabla</span>
+                </button>
+              </div>
             </div>
           </div>
 
         </section>
 
-        <!-- ── TABLA / LISTADO DE PRODUCTOS ── -->
+        <!-- ── LISTADO DE PRODUCTOS (TARJETAS 4 COLUMNAS / TABLA) ── -->
         <section class="prod-table-section">
-
-          <!-- Table Header Desktop -->
-          <div class="prod-table-head">
-            <div class="col-media">Imagen</div>
-            <div class="col-main">Producto / Descripción</div>
-            <div class="col-specs">Especificaciones</div>
-            <div class="col-brand">Marca / Línea</div>
-            <div class="col-actions">Acciones</div>
-          </div>
 
           <!-- Empty State -->
           <div *ngIf="totalFilteredProducts === 0" class="prod-empty-state">
@@ -407,10 +424,122 @@
             <p class="empty-sub">Prueba cambiando los filtros o el término de búsqueda.</p>
           </div>
 
+          <!-- ── VISTA TARJETAS (4 COLUMNAS) ── -->
+          <div *ngIf="viewMode === 'cards' && totalFilteredProducts > 0" class="prod-cards-grid">
+            <article *ngFor="let product of paginatedProducts; trackBy: trackByProductId"
+              class="dash-product-card"
+              [class.dash-product-card--hidden]="!hasValidPrice(product)"
+              (click)="editProduct(product)"
+              title="Clic para editar producto">
+
+              <!-- Imagen superior + Badges -->
+              <div class="dash-card-media">
+                <span class="dash-brand-pill">
+                  {{ (product.category || product.marca || 'Catálogo') | uppercase }}
+                </span>
+
+                <div class="dash-top-right-badges">
+                  <span *ngIf="product.isNew === true || product.isNew === 1 || product.isNew === '1'" class="badge-new-pill">
+                    Nuevo
+                  </span>
+                </div>
+
+                <div class="dash-image-wrap">
+                  <img *ngIf="product.images && product.images.length > 0; else noCardImg"
+                    [src]="product.images[0].url"
+                    [alt]="product.name"
+                    class="dash-card-img"
+                    loading="lazy">
+                  <ng-template #noCardImg>
+                    <div class="dash-no-img">
+                      <span class="material-symbols-rounded">image</span>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <!-- Badges inferiores sobre la imagen -->
+                <span class="dash-stock-pill"
+                  [class.stock-actualizado-anim]="isStockRecentlyUpdated(product.id)"
+                  [attr.data-product-id]="product.id">
+                  <span class="material-symbols-rounded">inventory_2</span>
+                  {{ product.stock !== undefined ? product.stock : 15 }} u.
+                </span>
+
+                <span *ngIf="product.variants && product.variants.length > 1" class="dash-variants-count-pill">
+                  <span class="material-symbols-rounded">tune</span>
+                  {{ product.variants.length }} variantes
+                </span>
+              </div>
+
+              <!-- Cuerpo de la tarjeta -->
+              <div class="dash-card-body">
+                <!-- Aviso destacado si no tiene precio -->
+                <div *ngIf="!hasValidPrice(product)" class="dash-not-visible-banner">
+                  <span class="material-symbols-rounded">visibility_off</span>
+                  <span>Producto no visible (Sin precio)</span>
+                </div>
+
+                <div class="dash-meta-row">
+                  <span class="dash-meta-category">{{ (product.category_name || product.subcategory_name || 'GENERAL') | uppercase }}</span>
+                  <span class="dash-meta-right" *ngIf="product.material || product.gramaje" [title]="product.material || product.gramaje">
+                    {{ product.material || product.gramaje }}
+                  </span>
+                </div>
+
+                <h3 class="dash-card-title" [title]="product.name">{{ product.name }}</h3>
+
+                <div class="dash-variant-chips" *ngIf="product.variants && product.variants.length > 0">
+                  <span class="dash-variant-chip" *ngFor="let v of product.variants.slice(0, 4)">
+                    {{ v.name }}
+                  </span>
+                  <span class="dash-variant-chip dash-variant-chip--more" *ngIf="product.variants.length > 4">
+                    +{{ product.variants.length - 4 }}
+                  </span>
+                </div>
+
+                <div class="dash-card-spacer"></div>
+
+                <!-- Pie de tarjeta: Precio + Acciones admin -->
+                <div class="dash-card-footer">
+                  <div class="dash-price-block">
+                    <span class="dash-price-caption">
+                      {{ getMinPrice(product) > 0 ? (product.variants && product.variants.length > 1 ? 'DESDE' : 'PRECIO OFICIAL') : 'ESTADO' }}
+                    </span>
+                    <span *ngIf="getMinPrice(product) > 0" class="dash-price-value">
+                      {{ getMinPrice(product) | currency:'USD':'symbol':'1.0-0' }}
+                    </span>
+                    <span *ngIf="getMinPrice(product) <= 0" class="dash-price-missing">
+                      Sin precio
+                    </span>
+                  </div>
+
+                  <div class="dash-card-actions">
+                    <button type="button" (click)="$event.stopPropagation(); editProduct(product)" class="row-action-btn" title="Editar producto">
+                      <span class="material-symbols-rounded">edit</span>
+                    </button>
+                    <button type="button" (click)="$event.stopPropagation(); deleteProduct(product)" class="row-action-btn row-action-btn--delete" title="Eliminar producto">
+                      <span class="material-symbols-rounded">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Table Header Desktop -->
+          <div *ngIf="viewMode === 'table' && totalFilteredProducts > 0" class="prod-table-head">
+            <div class="col-media">Imagen</div>
+            <div class="col-main">Producto / Descripción</div>
+            <div class="col-specs">Especificaciones</div>
+            <div class="col-brand">Marca / Línea</div>
+            <div class="col-actions">Acciones</div>
+          </div>
+
           <!-- Rows List -->
-          <div class="prod-rows-list">
+          <div *ngIf="viewMode === 'table' && totalFilteredProducts > 0" class="prod-rows-list">
             <div *ngFor="let product of paginatedProducts; trackBy: trackByProductId" 
                  class="prod-row-card"
+                 [class.prod-row-card--hidden]="!hasValidPrice(product)"
                  (click)="editProduct(product)"
                  title="Clic para editar producto">
 
@@ -429,6 +558,10 @@
                 <div class="row-title-wrap">
                   <span class="row-product-title">{{ product.name }}</span>
                   <span *ngIf="product.isNew === true || product.isNew === 1 || product.isNew === '1'" class="badge-new-pill">Nuevo</span>
+                  <span *ngIf="!hasValidPrice(product)" class="badge-not-visible-pill" title="Este producto no tiene precio asignado y está oculto en la vista pública del catálogo">
+                    <span class="material-symbols-rounded">visibility_off</span>
+                    Producto no visible
+                  </span>
                 </div>
                 <div class="row-meta-wrap">
                   <span class="row-category-text">{{ product.category }}</span>

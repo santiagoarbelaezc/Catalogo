@@ -1,0 +1,687 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   SISTEMA DE DISEÑO GLOBAL DEL DASHBOARD — DARK MINIMAL + BENTO + VERDE CORPORATIVO
+   Aplica la arquitectura híbrida Dark Minimal + Bento Grid sobre Canvas Claro
+   en todos los módulos del Dashboard (.dash-shell) según guia_estilo_dashboard_y_login.md.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Verde Corporativo */
+  --brand-green: #379045;
+  --brand-green-dark: #2c7337;
+  --brand-green-light: #eaf4ec;
+  --brand-green-bright: #4ade80;
+  --brand-green-soft-text: #86efac;
+  --brand-green-mint: #bbf7d0;
+
+  /* Superficies Oscuras (Dark Minimal) */
+  --dark-surface: #09090b;
+  --dark-surface-2: #141416;
+  --dark-input: #121215;
+  --dark-tab-bg: #131316;
+  --dark-border: #1e1e22;
+  --dark-border-subtle: #27272a;
+  --dark-border-hover: #3f3f46;
+
+  /* Superficies Claras (Canvas Dashboard) */
+  --bg-canvas: #f4f5f7;
+  --card-bg: #ffffff;
+  --card-border: #e4e4e7;
+  --card-border-alt: #e2e8f0;
+  --text-dark: #09090b;
+  --text-muted: #5e5e5e;
+
+  /* Estados Semánticos */
+  --accent-red: #dc2626;
+  --danger-soft: #f87171;
+  --warning: #f59e0b;
+  --success: #10b981;
+
+  /* Curva de Animación Principal */
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'Mulish', 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ── Shell & Tipografía Base del Dashboard ── */
+.dash-shell {
+  --sidebar-w: 248px;
+  --sidebar-w-collapsed: 68px;
+  background: var(--bg-canvas) !important;
+  font-family: var(--font-body) !important;
+  color: var(--text-dark);
+}
+
+.dash-shell h1,
+.dash-shell h2,
+.dash-shell h3,
+.dash-shell .dash-brand,
+.dash-shell .topbar-title,
+.dash-shell .stat-number,
+.dash-shell .prod-stat-num,
+.dash-shell .kpi-value,
+.dash-shell .tree-kpi-value,
+.dash-shell .stat-card-label,
+.dash-shell .prod-stat-label {
+  font-family: var(--font-heading) !important;
+}
+
+/* ══════════════════════
+   SIDEBAR DARK MINIMAL (#09090b)
+   ══════════════════════ */
+.dash-shell .dash-sidebar {
+  width: var(--sidebar-w);
+  background: var(--dark-surface) !important;
+  border-right: 1px solid var(--dark-border) !important;
+  transition: width 0.25s var(--ease-editorial) !important;
+}
+
+.dash-shell.sidebar-collapsed .dash-sidebar {
+  width: var(--sidebar-w-collapsed);
+}
+
+.dash-shell .dash-content {
+  margin-left: var(--sidebar-w);
+  width: calc(100% - var(--sidebar-w));
+  transition: margin-left 0.25s var(--ease-editorial), width 0.25s var(--ease-editorial);
+}
+
+.dash-shell.sidebar-collapsed .dash-content {
+  margin-left: var(--sidebar-w-collapsed);
+  width: calc(100% - var(--sidebar-w-collapsed));
+}
+
+/* Cabecera de marca en Sidebar */
+.dash-shell .sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 16px;
+  min-height: 74px;
+  border-bottom: 1px solid var(--dark-border);
+}
+
+.dash-shell .sidebar-brand-full {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.dash-shell .sidebar-brand-logo {
+  height: 32px;
+  width: auto;
+  max-width: 146px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.dash-shell .sidebar-admin-pill {
+  font-family: var(--font-heading);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand-green-soft-text);
+  background: rgba(55, 144, 69, 0.16);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  padding: 3px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.dash-shell .sidebar-brand-collapsed-box {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--dark-surface-2);
+  border: 1px solid var(--dark-border-subtle);
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.dash-shell .sidebar-brand-isotipo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.dash-shell.sidebar-collapsed .sidebar-brand {
+  padding: 18px 12px;
+  justify-content: center;
+}
+
+.dash-shell.sidebar-collapsed .sidebar-brand-full {
+  display: none;
+}
+
+.dash-shell.sidebar-collapsed .sidebar-brand-collapsed-box {
+  display: flex;
+}
+
+/* Botón Colapsar Sidebar */
+.dash-shell .sidebar-toggle {
+  width: 28px;
+  height: 28px;
+  background: #18181b !important;
+  border: 1.5px solid #2e2e33 !important;
+  top: 22px;
+  right: -14px;
+  color: #e4e4e7;
+}
+
+.dash-shell .sidebar-toggle:hover {
+  border-color: var(--brand-green) !important;
+  color: var(--brand-green-bright) !important;
+}
+
+/* Ítems de Navegación */
+.dash-shell .sidebar-nav-item {
+  border-radius: 12px !important;
+  padding: 10px 14px;
+  color: #a1a1aa !important;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all 0.2s var(--ease-editorial);
+}
+
+.dash-shell .sidebar-nav-item:hover {
+  background: var(--dark-surface-2) !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .sidebar-nav-item--active {
+  background: rgba(55, 144, 69, 0.16) !important;
+  border: 1px solid rgba(55, 144, 69, 0.42) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.dash-shell .sidebar-nav-item--active .sidebar-nav-icon {
+  color: var(--brand-green-bright) !important;
+}
+
+.dash-shell .sidebar-nav-active-dot {
+  background: var(--brand-green-bright) !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.75);
+}
+
+/* Submenú de Secciones */
+.dash-shell .sidebar-submenu-item:hover {
+  background: var(--dark-surface-2) !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .sidebar-submenu-item--active,
+.dash-shell .sidebar-submenu-item.is-active {
+  background: rgba(55, 144, 69, 0.14) !important;
+  color: var(--brand-green-soft-text) !important;
+}
+
+/* ══════════════════════
+   HEADER STICKY
+   ══════════════════════ */
+.dash-shell .dash-header,
+.dash-shell .dash-topbar {
+  min-height: var(--header-h, 74px);
+  background: #ffffff !important;
+  border-bottom: 1.5px solid var(--card-border) !important;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dash-shell .dash-status-dot {
+  background: var(--brand-green-bright) !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.75) !important;
+}
+
+/* Botones Primarios Corporativos Verde (#379045) */
+.dash-shell .btn-new-product,
+.dash-shell .btn-primary-green,
+.dash-shell .btn-primary-black,
+.dash-shell .ai-generate-btn,
+.dash-shell .tree-cta-inventory-btn {
+  background: var(--brand-green) !important;
+  border-color: var(--brand-green) !important;
+  color: #ffffff !important;
+  font-family: var(--font-heading) !important;
+  box-shadow: 0 6px 16px -6px rgba(55, 144, 69, 0.55) !important;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.dash-shell .btn-new-product:hover:not(:disabled),
+.dash-shell .btn-primary-green:hover:not(:disabled),
+.dash-shell .btn-primary-black:hover:not(:disabled),
+.dash-shell .ai-generate-btn:hover:not(:disabled),
+.dash-shell .tree-cta-inventory-btn:hover:not(:disabled) {
+  background: var(--brand-green-dark) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -6px rgba(55, 144, 69, 0.65) !important;
+}
+
+/* ══════════════════════
+   STAT CARDS CON ACENTO VERDE IZQUIERDO (4px solid #379045)
+   Reemplaza los tonos rojos previos por verde corporativo
+   ══════════════════════ */
+.dash-shell .stat-card,
+.dash-shell .stat-card--categories,
+.dash-shell .stat-card--primary,
+.dash-shell .stat-card--modules,
+.dash-shell .stat-card--status,
+.dash-shell .prod-stat-card,
+.dash-shell .prod-stat-card--plax,
+.dash-shell .kpi-card,
+.dash-shell .tree-kpi-card {
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--card-border) !important;
+  border-left: 4px solid var(--brand-green) !important;
+  border-radius: 16px !important;
+  transition: transform 0.25s var(--ease-editorial), box-shadow 0.25s var(--ease-editorial) !important;
+}
+
+.dash-shell .stat-card:hover,
+.dash-shell .prod-stat-card:hover,
+.dash-shell .kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 14px 30px -12px rgba(9, 9, 11, 0.1),
+    0 4px 12px -4px rgba(55, 144, 69, 0.14) !important;
+}
+
+.dash-shell .stat-card-label,
+.dash-shell .prod-stat-label {
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted) !important;
+}
+
+.dash-shell .stat-number,
+.dash-shell .prod-stat-num {
+  font-weight: 800 !important;
+  letter-spacing: -0.035em;
+  color: var(--text-dark) !important;
+}
+
+.dash-shell .stat-card--categories .stat-sub,
+.dash-shell .stat-sub {
+  color: var(--text-muted) !important;
+}
+
+.dash-shell .stat-icon-wrap,
+.dash-shell .stat-icon-wrap--red,
+.dash-shell .stat-icon-wrap--black,
+.dash-shell .stat-icon-wrap--gray,
+.dash-shell .prod-stat-icon {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 10px !important;
+  background: var(--brand-green-light) !important;
+  color: var(--brand-green) !important;
+}
+
+/* ══════════════════════
+   BENTO WELCOME HERO (DEGRADADO VERDE-CARBÓN + WATERMARK)
+   ══════════════════════ */
+.dash-shell .dash-bento-grid {
+  align-items: stretch;
+}
+
+.dash-shell .bento-welcome {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 320px;
+  background: linear-gradient(
+    108deg,
+    #379045 0%,
+    #2b6e35 30%,
+    #1e4724 58%,
+    #152819 82%,
+    #101311 100%
+  ) !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(74, 222, 128, 0.25) !important;
+  padding: 32px 38px !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .bento-welcome::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 12% 88%, rgba(74, 222, 128, 0.2) 0%, transparent 52%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dash-shell .bento-welcome > *:not(.bento-welcome-watermark) {
+  position: relative;
+  z-index: 2;
+}
+
+.dash-shell .bento-welcome-watermark {
+  position: absolute;
+  right: -14px;
+  bottom: -20px;
+  width: 240px;
+  height: auto;
+  opacity: 0.14;
+  mix-blend-mode: multiply;
+  filter: grayscale(1) brightness(0.32);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.dash-shell .bento-circle {
+  display: none !important;
+}
+
+.dash-shell .bento-badge {
+  align-self: flex-start;
+  background: rgba(9, 9, 11, 0.34) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .bento-badge-dot {
+  background: var(--brand-green-bright) !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.9) !important;
+}
+
+.dash-shell .bento-title {
+  color: #ffffff !important;
+  font-size: clamp(2rem, 3vw, 2.75rem) !important;
+  line-height: 1.08 !important;
+  margin: 0 !important;
+}
+
+.dash-shell .bento-username {
+  color: var(--brand-green-mint) !important;
+}
+
+.dash-shell .bento-desc {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 1.04rem !important;
+  line-height: 1.55 !important;
+  max-width: 540px;
+  margin: 0 !important;
+}
+
+.dash-shell .bento-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  align-self: flex-start;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(9, 9, 11, 0.36) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: rgba(255, 255, 255, 0.94) !important;
+  font-size: 0.84rem !important;
+  font-weight: 600 !important;
+}
+
+.dash-shell .bento-date .material-symbols-rounded {
+  color: var(--brand-green-soft-text) !important;
+}
+
+.dash-shell .bento-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.dash-shell .bento-cta-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #ffffff !important;
+  color: #1c4424 !important;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-heading) !important;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.dash-shell .bento-cta-white:hover {
+  background: var(--brand-green-light) !important;
+  transform: translateY(-2px);
+}
+
+.dash-shell .bento-cta-glass {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  background: rgba(9, 9, 11, 0.36);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 10px;
+  font-family: var(--font-heading) !important;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.dash-shell .bento-cta-glass:hover {
+  background: rgba(9, 9, 11, 0.58);
+  transform: translateY(-2px);
+}
+
+/* Quick Access & Module Cards (Reemplaza tonos rojos por verdes) */
+.dash-shell .bento-quick-access {
+  background: #ffffff;
+  border: 1.5px solid var(--card-border);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.dash-shell .quick-btn-icon--red {
+  background: var(--brand-green-light) !important;
+  color: var(--brand-green) !important;
+}
+
+.dash-shell .module-card--accent {
+  border-color: rgba(55, 144, 69, 0.35) !important;
+}
+
+.dash-shell .module-icon-wrap--red {
+  background: var(--brand-green-light) !important;
+  color: var(--brand-green) !important;
+}
+
+.dash-shell .module-cta--red {
+  color: var(--brand-green) !important;
+}
+
+.dash-shell .bento-quick-card,
+.dash-shell .module-card,
+.dash-shell .prod-controls-card,
+.dash-shell .tree-controls-bar,
+.dash-shell .dash-product-card,
+.dash-shell .tree-cat-card,
+.dash-shell .chart-card {
+  border: 1.5px solid var(--card-border) !important;
+  border-radius: 16px !important;
+}
+
+.dash-shell .quick-btn:hover {
+  background: var(--brand-green-light) !important;
+  border-color: rgba(55, 144, 69, 0.42) !important;
+  transform: translateX(3px);
+}
+
+/* ── Tarjetas de Estadísticas por Marca en Inventario ── */
+.dash-shell .prod-stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-shell .prod-stat-card--total {
+  border-left: 4px solid #09090b !important;
+  background: #ffffff !important;
+}
+
+.dash-shell .prod-stat-card--total .prod-stat-icon {
+  background: #f4f4f5 !important;
+  color: #09090b !important;
+}
+
+/* Plaxtilineas: Toda la tarjeta con degradado verde institucional */
+.dash-shell .prod-stat-card--plax {
+  border: 1px solid rgba(74, 222, 128, 0.3) !important;
+  border-left: 4px solid #4ade80 !important;
+  background: linear-gradient(
+    112deg,
+    #379045 0%,
+    #2b6e35 35%,
+    #1e4724 68%,
+    #101311 100%
+  ) !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .prod-stat-card--plax .prod-stat-label {
+  color: #bbf7d0 !important;
+}
+
+.dash-shell .prod-stat-card--plax .prod-stat-num {
+  color: #ffffff !important;
+}
+
+.dash-shell .prod-stat-card--plax .prod-stat-sub {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dash-shell .prod-stat-card--plax .prod-stat-icon--plax {
+  background: rgba(9, 9, 11, 0.32) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.dash-shell .prod-stat-card--plax .stat-brand-logo {
+  filter: brightness(0) invert(1);
+}
+
+/* Espumas y Plásticos: Blanca con acento Teal representativo */
+.dash-shell .prod-stat-card--espumas {
+  border-left: 4px solid #0d9488 !important;
+  background: #ffffff !important;
+}
+
+/* Districol: Blanca con acento Carbón representativo */
+.dash-shell .prod-stat-card--districol {
+  border-left: 4px solid #18181b !important;
+  background: #ffffff !important;
+}
+
+/* Camascotas: Blanca con acento Ámbar representativo */
+.dash-shell .prod-stat-card--camascotas {
+  border-left: 4px solid #d97706 !important;
+  background: #ffffff !important;
+}
+
+/* Plaxtilineas mantiene su caja; las demás líneas muestran el PNG limpio sin contenedor */
+.dash-shell .prod-stat-card .prod-stat-icon--plax {
+  width: auto !important;
+  min-width: 54px !important;
+  max-width: 108px !important;
+  height: 50px !important;
+  padding: 6px 10px !important;
+  border-radius: 12px !important;
+}
+
+.dash-shell .prod-stat-card .prod-stat-icon--espumas,
+.dash-shell .prod-stat-card .prod-stat-icon--districol,
+.dash-shell .prod-stat-card .prod-stat-icon--camascotas {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  width: auto !important;
+  min-width: 54px !important;
+  max-width: 120px !important;
+  height: 50px !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+.dash-shell .stat-brand-logo {
+  width: auto;
+  max-width: 100%;
+  height: 100%;
+  max-height: 44px;
+  object-fit: contain;
+  display: block;
+}
+
+.dash-shell .tab-brand-logo {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Brand Tabs Activas por Color Representativo */
+.dash-shell .brand-tab-pill.is-active,
+.dash-shell .tree-brand-tab.is-active {
+  background: var(--brand-green) !important;
+  border-color: var(--brand-green) !important;
+  color: #ffffff !important;
+}
+
+.dash-shell .brand-tab-pill--plax.is-active {
+  background: linear-gradient(112deg, #379045 0%, #1e4724 100%) !important;
+  border-color: #2c7337 !important;
+}
+
+.dash-shell .brand-tab-pill--plax.is-active .tab-brand-logo {
+  filter: brightness(0) invert(1);
+}
+
+.dash-shell .brand-tab-pill--espumas.is-active {
+  background: #0d9488 !important;
+  border-color: #0d9488 !important;
+}
+
+.dash-shell .brand-tab-pill--districol.is-active {
+  background: #18181b !important;
+  border-color: #18181b !important;
+}
+
+.dash-shell .brand-tab-pill--camascotas.is-active {
+  background: #d97706 !important;
+  border-color: #d97706 !important;
+}
+
+/* Focus Rings en Inputs del Dashboard */
+.dash-shell input:focus,
+.dash-shell select:focus,
+.dash-shell textarea:focus {
+  border-color: var(--brand-green) !important;
+  box-shadow: 0 0 0 3px rgba(55, 144, 69, 0.18) !important;
+}

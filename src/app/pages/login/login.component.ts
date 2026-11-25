@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginError = signal<string | null>(null);
   loading = signal(false);
+  loginSuccess = signal(false);
   showPassword = signal(false);
 
   /** Email guardado de la sesión anterior */
@@ -80,8 +81,10 @@ export class LoginComponent implements OnInit {
           if (response.success) {
             // Guardar el email para la próxima vez
             localStorage.setItem(REMEMBERED_EMAIL_KEY, email);
-            console.log('Login exitoso:', response.data.user);
-            this.router.navigate(['/dashboard']);
+            this.loginSuccess.set(true);
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 1150);
           }
         },
         error: (error) => {

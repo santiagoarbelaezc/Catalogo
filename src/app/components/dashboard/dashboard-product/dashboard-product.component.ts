@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ProductsService } from '../../../services/products.service';
 import { ToastService } from '../../../services/toast.service';
@@ -62,9 +62,10 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
   // === Filters ===
   searchTerm = '';
   filterCategory = '';
-  filterStatus = ''; // 'new', 'featured', ''
-  filterBrand = ''; // '', 'Plaxtilineas', 'Espumas', 'Districol'
+  filterStatus = ''; // 'new', 'featured', 'no_price', ''
+  filterBrand = ''; // '', 'Plaxtilineas', 'Espumas', 'Districol', 'Camascotas'
   sortOrder = 'newest'; // 'newest', 'oldest', 'price_asc', 'price_desc', 'az', 'za'
+  viewMode: 'cards' | 'table' = 'cards';
   private searchSubject = new Subject<string>();
 
   // === Pagination ===
@@ -232,6 +233,7 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private realtimeStockService: RealtimeStockService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {
     this.productForm = this.createForm();
@@ -265,6 +267,20 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
     this.loadProducts();
     this.loadCategories();
     this.initRealtimeStock();
+
+    const qpSub = this.route.queryParams.subscribe(params => {
+      if (params['brand'] !== undefined) {
+        this.filterBrand = params['brand'];
+      }
+      if (params['category'] !== undefined) {
+        this.filterCategory = params['category'];
+      }
+      if (params['brand'] !== undefined || params['category'] !== undefined) {
+        this.currentPage = 1;
+        this.cdr.markForCheck();
+      }
+    });
+    this.subscriptions.push(qpSub);
   }
 
   private initRealtimeStock(): void {
@@ -722,6 +738,8 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
       result = result.filter(p => p.isNew === true || p.isNew === 1 || p.isNew === '1');
     } else if (this.filterStatus === 'featured') {
       result = result.filter(p => p.isFeatured === true || p.isFeatured === 1 || p.isFeatured === '1');
+    } else if (this.filterStatus === 'no_price') {
+      result = result.filter(p => !this.hasValidPrice(p));
     }
 
     // Apply sorting
@@ -803,14 +821,11 @@ export class DashboardProductComponent implements OnInit, OnDestroy {
 
   // === Utils ===
   getMinPrice(product: any): number {
-    if (!product.variants || product.variants.length === 0) return 0;
-    const prices = product.variants.map((v: any) => parseFloat(v.price) || 0);
-    return Math.min(...prices);
+    return this.productsService.getProductMinPrice(product);
   }
 
   hasValidPrice(product: any): boolean {
-    return product.variants && product.variants.length > 0 &&
-      !product.variants.some((v: any) => !v.price || parseFloat(v.price) <= 0);
+    return this.productsService.hasValidPrice(product);
   }
 
   // === trackBy ===

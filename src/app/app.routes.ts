@@ -13,6 +13,7 @@ import { DashboardEspumasComponent } from './components/dashboard/dashboard-espu
 import { DashboardDistricolComponent } from './components/dashboard/dashboard-districol/dashboard-districol.component';
 import { DashboardCamascotasComponent } from './components/dashboard/dashboard-camascotas/dashboard-camascotas.component';
 import { DashboardAnalyticsComponent } from './components/dashboard/dashboard-analytics/dashboard-analytics.component';
+import { DashboardCategoryTreeComponent } from './components/dashboard/dashboard-category-tree/dashboard-category-tree.component';
 import { authGuard } from './guards/auth.guard';
 import { ProductDetailComponent } from './components/catalog/product-detail/product-detail.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardInicioComponent, canActivate: [authGuard] },
   { path: 'dashboard/productos', component: DashboardProductComponent, canActivate: [authGuard] },
   { path: 'dashboard/analiticas', component: DashboardAnalyticsComponent, canActivate: [authGuard] },
+  { path: 'dashboard/arbol-categorias', component: DashboardCategoryTreeComponent, canActivate: [authGuard] },
   { path: 'dashboard/categorias', component: DashboardCategoriesComponent, canActivate: [authGuard] },
   { path: 'dashboard/espumas', component: DashboardEspumasComponent, canActivate: [authGuard] },
   { path: 'dashboard/districol', component: DashboardDistricolComponent, canActivate: [authGuard] },

@@ -108,7 +108,10 @@ export class DistricolComponent implements OnInit {
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
           this.products = products
-            .filter((product: any) => product.category === 'Districol')
+            .filter((product: any) =>
+              product.category === 'Districol' &&
+              this.productsService.hasValidPrice(product)
+            )
             .sort((a, b) => a.name.localeCompare(b.name));
           this.applyFilters(this.currentFilters);
         }

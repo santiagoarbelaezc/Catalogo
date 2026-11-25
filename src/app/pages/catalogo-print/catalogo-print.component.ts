@@ -32,16 +32,17 @@ export class CatalogoPrintComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
+          const visibleProducts = products.filter(p => this.productsService.hasValidPrice(p));
           const brandParam = this.route.snapshot.queryParamMap.get('brand');
           
           if (brandParam) {
             this.brandName = brandParam.toUpperCase();
-            this.products = products.filter(p => 
+            this.products = visibleProducts.filter(p => 
               p.category?.toLowerCase() === brandParam.toLowerCase() || 
               p.marca?.toLowerCase() === brandParam.toLowerCase()
             );
           } else {
-            this.products = products;
+            this.products = visibleProducts;
           }
 
           // Disparamos la impresión automáticamente tras un pequeño delay

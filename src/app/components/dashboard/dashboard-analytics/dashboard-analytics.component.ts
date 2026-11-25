@@ -94,8 +94,8 @@ export class DashboardAnalyticsComponent implements OnInit {
     datasets: [
       {
         data: [0, 0, 0, 0, 0],
-        backgroundColor: ['#dc2626', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
-        hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#18181b', '#71717a'],
+        backgroundColor: ['#379045', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
+        hoverBackgroundColor: ['#2c7337', '#000000', '#3f3f46', '#18181b', '#71717a'],
         borderColor: '#ffffff',
         borderWidth: 3,
         hoverOffset: 10
@@ -308,14 +308,14 @@ export class DashboardAnalyticsComponent implements OnInit {
       completePct: total > 0 ? Math.round((complete / total) * 100) : 0
     };
 
-    // Actualizar Gráficos (Monocromático: Rojo, Gris, Negro)
+    // Actualizar Gráficos (Verde Corporativo, Gris, Negro)
     this.lineChartData = {
       labels: ['Plaxtilineas', 'Espumas', 'Districol', 'Camascotas', 'Otros'],
       datasets: [
         {
           data: [plaxti, espumas, distri, camascotas, otros],
-          backgroundColor: ['#dc2626', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
-          hoverBackgroundColor: ['#b91c1c', '#000000', '#3f3f46', '#18181b', '#71717a'],
+          backgroundColor: ['#379045', '#09090b', '#52525b', '#27272a', '#a1a1aa'],
+          hoverBackgroundColor: ['#2c7337', '#000000', '#3f3f46', '#18181b', '#71717a'],
           borderColor: '#ffffff',
           borderWidth: 3,
           hoverOffset: 10
@@ -325,7 +325,7 @@ export class DashboardAnalyticsComponent implements OnInit {
 
     const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
     const barColors = sortedCats.map((_, index) => {
-      if (index === 0) return '#dc2626'; // #1 en Rojo vibrante
+      if (index === 0) return '#379045'; // #1 en Verde corporativo
       if (index === 1) return '#09090b'; // #2 en Negro puro
       if (index === 2) return '#18181b'; // #3 en Carbón profundo
       if (index === 3) return '#27272a'; // #4 en Grafito oscuro
@@ -341,7 +341,7 @@ export class DashboardAnalyticsComponent implements OnInit {
         {
           data: sortedCats.map(c => c[1]),
           backgroundColor: barColors,
-          hoverBackgroundColor: barColors.map(c => c === '#dc2626' ? '#b91c1c' : '#000000'),
+          hoverBackgroundColor: barColors.map(c => c === '#379045' ? '#2c7337' : '#000000'),
           borderRadius: 8,
           barPercentage: 0.65
         }

@@ -8,10 +8,13 @@
 
     <!-- Logo / Brand -->
     <div class="sidebar-brand">
-      <div class="sidebar-logo">
-        <span class="material-symbols-rounded" style="font-size:1.3rem">dashboard</span>
+      <div class="sidebar-brand-full">
+        <img src="assets/logos/logo-blanco-invertido.png" alt="Plaxtilíneas" class="sidebar-brand-logo">
+        <span class="sidebar-admin-pill">ADMIN</span>
       </div>
-      <span class="sidebar-brand-text">Plaxtilineas</span>
+      <div class="sidebar-brand-collapsed-box">
+        <img src="assets/logos/isotipo-plaxtilineas.png" alt="Plaxtilíneas" class="sidebar-brand-isotipo">
+      </div>
     </div>
 
     <!-- Toggle button flotante en el borde -->
@@ -59,6 +62,16 @@
         <span class="material-symbols-rounded sidebar-nav-icon">analytics</span>
         <span class="sidebar-nav-label-text">Analíticas</span>
         <span class="sidebar-nav-active-dot"></span>
+      </button>
+
+      <!-- Árbol de Categorías -->
+      <button
+        class="sidebar-nav-item"
+        (click)="navigateTo('/dashboard/arbol-categorias')"
+        title="Árbol de Categorías y Subcategorías"
+      >
+        <span class="material-symbols-rounded sidebar-nav-icon">account_tree</span>
+        <span class="sidebar-nav-label-text">Árbol Categorías</span>
       </button>
 
       <p class="sidebar-nav-label" style="margin-top: 14px;">Catálogos y Secciones</p>
@@ -235,7 +248,7 @@
           </div>
 
           <div class="header-count-badge">
-            <span class="count-num" style="color:#dc2626;">{{ statsGlobal.completePct }}%</span>
+            <span class="count-num" style="color:#379045;">{{ statsGlobal.completePct }}%</span>
             <span class="count-label">salud general</span>
           </div>
         </div>
@@ -337,7 +350,7 @@
               </div>
               <div class="kpi-card">
                 <p class="kpi-label mb-1">Completitud</p>
-                <p class="kpi-value" style="color:#dc2626;">{{ statsGlobal.completePct }}%</p>
+                <p class="kpi-value" style="color:#379045;">{{ statsGlobal.completePct }}%</p>
                 <p class="kpi-sub">{{ statsGlobal.complete }} prods. completos</p>
               </div>
             </div>
@@ -346,7 +359,7 @@
             <div class="completeness-banner">
               <div class="completeness-header">
                 <span class="completeness-title">
-                  <span class="material-symbols-rounded" style="color:#dc2626;">health_and_safety</span>
+                  <span class="material-symbols-rounded" style="color:#379045;">health_and_safety</span>
                   Salud y Calidad del Catálogo
                 </span>
                 <span class="completeness-pct">{{ statsGlobal.completePct }}%</span>

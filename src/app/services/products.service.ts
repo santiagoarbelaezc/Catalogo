@@ -17,6 +17,32 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   /**
+   * Obtiene el precio mínimo positivo (> 0) entre las variantes/referencias del producto.
+   * Retorna 0 si el producto no tiene ningún precio configurado.
+   */
+  getProductMinPrice(product: any): number {
+    if (!product) return 0;
+    const variants = product.references || product.variants || [];
+    const positivePrices = variants
+      .map((v: any) => Number(v?.price))
+      .filter((p: number) => !isNaN(p) && p > 0);
+
+    if (positivePrices.length > 0) {
+      return Math.min(...positivePrices);
+    }
+
+    const directPrice = Number(product.price);
+    return !isNaN(directPrice) && directPrice > 0 ? directPrice : 0;
+  }
+
+  /**
+   * Indica si el producto tiene al menos un precio válido (> 0) para mostrarse al público.
+   */
+  hasValidPrice(product: any): boolean {
+    return this.getProductMinPrice(product) > 0;
+  }
+
+  /**
    * 📖 Obtener todos los productos
    * GET /api/productos
    */

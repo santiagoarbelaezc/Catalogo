@@ -191,8 +191,9 @@ export class CamascotasComponent implements OnInit {
         if (products && Array.isArray(products)) {
           this.products = products
             .filter((product: any) =>
-              (product.category && product.category.toLowerCase() === 'camascotas') ||
-              (product.marca && product.marca.toLowerCase() === 'camascotas')
+              ((product.category && product.category.toLowerCase() === 'camascotas') ||
+              (product.marca && product.marca.toLowerCase() === 'camascotas')) &&
+              this.productsService.hasValidPrice(product)
             )
             .sort((a, b) => a.name.localeCompare(b.name));
           this.buildCategoryMenu();

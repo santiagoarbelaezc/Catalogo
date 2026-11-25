@@ -23,13 +23,32 @@ export class CatalogItemComponent implements OnInit {
   constructor(public detailService: ProductDetailService) {}
 
   ngOnInit() {
-    const variants = this.product.references || this.product.variants || [];
-    const availableVariants = variants.filter(v => v.available);
+    const variants = this.variantsList;
+    const positiveVariants = variants.filter(v => Number(v.price) > 0);
+    const availableVariants = positiveVariants.filter(v => v.available);
     if (availableVariants.length > 0) {
       this.selectedVariant = availableVariants[0];
+    } else if (positiveVariants.length > 0) {
+      this.selectedVariant = positiveVariants[0];
     } else if (variants.length > 0) {
       this.selectedVariant = variants[0];
     }
+  }
+
+  get variantsList(): any[] {
+    return this.product?.references || this.product?.variants || [];
+  }
+
+  get brandBadgeLabel(): string {
+    return (this.product?.category || this.product?.marca || 'Catálogo').toUpperCase();
+  }
+
+  get categoryMetaLabel(): string {
+    return (this.product?.category_name || this.product?.subcategory_name || 'GENERAL').toUpperCase();
+  }
+
+  get priceCaptionLabel(): string {
+    return this.variantsList.length > 1 ? 'DESDE' : 'PRECIO OFICIAL';
   }
 
   selectImage(index: number): void {
@@ -90,7 +109,8 @@ export class CatalogItemComponent implements OnInit {
     this.quantity++;
   }
 
-  selectVariant(variant: any) {
+  selectVariant(variant: any, event?: Event) {
+    event?.stopPropagation();
     this.selectedVariant = variant;
   }
 

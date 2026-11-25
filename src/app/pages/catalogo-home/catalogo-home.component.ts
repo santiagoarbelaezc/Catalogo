@@ -44,10 +44,10 @@ export class CatalogoHomeComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products: any[]) => {
         if (products && Array.isArray(products)) {
-          // Ordenar por nombre A-Z por defecto
-          this.products = products.sort((a, b) => {
-            return a.name.localeCompare(b.name);
-          });
+          // Mostrar solo productos con precio válido (> 0) y ordenar por nombre A-Z
+          this.products = products
+            .filter((product: any) => this.productsService.hasValidPrice(product))
+            .sort((a, b) => a.name.localeCompare(b.name));
           this.applyFilters(this.currentFilters);
         }
       },
