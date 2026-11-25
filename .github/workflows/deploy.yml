@@ -43,6 +43,8 @@ jobs:
       # 4. Build de producción Angular
       # ─────────────────────────────────────────────
       - name: 🏗️ Build producción Angular
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: npm run build -- --configuration production
 
       # ─────────────────────────────────────────────
@@ -72,20 +74,24 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
       # ─────────────────────────────────────────────
       # 7. Sincronizar dist/ → public_html/ con rsync
-      #    --delete elimina archivos viejos del servidor
-      #    que ya no existen en el nuevo build (hashes cambiados)
+      #    Se preservan carpetas del servidor (.well-known para SSL, cgi-bin)
       # ─────────────────────────────────────────────
       - name: 📤 Sincronizar build al servidor
         run: |
+          ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p ${{ env.DEPLOY_PATH }}"
+
           rsync -avz --delete \
             --exclude='.git/' \
+            --exclude='.well-known/' \
+            --exclude='cgi-bin/' \
+            --exclude='error_docs/' \
             -e "ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519" \
             dist/catalogo/browser/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
@@ -95,11 +101,15 @@ jobs:
       # ─────────────────────────────────────────────
       - name: 🌐 Verificar frontend en producción
         run: |
-          sleep 5
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://catalogoplaxtilineas.com/)
+          sleep 3
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://catalogoplaxtilineas.com/ || echo "000")
           if [ "$HTTP_CODE" = "200" ]; then
             echo "✅ Frontend responde correctamente (HTTP $HTTP_CODE)"
           else
             echo "⚠️ Frontend retornó HTTP $HTTP_CODE"
             exit 1
           fi
+
+      - name: 🧹 Limpiar clave SSH
+        if: always()
+        run: rm -rf ~/.ssh
