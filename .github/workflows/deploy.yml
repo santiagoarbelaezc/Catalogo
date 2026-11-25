@@ -1,0 +1,105 @@
+name: 🚀 Deploy Frontend Angular → Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # permite disparar manualmente desde GitHub UI
+
+env:
+  DEPLOY_PATH: /home/u870397049/domains/catalogoplaxtilineas.com/public_html
+  NODE_VERSION: '20'
+
+jobs:
+  build-and-deploy:
+    name: Build Angular + Deploy to Hostinger
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # ─────────────────────────────────────────────
+      # 1. Checkout del código
+      # ─────────────────────────────────────────────
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────
+      # 2. Instalar Node.js con caché de npm
+      # ─────────────────────────────────────────────
+      - name: 🟢 Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      # ─────────────────────────────────────────────
+      # 3. Instalar dependencias
+      # ─────────────────────────────────────────────
+      - name: 📦 Instalar dependencias npm
+        run: npm ci
+
+      # ─────────────────────────────────────────────
+      # 4. Build de producción Angular
+      # ─────────────────────────────────────────────
+      - name: 🏗️ Build producción Angular
+        run: npm run build -- --configuration production
+
+      # ─────────────────────────────────────────────
+      # 5. Verificar que el build generó los archivos clave
+      # ─────────────────────────────────────────────
+      - name: 🔍 Verificar artefactos del build
+        run: |
+          if [ ! -f dist/catalogo/browser/index.html ]; then
+            echo "❌ No se encontró dist/catalogo/browser/index.html"
+            exit 1
+          fi
+          if [ ! -f dist/catalogo/browser/laravel-index.php ]; then
+            echo "❌ No se encontró dist/catalogo/browser/laravel-index.php"
+            exit 1
+          fi
+          if [ ! -f dist/catalogo/browser/.htaccess ]; then
+            echo "❌ No se encontró dist/catalogo/browser/.htaccess"
+            exit 1
+          fi
+          echo "✅ Artefactos de build verificados:"
+          ls -lh dist/catalogo/browser/
+
+      # ─────────────────────────────────────────────
+      # 6. Configurar SSH
+      # ─────────────────────────────────────────────
+      - name: 🔑 Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      # ─────────────────────────────────────────────
+      # 7. Sincronizar dist/ → public_html/ con rsync
+      #    --delete elimina archivos viejos del servidor
+      #    que ya no existen en el nuevo build (hashes cambiados)
+      # ─────────────────────────────────────────────
+      - name: 📤 Sincronizar build al servidor
+        run: |
+          rsync -avz --delete \
+            --exclude='.git/' \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -i ~/.ssh/id_ed25519" \
+            dist/catalogo/browser/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.DEPLOY_PATH }}/
+
+      # ─────────────────────────────────────────────
+      # 8. Verificar que el frontend sirve correctamente
+      # ─────────────────────────────────────────────
+      - name: 🌐 Verificar frontend en producción
+        run: |
+          sleep 5
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://catalogoplaxtilineas.com/)
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ Frontend responde correctamente (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️ Frontend retornó HTTP $HTTP_CODE"
+            exit 1
+          fi
