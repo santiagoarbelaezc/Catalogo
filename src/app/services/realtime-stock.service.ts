@@ -145,13 +145,13 @@ export class RealtimeStockService implements OnDestroy {
     // Consulta inicial inmediata
     this.fetchChanges();
 
-    // Intervalo liviano cada 4 segundos (solo si pestaña visible)
+    // Intervalo liviano cada 15 segundos (solo si pestaña visible) para proteger cuota de BD
     this.pollIntervalId = setInterval(() => {
       if (typeof document !== 'undefined' && document.hidden) {
         return;
       }
       this.fetchChanges();
-    }, 4000);
+    }, 15000);
   }
 
   private fetchChanges(): void {
